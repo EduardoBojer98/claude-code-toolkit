@@ -1,0 +1,28 @@
+{
+  "backedUp": "2026-10-16",
+  "account": "claude.ai",
+  "customSkills": [
+    {
+      "name": "web-dev-standards",
+      "path": "skills/web-dev-standards/SKILL.md",
+      "description": "Personal web dev standards for every website, theme, plugin or web app built for this user (WordPress block/classic themes, plugins, WooCommerce, HTML/CSS/JS, React, Next.js, Tailwind, SCSS). Use on ANY web project, page, component, theme or code review, even when not named."
+    }
+  ],
+  "plugins": [
+    { "name": "frontend-design", "folder": "plugins/frontend-design",      "directoryName": "frontend-design",                                    "publisher": "Anthropic",          "status": "enabled" },
+    { "name": "WordPress Dev Skills",       "folder": "plugins/wordpress-dev-skills", "directoryName": "WordPress Dev Skills",                               "publisher": "Al Amin Ahamed",     "status": "enabled" },
+    { "name": "github",                     "folder": "plugins/github",               "directoryName": "github",                                             "publisher": "GitHub",             "status": "enabled", "needs": "GitHub sign-in (free account)" },
+    { "name": "playwright",                 "folder": "plugins/playwright",           "directoryName": "playwright",                                         "publisher": "Microsoft",          "status": "enabled" },
+    { "name": "A11y Enforcer",              "folder": "plugins/a11y-enforcer",        "directoryName": "A11y Enforcer: WCAG Accessibility Checker",          "publisher": "Stefan Petrovici",   "status": "enabled" },
+    { "name": "Perf Profiler",              "folder": "plugins/perf-profiler",        "directoryName": "Perf Profiler: Lighthouse and Core Web Vitals",      "publisher": "Stefan Petrovici",   "status": "enabled" },
+    { "name": "searchfit-seo",              "folder": "plugins/searchfit-seo",        "directoryName": "searchfit-seo",                                      "publisher": "SearchFit",          "status": "enabled" },
+    { "name": "figma",                      "folder": "plugins/figma",                "directoryName": "figma",                                              "publisher": "Figma",              "status": "enabled", "note": "optional - you design in code" },
+    { "name": "caveman",                    "folder": "plugins/caveman",              "directoryName": "caveman",                                            "publisher": "Ali Akram",          "status": "enabled", "note": "optional" },
+    { "name": "brightdata-plugin",          "folder": null,                           "directoryName": "brightdata-plugin",                                  "publisher": "Bright Data",        "status": "disabled", "note": "deliberately off: needs paid account/API key. Not backed up." }
+  ],
+  "connectors": [
+    { "name": "Context7", "purpose": "Up-to-date library docs", "auth": "free Context7 account (1,000 requests/month)" },
+    { "name": "Figma",    "purpose": "Figma files (optional)",  "auth": "Figma account" }
+  ],
+  "builtInSkillsNotBackedUp": "docs, docx, xlsx, pptx, pdf, skill-creator, deep-research, chrome-browser, built-in-browser, computer-use, google-workspace, import-memory, morning - these come with every Claude account."
+}
