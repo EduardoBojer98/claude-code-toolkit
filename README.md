@@ -11,6 +11,8 @@ Backed up: 16 Oct 2026. Everything here is free to use (no paid plans or API key
 |---|---|
 | `skills/web-dev-standards/` | **My own skill** — design, code, WordPress, accessibility, performance, SEO, security standards and the Definition of Done checklist. This is the important one. |
 | `plugins/` | Snapshot of every enabled plugin's files (skills, commands, MCP configs) at backup time. |
+| `skills/toolkit-maintainer/` | My own skill that reviews and updates this setup (see MAINTENANCE.md). |
+| `DECISIONS.md` / `CHANGELOG.md` | Why each tool is in or out; history of reviews. |
 | `manifest.json` | Exact list of skills, plugins (with directory names) and connectors, and which ones are on/off. |
 | `docs/web-dev-toolkit.xlsx` | What each tool is for, example prompts, next steps. |
 

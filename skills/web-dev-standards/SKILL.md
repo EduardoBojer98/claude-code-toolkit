@@ -5,6 +5,8 @@ description: Personal web dev standards for every website, theme, plugin or web 
 
 # Web Dev Standards
 
+_Version 1.0 · Last reviewed 2026-10-16 · Maintained by the `toolkit-maintainer` skill; source of truth: github.com/EduardoBojer98/claude-setup_
+
 These are my standards for every web project. Apply them by default, without being asked.
 When a project has its own conventions (an existing theme, a client's codebase), follow those
 for style and naming, but never drop below the accessibility, security and performance floors here.
