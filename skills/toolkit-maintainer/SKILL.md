@@ -68,10 +68,10 @@ Search in parallel:
 Skip anything already in `DECISIONS.md` → *Skip* unless its reason has changed (e.g. it became free).
 
 ### 5. Evaluate each candidate
-Score 1–5 on each; recommend only if it passes the free gate and averages ≥ 4 **and** beats the incumbent:
+Score 1–5 on each; recommend only if it averages ≥ 4 **and** beats the incumbent (a paid tool must also beat every free option):
 | Criterion | Question |
 |---|---|
-| Free gate | Verified free today, with source? (pass/fail) |
+| Cost | Free/open source today, with source? If paid: price, and why no free option is good enough |
 | Fit | Does it help WordPress *and/or* custom projects this user actually builds? |
 | Quality | Publisher tier (anthropic/partner > community), docs, maintenance, install base |
 | Overlap | Does it replace something, or add a capability we lack? |
