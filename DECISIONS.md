@@ -19,7 +19,7 @@ Free first; paid only with strong evidence (see MAINTENANCE.md). Retired tools a
 ## Adopted 2026-10-22 (installed by the user in Claude Code)
 | Tool | Kind | Role | Why | Condition |
 |---|---|---|---|---|
-| Shopify Dev MCP (`@shopify/dev-mcp`) | Local MCP, official, free | Conditional (Shopify) | Liquid docs, Theme Check validation, Admin GraphQL schema | Pinned version |
+| Shopify Dev MCP (`@shopify/dev-mcp@1.17.0`, WSL user scope, connected) | Local MCP, official, free | Conditional (Shopify) | Liquid docs, Theme Check validation, Admin GraphQL schema | Pinned version |
 | Impeccable (pbakaus/impeccable, Apache 2.0) | Claude Code plugin | Review (design critique/polish) | Builds on frontend-design; adds critique, audit, polish and 61 detector rules | Telemetry off; removed if it doesn't beat frontend-design alone on the benchmark |
 | Vercel react-best-practices | Project skill | Conditional (React repos only) | React performance rules | Installed per project in `.claude/skills/` |
 
