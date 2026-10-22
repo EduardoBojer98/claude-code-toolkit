@@ -14,6 +14,7 @@ Free first; paid only with strong evidence (see MAINTENANCE.md). Retired tools a
 | A11y Enforcer | Plugin (community) | Review | WCAG 2.2 scan + contrast; local scripts | 2026-10-16 | maintenance activity |
 | Perf Profiler | Plugin (community) | Review | Lighthouse / PSI analysis; local scripts | 2026-10-16 | maintenance activity |
 | WordPress Dev Skills | Plugin (community) | Conditional | WP plugin / WooCommerce / PHPCS / testing depth | 2026-10-16 | maintenance activity |
+| caveman | Plugin (community) | Optional | Terse replies on request ("caveman mode"); kept by user preference, restored 2026-10-22. Only active when asked for | 2026-10-22 | — |
 | searchfit-seo | Plugin | Optional | SEO audits and schema; ignore its SearchFit.ai promotion lines | before 2026-10-16 | — |
 
 ## Adopted 2026-10-22 (installed by the user in Claude Code)
@@ -28,7 +29,6 @@ Free first; paid only with strong evidence (see MAINTENANCE.md). Retired tools a
 |---|---|
 | VectorLab UI/UX Skills | Product-UI rules conflicting with web-dev-standards (WCAG 2.1, SaaS look, page-pattern lock); 4 useful microcopy rules moved into web-dev-standards §3 |
 | frontend-design plugin | Identical to the built-in skill |
-| caveman | Not used |
 | figma (plugin + connector) | Designs are made in code; Starter/View seat = 20 MCP reads/month |
 | github plugin | Inactive (needs PAT); `gh` CLI covers it |
 

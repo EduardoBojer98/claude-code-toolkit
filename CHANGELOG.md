@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-10-22: caveman restored
+- Re-enabled by user preference; snapshot moved from `archive/plugins/` back to `plugins/`. Opt-in only ("caveman mode").
+
 ## 2026-10-22: web-dev-standards 2.1
 - WordPress client sites start from the CodeMate starter (classic theme, SCF page sections, runtime CSS tokens, Lando); its `AGENTS.md` and ADR 0001 rule there. Block themes only when the Site Editor or native blocks are needed; Elementor + ACF rules apply to existing sites built that way.
 - Replaces PR #1 (written against v1.0, which v2.0 replaced); its intent is carried over in full.

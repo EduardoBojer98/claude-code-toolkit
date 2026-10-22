@@ -80,12 +80,12 @@
     },
     {
       "name": "caveman",
-      "folder": "archive/plugins/caveman",
+      "folder": "plugins/caveman",
       "directoryName": "caveman",
       "publisher": "Ali Akram",
-      "status": "archived",
+      "status": "enabled",
       "note": "optional",
-      "archived": "2026-10-22"
+      "restored": "2026-10-22"
     },
     {
       "name": "brightdata-plugin",
