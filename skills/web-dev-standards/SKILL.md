@@ -36,7 +36,7 @@ naming, but never go below the accessibility, security and performance floors he
 | `*.csproj`, `plugin.json` with `SystemName` | §6 nopCommerce | Front-end design skills unless views change |
 | `vite.config.*`, `tsconfig.json`, React | §7 React + project's react-best-practices skill | WordPress skills |
 | New page, section or redesign | `frontend-design` (or Impeccable `craft` in Claude Code) | More than one design skill at once |
-| UI work about to be called done | §8 review: Impeccable `critique`→`polish` if installed, A11y Enforcer, Perf Profiler, Playwright | — |
+| UI work about to be called done | §10 review: Impeccable `critique`→`polish` if installed, A11y Enforcer, Perf Profiler, Playwright | — |
 | A live site to look at, no code | Built-in browser; Chrome only for signed-in client admin | Playwright |
 | Scripted screenshots, E2E, visual diffs | Playwright | Chrome extension |
 
@@ -51,6 +51,7 @@ naming, but never go below the accessibility, security and performance floors he
 - Motion: purposeful, 150–300ms, `transform`/`opacity`, always a `prefers-reduced-motion` fallback; CSS before animation libraries.
 - Microcopy: verb-first button labels ("Book a call", not "Submit"); errors say what happened and how to fix it, never blame; every input has a visible label; no spinner under ~300ms, skeletons for longer loads.
 - E-commerce: price, delivery and returns visible near the buy button; trust signals near decisions; no surprise costs at checkout.
+- Dark mode when it fits (apps, tech audiences, client request): swap colour tokens only; check contrast in both modes.
 
 ## 4. WordPress
 
@@ -60,6 +61,8 @@ Write for PHP 8.2+. Never edit core, a parent theme or third-party plugins; use 
 - Prefix everything with the project slug or use namespaces; WPCS via PHPCS; `functions.php` only includes files from `/inc`.
 - Enqueue properly on the right hook, versioned (`*.asset.php` or `filemtime()` in dev), `'strategy' => 'defer'`; no hard-coded `<script>`/`<link>`.
 - Content structures (CPTs, taxonomies, fields, integrations) in a site plugin so they survive a theme change.
+- Everything translatable with the text domain; editors change content in the editor, not code; remove unused bloat (emoji script, unused patterns).
+- Local dev with Lando (`.lando.yml` in the repo) unless the project already uses another setup.
 
 **Block themes:** `theme.json` v3 as the token source; patterns in `/patterns`; `block.json` `apiVersion: 3`; dynamic blocks with `render.php`; Interactivity API for front-end behaviour; core blocks + patterns + Block Bindings before custom blocks.
 
@@ -98,15 +101,23 @@ Write for PHP 8.2+. Never edit core, a parent theme or third-party plugins; use 
 - Code-split routes; check bundle size before adding a dependency; Vitest for logic, Playwright for flows.
 - Secrets never in client code (`VITE_` vars are public); `.env.example` committed.
 
-## 8. Quality floors (all projects)
+## 8. Code quality (all projects)
 
-- **Accessibility, WCAG 2.2 AA:** contrast 4.5:1 text / 3:1 large text and UI, in every theme; semantic landmarks, one `h1`, no skipped levels; full keyboard use with visible `:focus-visible`; targets ≥ 24×24px (44 on touch); labels and text errors linked with `aria-describedby`; skip link; native elements before ARIA.
+- HTML: semantic landmarks, one `main`; buttons for actions, links for navigation, never a clickable `div`; native `<dialog>`, `<details>`, `popover` before custom widgets.
+- CSS: no inline styles (except custom-property values); cascade layers (`reset, tokens, base, layout, components, utilities`); low specificity with `:where()`; logical properties; no `!important` except third-party overrides, with a comment; no IDs for styling; one approach per project (BEM-ish or Tailwind, SCSS with `@use`).
+- JS: ES modules, `const`, early returns, no jQuery in new code, progressive enhancement, `AbortController` to clean up listeners, explicit loading/empty/error states.
+- Naming: `kebab-case` files, `PascalCase.tsx` components, `camelCase` JS, prefixed `snake_case` PHP functions per WPCS. Comments explain why. Extract on the third repetition, not the first.
+- Prettier + ESLint (+ Stylelint) configured in the repo.
+
+## 9. Quality floors (all projects)
+
+- **Accessibility, WCAG 2.2 AA:** contrast 4.5:1 text / 3:1 large text and UI, in every theme; meaningful `alt` (decorative `alt=""`); one `h1`, no skipped levels; full keyboard use, no traps, `Esc` closes overlays, focus moves into and back out of dialogs; visible `:focus-visible`, never hidden behind sticky headers (`scroll-padding-top`); targets ≥ 24×24px (44 on touch); visible labels and text errors linked with `aria-describedby`; skip link, `lang` on `<html>`, meaningful link text; native elements before ARIA.
 - **Performance, Core Web Vitals "good":** LCP ≤ 2.5s, INP ≤ 200ms, CLS ≤ 0.1; Lighthouse mobile ≥ 90 where the platform allows. Modern image formats with sizes and dimensions; LCP image not lazy, `fetchpriority="high"`; self-hosted WOFF2, `font-display: swap`; minimal, deferred JS; reserve space for late content.
-- **SEO:** unique title and description, canonical, Open Graph, one `h1`, valid JSON-LD that matches visible content, sitemap, sane robots, noindex on staging.
+- **SEO:** unique title (~50–60 chars) and description (~150–160), clean lowercase URLs (WP permalinks `/%postname%/`), canonical, Open Graph, one `h1`, valid JSON-LD that matches visible content, sitemap, sane robots, noindex on staging.
 - **Security:** no secrets in code or Git; validate on the server; escape output; HTTPS and security headers where the host allows; `npm audit` / `composer audit` / `dotnet list package --vulnerable`; least privilege.
 - **Git:** small Conventional Commits (`feat:`, `fix:`…), branches per feature, PRs into `main`. Never commit `.env`, `wp-config.php`, uploads or credentials.
 
-## 9. Definition of Done
+## 10. Definition of Done
 
 Report each item; fix failures before saying it's done.
 - [ ] Design direction visible; tokens only; checked with screenshots at 375 / 768 / 1280px, no horizontal scroll
@@ -114,5 +125,5 @@ Report each item; fix failures before saying it's done.
 - [ ] No console errors; linters pass (ESLint / PHPCS / Theme Check / build warnings)
 - [ ] Keyboard walkthrough works; A11y Enforcer check passes
 - [ ] Perf Profiler / Lighthouse within targets, or the platform limit explained
-- [ ] Platform rules met (§4–§7): escaping and nonces, editable in the editor, no core edits
+- [ ] Code rules met (§8); platform rules met (§4–§7): escaping and nonces, editable in the editor, no core edits
 - [ ] No secrets committed; README or `CLAUDE.md` updated for anything a future session needs
