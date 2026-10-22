@@ -3,7 +3,9 @@
 My Claude skills, plugins and connectors for web development (WordPress + custom projects),
 so I can restore the same setup on a new machine, OS or account.
 
-Backed up: 16 Oct 2026. Everything here is free to use (no paid plans or API keys).
+Last updated: 22 Oct 2026. Everything here is free to use (no paid plans or API keys).
+
+**New Linux machine?** Follow [SETUP-LINUX.md](SETUP-LINUX.md).
 
 ## What's in here
 
@@ -11,6 +13,9 @@ Backed up: 16 Oct 2026. Everything here is free to use (no paid plans or API key
 |---|---|
 | `skills/web-dev-standards/` | **My own skill** — design, code, WordPress, accessibility, performance, SEO, security standards and the Definition of Done checklist. This is the important one. |
 | `plugins/` | Snapshot of every enabled plugin's files (skills, commands, MCP configs) at backup time. |
+| `archive/` | Retired plugins, old skill versions and old scheduled-task prompts, with restore steps (`archive/README.md`). Never deleted. |
+| `templates/CLAUDE.md` | Starter project file for client repos. |
+| `SETUP-LINUX.md` | Clean Claude Code setup on a new Linux machine. |
 | `skills/toolkit-maintainer/` | My own skill that reviews and updates this setup (see MAINTENANCE.md). |
 | `DECISIONS.md` / `CHANGELOG.md` | Why each tool is in or out; history of reviews. |
 | `manifest.json` | Exact list of skills, plugins (with directory names) and connectors, and which ones are on/off. |
@@ -33,8 +38,8 @@ Manual: zip the `skills/web-dev-standards` folder and upload it in **Settings �
 ### 2. Plugins
 Ask Claude: *"Install the plugins listed in manifest.json of my claude-setup repo"* — it will show install cards.
 Or install each by name from the plugin directory (names in `manifest.json` → `directoryName`):
-frontend-design, WordPress Dev Skills, github, playwright, A11y Enforcer, Perf Profiler, searchfit-seo
-(optional: figma, caveman). Leave **brightdata-plugin** off.
+WordPress Dev Skills, playwright, A11y Enforcer, Perf Profiler, searchfit-seo.
+Retired ones (frontend-design plugin, caveman, figma, github, VectorLab) stay off; see `archive/README.md`. Leave **brightdata-plugin** off.
 
 If a plugin disappears from the directory, upload its folder from `plugins/` as a custom plugin
 (zip the folder; ask Claude to help with the cowork-plugin skill).
