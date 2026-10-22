@@ -1,6 +1,6 @@
 ---
 name: web-dev-standards
-description: Personal web design and development standards and routing for this user's client work - design direction, accessibility, performance, security, Definition of Done, and stack rules for WordPress (block themes, Elementor, ACF, WooCommerce), Shopify (Liquid, metafields, metaobjects), nopCommerce (.NET plugins), React + Vite + TypeScript + Tailwind, and plain HTML/CSS/JS. Use when building, designing, fixing or reviewing a website, theme, plugin, store or web app.
+description: Personal web design and development standards and routing for this user's client work - design direction, accessibility, performance, security, Definition of Done, and stack rules for WordPress (CodeMate starter with SCF sections, block themes, Elementor, ACF, WooCommerce), Shopify (Liquid, metafields, metaobjects), nopCommerce (.NET plugins), React + Vite + TypeScript + Tailwind, and plain HTML/CSS/JS. Use when building, designing, fixing or reviewing a website, theme, plugin, store or web app.
 ---
 
 # Web Dev Standards
