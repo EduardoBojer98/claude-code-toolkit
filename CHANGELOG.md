@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-10-22: Claude Code review (WSL)
+- Figma kept in Claude Code (62 uses of design-to-code in 20 days); ponytail kept by preference; hyperframes and mattpocock-skills disabled.
+- 13 claude.ai-synced skills unused in Claude Code disabled per machine (~2,370 tokens a turn); duplicate user-level copies of own skills disabled.
+
 ## 2026-10-22: caveman restored
 - Re-enabled by user preference; snapshot moved from `archive/plugins/` back to `plugins/`. Opt-in only ("caveman mode").
 

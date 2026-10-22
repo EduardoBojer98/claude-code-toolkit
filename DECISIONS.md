@@ -24,12 +24,23 @@ Free first; paid only with strong evidence (see MAINTENANCE.md). Retired tools a
 | Impeccable (pbakaus/impeccable, Apache 2.0) | Claude Code plugin | Review (design critique/polish) | Builds on frontend-design; adds critique, audit, polish and 61 detector rules | Telemetry off; removed if it doesn't beat frontend-design alone on the benchmark |
 | Vercel react-best-practices | Project skill | Conditional (React repos only) | React performance rules | Installed per project in `.claude/skills/` |
 
+## Claude Code (local machine), reviewed 2026-10-22 from its own usage stats
+| Tool | Decision | Evidence |
+|---|---|---|
+| figma (claude-plugins-official) | **Keep in Claude Code**; re-authenticate its MCP | `figma-design-to-code` used 62× in 20 days: Figma designs are implemented in code. Still off on claude.ai (no use there) |
+| ponytail (DietrichGebert/ponytail) | Keep (user's choice) | Code-minimalism rules injected each turn; matches web-dev-standards. Avoid `ultra` mode on client sites |
+| impeccable | Keep (trial) | Installed 2026-10-22, telemetry off |
+| hyperframes (heygen-com) | Disable | 21 skills, never used; HTML-to-video, not daily work |
+| mattpocock-skills (claude-plugins-official) | Disable | 27 skills, one use (setup) in 9 days |
+| claude.ai-synced built-in skills in Claude Code (built-in-browser, chrome-browser, computer-use, deep-research, docs, docx, google-workspace, import-memory, morning, pdf, pptx, skill-creator, xlsx) | Disable per machine in `/skills` | Never used in Claude Code; ~2,370 tokens of listings every turn (Claude Code's own estimate). Stay on for claude.ai |
+| user-level copies of web-dev-standards / toolkit-maintainer | Disable in `/skills` | Duplicates of the claude.ai-synced `anthropic-skills:` versions |
+
 ## Archived 2026-10-22 (disabled, files in `archive/plugins/`)
 | Tool | Why |
 |---|---|
 | VectorLab UI/UX Skills | Product-UI rules conflicting with web-dev-standards (WCAG 2.1, SaaS look, page-pattern lock); 4 useful microcopy rules moved into web-dev-standards §3 |
 | frontend-design plugin | Identical to the built-in skill |
-| figma (plugin + connector) | Designs are made in code; Starter/View seat = 20 MCP reads/month |
+| figma (claude.ai plugin + connector) | Not used on claude.ai; the Claude Code install is kept (see above) |
 | github plugin | Inactive (needs PAT); `gh` CLI covers it |
 
 ## Watchlist

@@ -94,6 +94,11 @@ npx impeccable telemetry off
 
 Then inside Claude Code: `/plugin marketplace add pbakaus/impeccable`, and install **impeccable** from `/plugin`.
 
+**Figma** (you implement Figma designs): inside Claude Code run `/plugin`, install **figma** from
+`claude-plugins-official`, then select its MCP and sign in.
+
+**Ponytail** (optional, your choice): `/plugin marketplace add DietrichGebert/ponytail`, install it, and keep it on `lite` or `full`, not `ultra`, for client sites.
+
 **React projects only**, inside each project folder:
 
 ```bash
@@ -114,8 +119,8 @@ git clone https://github.com/EduardoBojer98/claude-setup ~/claude-setup
 
 ## 9. Don't install (retired 2026-10-22)
 
-VectorLab UI/UX Skills, the frontend-design plugin (it's built in), Figma plugin/MCP,
-GitHub plugin, hyperframes, ponytail, mattpocock-skills. Restore steps are in `archive/README.md`
+VectorLab UI/UX Skills, the frontend-design plugin (Impeccable covers it in Claude Code), the claude.ai Figma connector,
+GitHub plugin, hyperframes, mattpocock-skills. Restore steps are in `archive/README.md`
 if one is ever needed.
 
 ## 10. Check it worked
@@ -125,7 +130,10 @@ claude mcp list        # shopify-dev-mcp ✔ Connected, and playwright
 ```
 
 In Claude Code:
-- `/plugin`: A11y Enforcer, Perf Profiler, WordPress Dev Skills, playwright, searchfit-seo, caveman, impeccable, and nothing from section 9.
+- `/plugin`: A11y Enforcer, Perf Profiler, WordPress Dev Skills, playwright, searchfit-seo, caveman, impeccable, figma (+ ponytail if you use it), and nothing from section 9.
+- `/skills`: disable the claude.ai-synced skills you don't use in Claude Code (built-in-browser, chrome-browser,
+  computer-use, deep-research, docs, docx, google-workspace, import-memory, morning, pdf, pptx, skill-creator, xlsx).
+  They stay on for claude.ai. Keep exactly one `web-dev-standards` and one `toolkit-maintainer`.
 - `/context`: note the number for skills and tools. That's the baseline for the next toolkit review.
 
 Then tell Claude "check my Claude Code setup against SETUP-LINUX.md in claude-setup".
