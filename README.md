@@ -16,6 +16,7 @@ Last updated: 22 Oct 2026. Everything here is free to use (no paid plans or API 
 | `archive/` | Retired plugins, old skill versions and old scheduled-task prompts, with restore steps (`archive/README.md`). Never deleted. |
 | `templates/CLAUDE.md` | Starter project file for client repos. |
 | `SETUP-LINUX.md` | Clean Claude Code setup on a new Linux machine. |
+| `fallback/` | **ccfb**: keeps Claude Code working on free models when your Claude plan limit is reached, and switches back automatically. See [fallback/README.md](fallback/README.md). |
 | `skills/toolkit-maintainer/` | My own skill that reviews and updates this setup (see MAINTENANCE.md). |
 | `DECISIONS.md` / `CHANGELOG.md` | Why each tool is in or out; history of reviews. |
 | `manifest.json` | Exact list of skills, plugins (with directory names) and connectors, and which ones are on/off. |

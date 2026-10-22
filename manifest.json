@@ -139,9 +139,31 @@
     },
     {
       "name": "figma",
-      "kind": "mcp (http, user scope, WSL)",
-      "status": "archived 2026-10-22",
-      "restore": "claude mcp add --scope user --transport http figma https://mcp.figma.com/mcp"
+      "kind": "plugin (claude-plugins-official)",
+      "status": "kept 2026-10-22: 62 uses of figma-design-to-code in 20 days; MCP needs re-auth"
+    },
+    {
+      "name": "ponytail",
+      "kind": "plugin (DietrichGebert/ponytail)",
+      "status": "kept, user preference"
+    },
+    {
+      "name": "hyperframes",
+      "kind": "plugin (heygen-com/hyperframes)",
+      "status": "disable 2026-10-22 (never used)",
+      "restore": "/plugin → enable hyperframes"
+    },
+    {
+      "name": "mattpocock-skills",
+      "kind": "plugin (claude-plugins-official)",
+      "status": "disable 2026-10-22 (1 use in 9 days)",
+      "restore": "/plugin → enable mattpocock-skills"
+    },
+    {
+      "name": "ccfb",
+      "kind": "local gateway (this repo: fallback/)",
+      "status": "added 2026-10-22",
+      "install": "bash fallback/install.sh --settings; add keys to ~/.config/claude-fallback/.env; use claude-fb"
     }
   ]
 }
