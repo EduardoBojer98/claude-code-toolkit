@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-10-22: free-model fallback (ccfb)
+- New `fallback/`: local gateway that passes Claude Code traffic to Anthropic unchanged and, on a plan-limit 429, serves the same session from free models (OpenRouter, Gemini; Ollama/Cerebras optional), then returns to Claude after the reset.
+- `ccfb` CLI (run, status, doctor, models, handoff, resume, use-fallback), `claude-fb` launcher, `install.sh`, provider registry with sources, 43 tests (1 opt-in with the real Claude Code CLI).
+
 ## 2026-10-22: Claude Code review (WSL)
 - Figma kept in Claude Code (62 uses of design-to-code in 20 days); ponytail kept by preference; hyperframes and mattpocock-skills disabled.
 - 13 claude.ai-synced skills unused in Claude Code disabled per machine (~2,370 tokens a turn); duplicate user-level copies of own skills disabled.

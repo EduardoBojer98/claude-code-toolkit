@@ -158,6 +158,12 @@
       "kind": "plugin (claude-plugins-official)",
       "status": "disable 2026-10-22 (1 use in 9 days)",
       "restore": "/plugin → enable mattpocock-skills"
+    },
+    {
+      "name": "ccfb",
+      "kind": "local gateway (this repo: fallback/)",
+      "status": "added 2026-10-22",
+      "install": "bash fallback/install.sh --settings; add keys to ~/.config/claude-fallback/.env; use claude-fb"
     }
   ]
 }

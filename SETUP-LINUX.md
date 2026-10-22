@@ -117,6 +117,19 @@ git clone https://github.com/EduardoBojer98/claude-setup ~/claude-setup
 - New WordPress client site: copy the CodeMate starter (`github.com/EduardoBojer98/wordpress-starter`) and follow its `docs/new-project.md`.
 - Any other client project: copy `templates/CLAUDE.md` to the project root and fill it in.
 
+## 8b. Free-model fallback (ccfb)
+
+Keeps Claude Code going on free models when your plan limit is reached
+([fallback/README.md](fallback/README.md)).:
+
+```bash
+bash ~/claude-setup/fallback/install.sh --settings
+nano ~/.config/claude-fallback/.env      # add OPENROUTER_API_KEY and/or GEMINI_API_KEY (free)
+ccfb doctor
+```
+
+Then start Claude Code with `claude-fb` instead of `claude`.
+
 ## 9. Don't install (retired 2026-10-22)
 
 VectorLab UI/UX Skills, the frontend-design plugin (Impeccable covers it in Claude Code), the claude.ai Figma connector,

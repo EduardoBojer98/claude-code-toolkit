@@ -17,6 +17,15 @@ Free first; paid only with strong evidence (see MAINTENANCE.md). Retired tools a
 | caveman | Plugin (community) | Optional | Terse replies on request ("caveman mode"); kept by user preference, restored 2026-10-22. Only active when asked for | 2026-10-22 | — |
 | searchfit-seo | Plugin | Optional | SEO audits and schema; ignore its SearchFit.ai promotion lines | before 2026-10-16 | — |
 
+## Built 2026-10-22: free-model fallback (ccfb, `fallback/`)
+| Choice | Decision | Why |
+|---|---|---|
+| Approach | Local gateway via `ANTHROPIC_BASE_URL`; Claude passthrough, fallback only on plan-limit 429 | Documented subscription pass-through; same session continues; see fallback/DESIGN.md |
+| Implementation | Python standard library only | No dependencies to install or be compromised (the gateway sees the claude.ai token) |
+| Providers on by default | OpenRouter free models, Gemini free tier | Free, tool calling, large context; keys from the user |
+| Off by default | Cerebras (trial only), Ollama (local, opt-in) | Trial is not a permanent free tier; local depends on hardware |
+| Rejected | Groq (8K TPM free < one Claude Code request), LiteLLM (heavy; March 2026 PyPI compromise), claude-code-router as core (no plan-limit fallback/pass-through) | See DESIGN.md "Existing tools considered" |
+
 ## Adopted 2026-10-22 (installed by the user in Claude Code)
 | Tool | Kind | Role | Why | Condition |
 |---|---|---|---|---|

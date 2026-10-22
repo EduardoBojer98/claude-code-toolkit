@@ -1,0 +1,5 @@
+#!/usr/bin/env sh
+# Launch Claude Code through the ccfb fallback gateway. All arguments go to `claude`.
+# Example: claude-fb            claude-fb --continue            claude-fb -p "fix the build"
+DIR=$(dirname "$(readlink -f "$0" 2>/dev/null || echo "$0")")
+exec python3 "$DIR/ccfb" run -- "$@"
