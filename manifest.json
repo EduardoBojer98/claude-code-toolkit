@@ -122,8 +122,8 @@
     {
       "name": "shopify-dev-mcp",
       "kind": "mcp",
-      "install": "claude mcp add --scope user shopify-dev-mcp -- npx -y @shopify/dev-mcp@<pinned>",
-      "status": "adopted 2026-10-22"
+      "install": "claude mcp add --scope user --transport stdio shopify-dev-mcp -- npx -y @shopify/dev-mcp@1.17.0",
+      "status": "installed 2026-10-22, pinned 1.17.0, connected (WSL)"
     },
     {
       "name": "impeccable",
@@ -136,6 +136,12 @@
       "kind": "project skill",
       "install": "per React project",
       "status": "conditional"
+    },
+    {
+      "name": "figma",
+      "kind": "mcp (http, user scope, WSL)",
+      "status": "archived 2026-10-22",
+      "restore": "claude mcp add --scope user --transport http figma https://mcp.figma.com/mcp"
     }
   ]
 }
