@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-10-22: repo cleanup and review record
+- Merged all open work into `main` (fallback, Claude Code review).
+- Added `reviews/2026-10.md` (first review report); removed the 16 Oct status spreadsheet `docs/web-dev-toolkit.xlsx` (superseded by DECISIONS.md and the review; still in Git history).
+- `toolkit-maintainer` v1.2: checks local Claude Code tools and the fallback provider registry, runs the fallback tests; v1.1 archived.
+- Monthly review task prompt v3 (CodeMate starter, fallback re-check, local tools, open items); v2 archived.
+- README, MAINTENANCE (rule numbering), DECISIONS (standards v2.1, duplicate row) and manifest (skill versions/descriptions, connector status) made consistent.
+
 ## 2026-10-22: free-model fallback (ccfb)
 - New `fallback/`: local gateway that passes Claude Code traffic to Anthropic unchanged and, on a plan-limit 429, serves the same session from free models (OpenRouter, Gemini; Ollama/Cerebras optional), then returns to Claude after the reset.
 - `ccfb` CLI (run, status, doctor, models, handoff, resume, use-fallback), `claude-fb` launcher, `install.sh`, provider registry with sources, 43 tests (1 opt-in with the real Claude Code CLI).

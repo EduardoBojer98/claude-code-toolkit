@@ -9,15 +9,16 @@ This repo is kept current by the `toolkit-maintainer` skill (`skills/toolkit-mai
 
 ## Rules every review follows
 1. **Free first:** paid tools only with strong evidence; pricing is re-verified on the web each time, with the date.
-6. **Archive, never delete:** retired tools and old skill versions go to `archive/` with restore steps.
-2. **Better, not newer:** a candidate must beat the current tool for this work; ties keep the incumbent.
-3. **No overlap:** two tools for one job means one goes.
-4. **Every change has a source** and a click-by-click way to apply it.
-5. **You approve:** installs, removals and skill edits are shown first; Claude can't do them silently.
+2. **Archive, never delete:** retired tools and old skill versions go to `archive/` with restore steps.
+3. **Better, not newer:** a candidate must beat the current tool for this work; ties keep the incumbent.
+4. **No overlap:** two tools for one job means one goes.
+5. **Every change has a source** and a click-by-click way to apply it.
+6. **You approve:** installs, removals and skill edits are shown first; Claude can't do them silently.
 
 ## What gets updated
 - Tools: add / remove / update / watch (see `DECISIONS.md`)
-- `web-dev-standards`: facts and practices that changed (WordPress, PHP, theme.json, Next.js, React, Tailwind, WCAG, Core Web Vitals, CSS)
+- `web-dev-standards`: facts and practices that changed (WordPress, CodeMate starter, Elementor, ACF, Shopify, nopCommerce, PHP, React, Vite, Tailwind, WCAG, Core Web Vitals, CSS)
+- `fallback/config/providers.toml`: free-provider limits and models (each entry cites its source and date)
 - Snapshot of plugin files (`scripts/refresh-snapshot.sh`), `manifest.json`, `CHANGELOG.md`
 
 ## Approving a review

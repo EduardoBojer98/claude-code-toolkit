@@ -6,14 +6,14 @@
     {
       "name": "web-dev-standards",
       "path": "skills/web-dev-standards/SKILL.md",
-      "description": "Personal web dev standards for every website, theme, plugin or web app built for this user (WordPress block/classic themes, plugins, WooCommerce, HTML/CSS/JS, React, Next.js, Tailwind, SCSS). Use on ANY web project, page, component, theme or code review, even when not named.",
-      "version": "2.0"
+      "description": "Personal web design and development standards and routing for this user's client work - design direction, accessibility, performance, security, Definition of Done, and stack rules for WordPress (CodeMate starter with SCF sections, block themes, Elementor, ACF, WooCommerce), Shopify (Liquid, metafields, metaobjects), nopCommerce (.NET plugins), React + Vite + TypeScript + Tailwind, and plain HTML/CSS/JS. Use when building, designing, fixing or reviewing a website, theme, plugin, store or web app.",
+      "version": "2.1"
     },
     {
       "name": "toolkit-maintainer",
       "path": "skills/toolkit-maintainer/SKILL.md",
-      "description": "Review and update the user's Claude web-dev toolkit and its claude-setup backup repo.",
-      "version": "1.1"
+      "description": "Review and update the user's Claude web design and development toolkit and its claude-setup backup and archive repo. Use when asked to review, update, maintain, audit, archive, restore or back up skills, plugins or connectors, on the scheduled monthly review, or when the user asks \"is there something better\".",
+      "version": "1.2"
     }
   ],
   "plugins": [
@@ -109,12 +109,14 @@
     {
       "name": "Context7",
       "purpose": "Up-to-date library docs",
-      "auth": "free Context7 account (1,000 requests/month)"
+      "auth": "free Context7 account (1,000 requests/month)",
+      "status": "connected"
     },
     {
       "name": "Figma",
-      "purpose": "Figma files (optional)",
-      "auth": "Figma account"
+      "purpose": "Figma files (used from Claude Code via the figma plugin)",
+      "auth": "Figma account",
+      "status": "disconnected on claude.ai 2026-10-22"
     }
   ],
   "builtInSkillsNotBackedUp": "docs, docx, xlsx, pptx, pdf, skill-creator, deep-research, chrome-browser, built-in-browser, computer-use, google-workspace, import-memory, morning - these come with every Claude account.",

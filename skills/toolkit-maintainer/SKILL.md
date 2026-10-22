@@ -5,7 +5,7 @@ description: Review and update the user's Claude web design and development tool
 
 # Toolkit maintainer
 
-_Version 1.1 · 2026-10-22 (v1.0 in archive/)_
+_Version 1.2 · 2026-10-22 (v1.0 in archive/)_
 
 Keeps the user's web-dev setup current: finds better free tools, retires weak or newly-paid ones,
 archives what is retired, refreshes the `web-dev-standards` skill with current best practice, and records every decision in the
@@ -20,7 +20,7 @@ The repo is the memory. Read it first, update it last.
 - **Archive, never delete.** Before anything is disabled or rewritten, copy it into `archive/` (plugins, skill versions,
   scheduled-task prompts), verify the copy with `diff -r`/`cmp`, and add a row to `archive/README.md`. Nothing in `archive/` is ever removed.
 - **Better, not newer.** Replace a tool only when the candidate is clearly better for this user's work
-  (WordPress with block themes, Elementor, ACF and WooCommerce; Shopify themes, metafields, metaobjects and migrations; nopCommerce/.NET plugins; React + Vite + TypeScript + Tailwind; plain HTML/CSS/JS; designs in code).
+  (WordPress client sites on the CodeMate starter, plus block themes, Elementor, ACF and WooCommerce; Shopify themes, metafields, metaobjects and migrations; nopCommerce/.NET plugins; React + Vite + TypeScript + Tailwind; plain HTML/CSS/JS; designs in code).
   Ties keep the incumbent. Avoid overlap: two tools doing the same job is a removal candidate.
 - **The user approves changes to their account.** Claude cannot install, uninstall or toggle plugins/connectors itself, or save
   skills directly: installs go through `SuggestPluginInstall` / `SuggestConnectors` cards, removals are
@@ -38,6 +38,7 @@ The repo is the memory. Read it first, update it last.
 | `skills/<name>/SKILL.md` | Source of truth for the user's own skills |
 | `archive/` | Retired plugins, old skill versions, old scheduled-task prompts + `README.md` index with restore steps |
 | `templates/CLAUDE.md` | Starter project file for client repos |
+| `fallback/` | ccfb free-model fallback for Claude Code; `config/providers.toml` lists free providers with sources |
 | `plugins/<name>/` | Snapshot of enabled plugin files (fallback if one vanishes from the directory) |
 | `scripts/refresh-snapshot.sh` | Re-copies plugin + skill files from this session into the repo |
 | `reviews/YYYY-MM.md` | Full report of each review |
@@ -57,6 +58,17 @@ For each enabled tool:
 - Still free? (re-verify anything on the `DECISIONS.md` watchlist, e.g. Context7's free tier)
 - Still maintained? (directory `updated_at`, version vs. the snapshot, upstream repo activity)
 - Still earning its place? (used in recent work, not duplicated by something better)
+
+Also re-check `manifest.json` → `localClaudeCode` (tools installed in Claude Code on the user's computer:
+Shopify Dev MCP, Impeccable, figma, ponytail, …). A cloud run can't see that machine: research new
+versions, security notices and pricing changes only, and list what the user should check with `/plugin`.
+Open items from the latest `reviews/` file (e.g. the Impeccable trial result) go into the report as questions.
+
+### 3b. Free-model fallback (ccfb)
+Re-verify every provider and model in `fallback/config/providers.toml` against its cited source: free
+terms (requests/tokens per minute/day, trial vs. permanent), model still offered, tool calling, context.
+Update entries with the new source and date; mark a provider `incompatible_reason` or `enabled = false`
+when it no longer fits. Then run `bash fallback/run-tests.sh` and include the result in the report.
 
 ### 4. Discover candidates
 Search in parallel:
@@ -98,7 +110,8 @@ Write `reviews/YYYY-MM.md` with:
 **User is present:** walk through the changes: show install cards, give removal clicks, call `propose_skills`
 with the full updated SKILL.md files, wait, then confirm with `ListPlugins` / `ListSkills` / `ListConnectors`.
 **Unattended (scheduled run):** apply nothing to the account. Commit the report and proposed skill files on a branch
-`review/YYYY-MM`, open a PR, and send the user a short message: what's recommended and that the PR is ready.
+`review/YYYY-MM`, open a PR (if that isn't possible, push the branch and give the compare link
+`https://github.com/<repo>/pull/new/review/YYYY-MM`), and send the user a short message: what's recommended and the link.
 
 ### 9. Update the repo
 After changes are confirmed (or on the review branch if unattended):

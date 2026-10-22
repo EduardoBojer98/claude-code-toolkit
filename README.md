@@ -1,9 +1,10 @@
 # Claude setup backup
 
-My Claude skills, plugins and connectors for web development (WordPress + custom projects),
-so I can restore the same setup on a new machine, OS or account.
+My Claude skills, plugins, connectors and Claude Code setup for client web work (WordPress with
+the CodeMate starter, Elementor and ACF; Shopify; nopCommerce; React + Vite), so the same setup can
+be restored on a new machine, OS or account, and kept current by a monthly review.
 
-Last updated: 22 Oct 2026. Everything here is free to use (no paid plans or API keys).
+Last updated: 22 Oct 2026. Everything here is free to use (no paid plans or paid API keys).
 
 **New Linux machine?** Follow [SETUP-LINUX.md](SETUP-LINUX.md).
 
@@ -11,16 +12,18 @@ Last updated: 22 Oct 2026. Everything here is free to use (no paid plans or API 
 
 | Folder / file | Contents |
 |---|---|
-| `skills/web-dev-standards/` | **My own skill** — design, code, WordPress, accessibility, performance, SEO, security standards and the Definition of Done checklist. This is the important one. |
-| `plugins/` | Snapshot of every enabled plugin's files (skills, commands, MCP configs) at backup time. |
-| `archive/` | Retired plugins, old skill versions and old scheduled-task prompts, with restore steps (`archive/README.md`). Never deleted. |
-| `templates/CLAUDE.md` | Starter project file for client repos. |
+| `skills/web-dev-standards/` | **My own skill** (v2.1): design, code, platform rules per stack, accessibility, performance, SEO, security and the Definition of Done. The important one. |
+| `skills/toolkit-maintainer/` | My own skill that reviews and updates this setup ([MAINTENANCE.md](MAINTENANCE.md)). |
+| `fallback/` | **ccfb**: keeps Claude Code working on free models when the Claude plan limit is reached, then switches back. [fallback/README.md](fallback/README.md) |
 | `SETUP-LINUX.md` | Clean Claude Code setup on a new Linux machine. |
-| `fallback/` | **ccfb**: keeps Claude Code working on free models when your Claude plan limit is reached, and switches back automatically. See [fallback/README.md](fallback/README.md). |
-| `skills/toolkit-maintainer/` | My own skill that reviews and updates this setup (see MAINTENANCE.md). |
-| `DECISIONS.md` / `CHANGELOG.md` | Why each tool is in or out; history of reviews. |
-| `manifest.json` | Exact list of skills, plugins (with directory names) and connectors, and which ones are on/off. |
-| `docs/web-dev-toolkit.xlsx` | What each tool is for, example prompts, next steps. |
+| `templates/CLAUDE.md` | Starter project file for client repos (WordPress sites use the CodeMate starter's own). |
+| `DECISIONS.md` | Why each tool is in, archived, watched or skipped, with sources and re-check dates. |
+| `reviews/` | One report per toolkit review (`YYYY-MM.md`). |
+| `CHANGELOG.md` | What changed and when. |
+| `manifest.json` | Machine-readable list of skills, plugins, connectors and local Claude Code tools, with status. |
+| `plugins/` | Snapshot of every enabled plugin's files, a fallback if one leaves the directory. |
+| `archive/` | Retired plugins, old skill versions and old task prompts, with restore steps. Never deleted. |
+| `scripts/refresh-snapshot.sh` | Refreshes `plugins/` from a Claude session; moves no-longer-enabled plugins to `archive/`. |
 
 Plugins are third-party, open-licensed (see each folder's `LICENSE`). The copies are a fallback;
 installing the current version from the plugin directory is preferred, since it gets updates.
@@ -47,10 +50,14 @@ If a plugin disappears from the directory, upload its folder from `plugins/` as 
 
 ### 3. Connectors
 - **Context7**: connect from the connector directory, sign in with a free account.
-- **GitHub**: after installing the github plugin, click Connect → sign in → Authorize.
-- **Figma** (optional).
+- **Figma**: not on claude.ai (archived); used in Claude Code through its plugin (see SETUP-LINUX.md).
+- **GitHub**: use the `gh` command line tool; the GitHub plugin is archived.
 
-### 4. Check it works
+### 4. Claude Code on a computer
+Follow [SETUP-LINUX.md](SETUP-LINUX.md): local tools (Shopify Dev MCP, Impeccable, Figma, optional
+Ponytail), the free-model fallback, and which synced skills to switch off in Claude Code.
+
+### 5. Check it works
 Ask: *"List my skills, plugins and connectors and test that Context7 and Playwright respond."*
 
 ## Updating this backup

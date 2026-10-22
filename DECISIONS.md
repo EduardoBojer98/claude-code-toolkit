@@ -6,7 +6,7 @@ Free first; paid only with strong evidence (see MAINTENANCE.md). Retired tools a
 ## In (enabled)
 | Tool | Kind | Role | Why | Added | Re-check |
 |---|---|---|---|---|---|
-| web-dev-standards v2.0 | Own skill | Core | Standards, routing per stack, Definition of Done | 2026-10-16 (v2 2026-10-22) | every review |
+| web-dev-standards v2.1 | Own skill | Core | Standards, routing per stack (incl. CodeMate starter), Definition of Done | 2026-10-16 (v2.1 2026-10-22) | every review |
 | toolkit-maintainer v1.1 | Own skill | Maintenance | Runs reviews, archives retired tools | 2026-10-16 (v1.1 2026-10-22) | every review |
 | frontend-design (built-in) | Built-in skill | Core | Visual direction on new pages | built-in | — |
 | Context7 | Connector | Core | Current docs; pinned IDs for Elementor, ACF, nopCommerce | 2026-10-16 | **free tier (watchlist)** |
@@ -38,7 +38,6 @@ Free first; paid only with strong evidence (see MAINTENANCE.md). Retired tools a
 |---|---|---|
 | figma (claude-plugins-official) | **Keep in Claude Code**; re-authenticate its MCP | `figma-design-to-code` used 62× in 20 days: Figma designs are implemented in code. Still off on claude.ai (no use there) |
 | ponytail (DietrichGebert/ponytail) | Keep (user's choice) | Code-minimalism rules injected each turn; matches web-dev-standards. Avoid `ultra` mode on client sites |
-| impeccable | Keep (trial) | Installed 2026-10-22, telemetry off |
 | hyperframes (heygen-com) | Disable | 21 skills, never used; HTML-to-video, not daily work |
 | mattpocock-skills (claude-plugins-official) | Disable | 27 skills, one use (setup) in 9 days |
 | claude.ai-synced built-in skills in Claude Code (built-in-browser, chrome-browser, computer-use, deep-research, docs, docx, google-workspace, import-memory, morning, pdf, pptx, skill-creator, xlsx) | Disable per machine in `/skills` | Never used in Claude Code; ~2,370 tokens of listings every turn (Claude Code's own estimate). Stay on for claude.ai |
