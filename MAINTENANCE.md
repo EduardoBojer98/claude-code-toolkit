@@ -8,7 +8,8 @@ This repo is kept current by the `toolkit-maintainer` skill (`skills/toolkit-mai
 - **On demand:** ask Claude *"review my toolkit"* or *"is there something better than X?"*.
 
 ## Rules every review follows
-1. **Free only:** pricing is re-verified on the web each time, with the date.
+1. **Free first:** paid tools only with strong evidence; pricing is re-verified on the web each time, with the date.
+6. **Archive, never delete:** retired tools and old skill versions go to `archive/` with restore steps.
 2. **Better, not newer:** a candidate must beat the current tool for this work; ties keep the incumbent.
 3. **No overlap:** two tools for one job means one goes.
 4. **Every change has a source** and a click-by-click way to apply it.

@@ -12,6 +12,24 @@ SKIP="brightdata-plugin"
 
 [[ -n "$PLUG_SRC" ]] || { echo "No synced plugins found - run this inside a Claude session." >&2; exit 1; }
 
+# Safety: archive/ is never touched by this script. Before plugins/ is rebuilt, any snapshot
+# whose plugin is no longer enabled is moved to archive/plugins/ instead of being lost.
+mkdir -p "$REPO/archive/plugins"
+live_names=""
+for dir in "$PLUG_SRC"*/; do
+  m="$dir.claude-plugin/plugin.json"
+  [[ -f "$m" ]] && live_names+=" $(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["name"])' "$m") "
+done
+for snap in "$REPO"/plugins/*/; do
+  [[ -d "$snap" ]] || continue
+  n="$(basename "$snap")"
+  case "$live_names" in *" $n "*) continue ;; esac
+  if [[ ! -d "$REPO/archive/plugins/$n" ]]; then
+    mv "$snap" "$REPO/archive/plugins/$n"
+    echo "ARCHIVED: $n is no longer enabled; its snapshot moved to archive/plugins/$n (add it to archive/README.md)."
+  fi
+done
+
 # Map each synced plugin folder to a readable name using its plugin.json "name".
 rm -rf "$REPO/plugins"
 mkdir -p "$REPO/plugins"
