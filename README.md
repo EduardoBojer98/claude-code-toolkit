@@ -38,8 +38,8 @@ Manual: zip the `skills/web-dev-standards` folder and upload it in **Settings �
 ### 2. Plugins
 Ask Claude: *"Install the plugins listed in manifest.json of my claude-setup repo"* — it will show install cards.
 Or install each by name from the plugin directory (names in `manifest.json` → `directoryName`):
-WordPress Dev Skills, playwright, A11y Enforcer, Perf Profiler, searchfit-seo.
-Retired ones (frontend-design plugin, caveman, figma, github, VectorLab) stay off; see `archive/README.md`. Leave **brightdata-plugin** off.
+WordPress Dev Skills, playwright, A11y Enforcer, Perf Profiler, searchfit-seo, caveman.
+Retired ones (frontend-design plugin, figma, github, VectorLab) stay off; see `archive/README.md`. Leave **brightdata-plugin** off.
 
 If a plugin disappears from the directory, upload its folder from `plugins/` as a custom plugin
 (zip the folder; ask Claude to help with the cowork-plugin skill).

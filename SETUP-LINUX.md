@@ -9,8 +9,8 @@ _Last checked: 2026-10-22._
 ## 0. What needs nothing
 
 Signing in to claude.ai brings everything account-level with it, on any OS:
-your skills (`web-dev-standards`, `toolkit-maintainer`), the 5 active plugins (A11y Enforcer,
-Perf Profiler, WordPress Dev Skills, Playwright, searchfit-seo), the Context7 connector and the
+your skills (`web-dev-standards`, `toolkit-maintainer`), the 6 active plugins (A11y Enforcer,
+Perf Profiler, WordPress Dev Skills, Playwright, searchfit-seo, caveman), the Context7 connector and the
 "Monthly toolkit review" scheduled task. Plugins also sync into Claude Code once you log in there.
 
 ## 1. Base packages
@@ -114,7 +114,7 @@ git clone https://github.com/EduardoBojer98/claude-setup ~/claude-setup
 
 ## 9. Don't install (retired 2026-10-22)
 
-caveman, VectorLab UI/UX Skills, the frontend-design plugin (it's built in), Figma plugin/MCP,
+VectorLab UI/UX Skills, the frontend-design plugin (it's built in), Figma plugin/MCP,
 GitHub plugin, hyperframes, ponytail, mattpocock-skills. Restore steps are in `archive/README.md`
 if one is ever needed.
 
@@ -125,7 +125,7 @@ claude mcp list        # shopify-dev-mcp ✔ Connected, and playwright
 ```
 
 In Claude Code:
-- `/plugin`: A11y Enforcer, Perf Profiler, WordPress Dev Skills, playwright, searchfit-seo, impeccable, and nothing from section 9.
+- `/plugin`: A11y Enforcer, Perf Profiler, WordPress Dev Skills, playwright, searchfit-seo, caveman, impeccable, and nothing from section 9.
 - `/context`: note the number for skills and tools. That's the baseline for the next toolkit review.
 
 Then tell Claude "check my Claude Code setup against SETUP-LINUX.md in claude-setup".
