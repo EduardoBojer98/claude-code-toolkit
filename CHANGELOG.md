@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-10-22: web-dev-standards 2.1
+- WordPress client sites start from the CodeMate starter (classic theme, SCF page sections, runtime CSS tokens, Lando); its `AGENTS.md` and ADR 0001 rule there. Block themes only when the Site Editor or native blocks are needed; Elementor + ACF rules apply to existing sites built that way.
+- Replaces PR #1 (written against v1.0, which v2.0 replaced); its intent is carried over in full.
+
 ## 2026-10-22: lean design + engineering setup
 - Added `archive/` (never deleted): VectorLab UI/UX Skills (first backup; it had been enabled outside a review), frontend-design plugin copy, caveman, figma, github; v1.0 of both own skills; the monthly task prompt. All copies verified identical to the live versions.
 - `scripts/refresh-snapshot.sh` now moves snapshots of no-longer-enabled plugins to `archive/plugins/` instead of deleting them.
