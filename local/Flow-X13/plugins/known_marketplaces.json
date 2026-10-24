@@ -1,0 +1,42 @@
+{
+  "claude-plugins-official": {
+    "source": {
+      "source": "github",
+      "repo": "anthropics/claude-plugins-official"
+    },
+    "installLocation": "/home/flowx13/.claude/plugins/marketplaces/claude-plugins-official",
+    "lastUpdated": "2026-10-22T17:45:24.207Z"
+  },
+  "hyperframes": {
+    "source": {
+      "source": "github",
+      "repo": "heygen-com/hyperframes"
+    },
+    "installLocation": "/home/flowx13/.claude/plugins/marketplaces/hyperframes",
+    "lastUpdated": "2026-10-13T11:37:10.365Z"
+  },
+  "ponytail": {
+    "source": {
+      "source": "github",
+      "repo": "DietrichGebert/ponytail"
+    },
+    "installLocation": "/home/flowx13/.claude/plugins/marketplaces/ponytail",
+    "lastUpdated": "2026-10-16T09:36:52.002Z"
+  },
+  "impeccable": {
+    "source": {
+      "source": "github",
+      "repo": "pbakaus/impeccable"
+    },
+    "installLocation": "/home/flowx13/.claude/plugins/marketplaces/impeccable",
+    "lastUpdated": "2026-10-22T18:05:32.819Z"
+  },
+  "claude-setup": {
+    "source": {
+      "source": "github",
+      "repo": "EduardoBojer98/claude-setup"
+    },
+    "installLocation": "/home/flowx13/.claude/plugins/marketplaces/claude-setup",
+    "lastUpdated": "2026-10-24T09:21:48.137Z"
+  }
+}

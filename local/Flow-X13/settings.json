@@ -1,0 +1,46 @@
+{
+  "enabledPlugins": {
+    "figma@claude-plugins-official": true,
+    "mattpocock-skills@claude-plugins-official": true,
+    "hyperframes@hyperframes": true,
+    "ponytail@ponytail": true,
+    "impeccable@impeccable": true,
+    "session-dashboard@claude-setup": true
+  },
+  "extraKnownMarketplaces": {
+    "hyperframes": {
+      "source": {
+        "source": "github",
+        "repo": "heygen-com/hyperframes"
+      }
+    },
+    "ponytail": {
+      "source": {
+        "source": "github",
+        "repo": "DietrichGebert/ponytail"
+      }
+    },
+    "impeccable": {
+      "source": {
+        "source": "github",
+        "repo": "pbakaus/impeccable"
+      }
+    },
+    "claude-setup": {
+      "source": {
+        "source": "github",
+        "repo": "EduardoBojer98/claude-setup"
+      }
+    }
+  },
+  "effortLevel": "xhigh",
+  "pluginConfigs": {
+    "ponytail@ponytail": {
+      "options": {
+        "ledger": true,
+        "sendNames": true
+      }
+    }
+  },
+  "theme": "dark"
+}
