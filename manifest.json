@@ -131,7 +131,8 @@
       "name": "impeccable",
       "kind": "plugin",
       "install": "/plugin marketplace add pbakaus/impeccable",
-      "status": "trial 2026-10-22, telemetry off"
+      "status": "trial 2026-10-22, telemetry off",
+      "version": "4.7.0"
     },
     {
       "name": "vercel react-best-practices",
@@ -142,24 +143,30 @@
     {
       "name": "figma",
       "kind": "plugin (claude-plugins-official)",
-      "status": "kept 2026-10-22: 62 uses of figma-design-to-code in 20 days; MCP needs re-auth"
+      "status": "kept 2026-10-22: 62 uses of figma-design-to-code in 20 days; MCP needs re-auth",
+      "version": "2.2.157"
     },
     {
       "name": "ponytail",
       "kind": "plugin (DietrichGebert/ponytail)",
-      "status": "kept, user preference"
+      "status": "kept, user preference",
+      "version": "5.3.0"
     },
     {
       "name": "hyperframes",
       "kind": "plugin (heygen-com/hyperframes)",
       "status": "disable 2026-10-22 (never used)",
-      "restore": "/plugin → enable hyperframes"
+      "restore": "/plugin → enable hyperframes",
+      "version": "0.8.152",
+      "drift": "still enabled in settings.json on Flow-X13 (2026-10-24), though marked disabled 2026-10-22"
     },
     {
       "name": "mattpocock-skills",
       "kind": "plugin (claude-plugins-official)",
       "status": "disable 2026-10-22 (1 use in 9 days)",
-      "restore": "/plugin → enable mattpocock-skills"
+      "restore": "/plugin → enable mattpocock-skills",
+      "version": "1.3.1",
+      "drift": "still enabled in settings.json on Flow-X13 (2026-10-24), though marked disabled 2026-10-22"
     },
     {
       "name": "ccfb",
@@ -181,6 +188,6 @@
     "script": "scripts/sync-local.sh",
     "folder": "local/<machine>/",
     "run": "bash scripts/sync-local.sh --push (in WSL / on the laptop)",
-    "status": "added 2026-10-24, not run yet"
+    "status": "last run 2026-10-24 on Flow-X13 (Claude Code 2.1.308)"
   }
 }

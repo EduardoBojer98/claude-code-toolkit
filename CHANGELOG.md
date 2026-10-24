@@ -3,6 +3,7 @@
 ## 2026-10-24: sync + local Claude Code backup
 - Synced with claude.ai: 6 plugins, 2 own skills and connectors match the manifest; plugin snapshots and own skills unchanged (no drift).
 - New `scripts/sync-local.sh`: copies the Claude Code setup of the machine it runs on (settings, global CLAUDE.md, installed plugins and marketplaces, user MCP servers, own agents/commands/hooks/skills, status line) into `local/<machine>/`, with secrets redacted and a guard that stops on anything that looks like a live key. `--push` commits and pushes.
+- First local sync from Flow-X13 (WSL). Claude Code 2.1.308; plugins figma 2.2.157, impeccable 4.7.0, ponytail 5.3.0, session-dashboard 0.1.0; MCP shopify-dev-mcp 1.17.0. Drift: hyperframes and mattpocock-skills are still enabled there. `sync-local.sh` now skips the downloaded claude.ai built-in skills (`skills/synced/`).
 
 ## 2026-10-24: session-dashboard mod
 - New `mods/session-dashboard/` (v0.1.0): Claude Code mod with a band above the prompt and a `/dash` panel (tokens, estimated cost, time, context, tool calls, files edited), optional cost alert. Modeled on savvy-progress (claude-kit, MIT).

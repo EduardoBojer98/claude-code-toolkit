@@ -72,6 +72,8 @@ for d in agents commands hooks skills output-styles; do
   for item in "$SRC/$d"/*; do
     [[ -e "$item" || -L "$item" ]] || continue
     name="$(basename "$item")"
+    # synced/ = claude.ai built-in skills Claude Code downloads; not ours, not backed up.
+    [[ "$d/$name" == "skills/synced" ]] && continue
     if [[ -L "$item" ]]; then
       echo "$name -> $(readlink "$item")" >> "$OUT/$d/_symlinks.txt"
     else

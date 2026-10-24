@@ -8,7 +8,7 @@ Claude Code: 2.1.308 (Claude Code)
 - plugins/installed_plugins.json
 - plugins/known_marketplaces.json
 - mcp-servers.json
-- skills/
+- skills/ (own skills are symlinks to this repo, see _symlinks.txt)
 
 ## MCP servers (claude mcp list)
 ```
