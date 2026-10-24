@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-10-24: sync + local Claude Code backup
+- Synced with claude.ai: 6 plugins, 2 own skills and connectors match the manifest; plugin snapshots and own skills unchanged (no drift).
+- New `scripts/sync-local.sh`: copies the Claude Code setup of the machine it runs on (settings, global CLAUDE.md, installed plugins and marketplaces, user MCP servers, own agents/commands/hooks/skills, status line) into `local/<machine>/`, with secrets redacted and a guard that stops on anything that looks like a live key. `--push` commits and pushes.
+
 ## 2026-10-24: session-dashboard mod
 - New `mods/session-dashboard/` (v0.1.0): Claude Code mod with a band above the prompt and a `/dash` panel (tokens, estimated cost, time, context, tool calls, files edited), optional cost alert. Modeled on savvy-progress (claude-kit, MIT).
 - Repo is now a plugin marketplace (`.claude-plugin/marketplace.json`) so own mods install with `/plugin install <mod> --marketplace EduardoBojer98/claude-setup`. Mods stay out of `plugins/`, which `refresh-snapshot.sh` rebuilds.

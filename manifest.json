@@ -1,6 +1,6 @@
 {
   "repo": "EduardoBojer98/claude-setup",
-  "backedUp": "2026-10-22",
+  "backedUp": "2026-10-24",
   "account": "claude.ai",
   "customSkills": [
     {
@@ -176,5 +176,11 @@
       "install": "/plugin install session-dashboard --marketplace EduardoBojer98/claude-setup",
       "status": "enabled"
     }
-  ]
+  ],
+  "localSync": {
+    "script": "scripts/sync-local.sh",
+    "folder": "local/<machine>/",
+    "run": "bash scripts/sync-local.sh --push (in WSL / on the laptop)",
+    "status": "added 2026-10-24, not run yet"
+  }
 }

@@ -17,6 +17,7 @@ Last updated: 22 Oct 2026. Everything here is free to use (no paid plans or paid
 | `mods/session-dashboard/` | **My own Claude Code mod**: band above the prompt and a `/dash` panel with tokens, estimated cost, time, context, tools and files edited. [README](mods/session-dashboard/README.md) |
 | `fallback/` | **ccfb**: keeps Claude Code working on free models when the Claude plan limit is reached, then switches back. [fallback/README.md](fallback/README.md) |
 | `SETUP-LINUX.md` | Clean Claude Code setup on a new Linux machine. |
+| `local/<machine>/` | Claude Code setup of each machine (settings, plugins, MCP, CLAUDE.md), written by `scripts/sync-local.sh`, secrets redacted. |
 | `templates/CLAUDE.md` | Starter project file for client repos (WordPress sites use the CodeMate starter's own). |
 | `DECISIONS.md` | Why each tool is in, archived, watched or skipped, with sources and re-check dates. |
 | `reviews/` | One report per toolkit review (`YYYY-MM.md`). |
