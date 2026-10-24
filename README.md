@@ -14,6 +14,7 @@ Last updated: 22 Oct 2026. Everything here is free to use (no paid plans or paid
 |---|---|
 | `skills/web-dev-standards/` | **My own skill** (v2.1): design, code, platform rules per stack, accessibility, performance, SEO, security and the Definition of Done. The important one. |
 | `skills/toolkit-maintainer/` | My own skill that reviews and updates this setup ([MAINTENANCE.md](MAINTENANCE.md)). |
+| `mods/session-dashboard/` | **My own Claude Code mod**: band above the prompt and a `/dash` panel with tokens, estimated cost, time, context, tools and files edited. [README](mods/session-dashboard/README.md) |
 | `fallback/` | **ccfb**: keeps Claude Code working on free models when the Claude plan limit is reached, then switches back. [fallback/README.md](fallback/README.md) |
 | `SETUP-LINUX.md` | Clean Claude Code setup on a new Linux machine. |
 | `templates/CLAUDE.md` | Starter project file for client repos (WordPress sites use the CodeMate starter's own). |
@@ -57,7 +58,14 @@ If a plugin disappears from the directory, upload its folder from `plugins/` as 
 Follow [SETUP-LINUX.md](SETUP-LINUX.md): local tools (Shopify Dev MCP, Impeccable, Figma, optional
 Ponytail), the free-model fallback, and which synced skills to switch off in Claude Code.
 
-### 5. Check it works
+### 5. Claude Code mods
+Own mods live in `mods/`; this repo is their marketplace (`.claude-plugin/marketplace.json`). In a terminal Claude Code session:
+```
+/plugin install session-dashboard --marketplace EduardoBojer98/claude-setup
+```
+The repo is private, so run `gh auth login` and `gh auth setup-git` on the machine first.
+
+### 6. Check it works
 Ask: *"List my skills, plugins and connectors and test that Context7 and Playwright respond."*
 
 ## Updating this backup

@@ -167,5 +167,14 @@
       "status": "added 2026-10-22",
       "install": "bash fallback/install.sh --settings; add keys to ~/.config/claude-fallback/.env; use claude-fb"
     }
+  ],
+  "ownMods": [
+    {
+      "name": "session-dashboard",
+      "path": "mods/session-dashboard",
+      "version": "0.1.0",
+      "install": "/plugin install session-dashboard --marketplace EduardoBojer98/claude-setup",
+      "status": "enabled"
+    }
   ]
 }

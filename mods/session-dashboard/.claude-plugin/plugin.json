@@ -1,0 +1,27 @@
+{
+  "name": "session-dashboard",
+  "version": "0.1.0",
+  "description": "A band above the prompt and a /dashboard panel: tokens, estimated cost, time, context, tool calls and files edited this session.",
+  "author": {
+    "name": "EduardoBojer98",
+    "url": "https://github.com/EduardoBojer98"
+  },
+  "types": "./types/index.d.ts",
+  "userConfig": {
+    "band": {
+      "type": "string",
+      "title": "Band above the prompt",
+      "description": "on: show the one-line summary above the prompt; off: only the /dashboard panel",
+      "default": "on",
+      "options": ["on", "off"]
+    },
+    "budget": {
+      "type": "string",
+      "title": "Cost alert (USD)",
+      "description": "Show a toast once the session's estimated cost passes this amount",
+      "default": "none",
+      "options": ["none", "1", "2", "5", "10", "25"]
+    }
+  },
+  "license": "MIT"
+}

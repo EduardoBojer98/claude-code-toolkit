@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-10-24: session-dashboard mod
+- New `mods/session-dashboard/` (v0.1.0): Claude Code mod with a band above the prompt and a `/dash` panel (tokens, estimated cost, time, context, tool calls, files edited), optional cost alert. Modeled on savvy-progress (claude-kit, MIT).
+- Repo is now a plugin marketplace (`.claude-plugin/marketplace.json`) so own mods install with `/plugin install <mod> --marketplace EduardoBojer98/claude-setup`. Mods stay out of `plugins/`, which `refresh-snapshot.sh` rebuilds.
+
 ## 2026-10-22: repo cleanup and review record
 - Merged all open work into `main` (fallback, Claude Code review).
 - Added `reviews/2026-10.md` (first review report); removed the 16 Oct status spreadsheet `docs/web-dev-toolkit.xlsx` (superseded by DECISIONS.md and the review; still in Git history).
