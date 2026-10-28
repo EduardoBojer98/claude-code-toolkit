@@ -6,6 +6,7 @@
 - Installed plugins: figma, impeccable (telemetry off), session-dashboard, ponytail (ledger on, no webhook).
 - WordPress Dev Skills v1.3.0 was disabled (missing dependency); installed `wordpress-official-agent-skills` 1.0.0 on approval, so it loads again (+3.6k tokens/request).
 - WordPress Dev Skills and its dependency scoped to WordPress projects: off in user settings, on per project with the new `claude-code/enable-plugins.sh wordpress <dir>` (also `seo` for searchfit-seo). Saves ~3.6k tokens/request elsewhere.
+- Figma plugin off by default (used rarely, accounts switch per job): enable when needed (`claude plugin enable figma@claude-plugins-official` or `enable-plugins.sh figma <dir>`), sign in via `/mcp` then. Skills listing 6.4k → 4k.
 - Context: skills listing 3.2k → 6.4k with the new plugins, 10k with the WordPress plugins (BENCHMARKS.md).
 
 ## 2026-10-28: Claude Code layer, model routing, CachyOS

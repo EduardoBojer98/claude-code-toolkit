@@ -142,7 +142,8 @@
   "enabledPlugins": {
     "searchfit-seo@synced": false,
     "wp-dev-skills@synced": false,
-    "wordpress-official-agent-skills@wordpress-official-agent-skills": false
+    "wordpress-official-agent-skills@wordpress-official-agent-skills": false,
+    "figma@claude-plugins-official": false
   },
   "skillOverrides": {
     "morning": "off",

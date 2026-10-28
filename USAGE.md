@@ -54,7 +54,7 @@ Force a route when you want one:
   bash ~/Documents/projects/claude-setup/claude-code/enable-plugins.sh seo ~/path/to/site
   ```
 
-  `wordpress` = WordPress Dev Skills + wordpress-official-agent-skills (~3.6k tokens/request), `seo` = searchfit-seo.
+  `wordpress` = WordPress Dev Skills + wordpress-official-agent-skills (~3.6k tokens/request), `seo` = searchfit-seo, `figma` = Figma plugin (~2.4k).
   Add a profile by editing `PROFILES` in that script.
 
 ## Swap in a better tool (example: a design skill)
@@ -88,5 +88,6 @@ Or ask: *"Use toolkit-maintainer to replace <old> with <new>"*: section 8b of th
 | A command is blocked "by guard-bash/guard-secrets" | Intended for secrets. False positive → adjust the pattern in `claude-code/hooks/`, add a test in `claude-code/tests/test_config.py` |
 | Settings ignored | `/status` (Setting sources), `claude doctor`; a project `.claude/settings.json` overrides yours |
 | Playwright / Shopify MCP "failed to connect" | Node isn't installed: see SETUP-LINUX.md §2 |
-| Figma "needs authentication" | `/mcp` → Figma → authenticate (or disable the connector on claude.ai) |
+| Need Figma | `claude plugin enable figma@claude-plugins-official` (everywhere) or `enable-plugins.sh figma <dir>` (one project), new session, then `/mcp` → Figma → sign in with the account for that job. Switch accounts: `/mcp` → Figma → clear authentication, sign in again. Done: `claude plugin disable figma@claude-plugins-official` |
+| claude.ai Figma connector shows "needs authentication" | Harmless (names only until used); ignore it, or disconnect it on claude.ai |
 | Undo the install | Remove the symlinks in `~/.claude` and restore `~/.claude/settings.json.bak-<time>` |

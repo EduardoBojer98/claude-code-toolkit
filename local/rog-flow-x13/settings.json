@@ -158,7 +158,7 @@
   },
   "enabledPlugins": {
     "searchfit-seo@synced": false,
-    "figma@claude-plugins-official": true,
+    "figma@claude-plugins-official": false,
     "impeccable@impeccable": true,
     "session-dashboard@claude-setup": true,
     "ponytail@ponytail": true,

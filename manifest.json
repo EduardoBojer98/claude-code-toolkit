@@ -144,7 +144,7 @@
     {
       "name": "figma",
       "kind": "plugin (claude-plugins-official)",
-      "status": "installed 2026-10-28 on CachyOS; MCP needs authentication (/mcp)",
+      "status": "installed 2026-10-28 on CachyOS, off by default; enable when needed and sign in via /mcp with the account for that job",
       "version": "2.2.157"
     },
     {
@@ -222,7 +222,8 @@
       "plugins": [
         "searchfit-seo@synced",
         "wp-dev-skills@synced",
-        "wordpress-official-agent-skills@wordpress-official-agent-skills"
+        "wordpress-official-agent-skills@wordpress-official-agent-skills",
+        "figma@claude-plugins-official"
       ],
       "skillsOff": [
         "morning",
@@ -254,6 +255,9 @@
       ],
       "seo": [
         "searchfit-seo@synced"
+      ],
+      "figma": [
+        "figma@claude-plugins-official"
       ]
     }
   }

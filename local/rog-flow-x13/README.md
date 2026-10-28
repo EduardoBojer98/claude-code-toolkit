@@ -1,6 +1,6 @@
 # Claude Code on rog-flow-x13
 
-Synced: 2026-10-28T11:59Z by scripts/sync-local.sh
+Synced: 2026-10-28T12:01Z by scripts/sync-local.sh
 Claude Code: 2.1.310 (Claude Code)
 
 ## Copied
@@ -19,7 +19,7 @@ Checking MCP server health…
 
 claude.ai Claude Docs: https://api.anthropic.com/v1/pages/mcp - ✔ Connected
 claude.ai Context7: https://mcp.context7.com/mcp - ✔ Connected
-plugin:figma:figma: https://mcp.figma.com/mcp (HTTP) - ! Needs authentication
+claude.ai Figma: https://mcp.figma.com/mcp - ! Needs authentication
 plugin:playwright:playwright: npx @playwright/mcp@latest - ✔ Connected
 shopify-dev-mcp: npx -y @shopify/dev-mcp@1.18.0 - ✔ Connected
 ```

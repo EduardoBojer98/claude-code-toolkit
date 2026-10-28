@@ -41,6 +41,9 @@ Adding WordPress Dev Skills' dependency (WP Dev Skills 20 + wordpress-official-a
 That was still below the 7.9k skills baseline before the WordPress plugins. If you stop using Figma or ponytail, disabling them is the
 biggest remaining lever (`claude plugin disable <name>`).
 
+With the figma plugin also off by default (enabled only when needed): **skills listing 4k** per request,
+half the 7.9k baseline.
+
 ## 2. Delegation smoke test (routing actually happens)
 
 Scratch repo with two JS files and a fake `.env`. Lead on Sonnet:

@@ -81,7 +81,7 @@ claude mcp add --scope user --transport stdio shopify-dev-mcp -- npx -y @shopify
 
 Plugins can also be installed from the terminal: `claude plugin marketplace add <owner/repo>` then
 `claude plugin install <name>@<marketplace> --scope user`. Inside Claude Code:
-- **figma** (you implement Figma designs): `/plugin` → install `figma` from `claude-plugins-official`, then `/mcp` to sign in.
+- **figma**: `claude plugin install figma@claude-plugins-official --scope user`. It stays off by default (settings template); enable it when you need it and sign in via `/mcp` with the Figma account for that job.
 - **Impeccable** (design critique/polish trial): `/plugin marketplace add pbakaus/impeccable`, install, then `npx impeccable telemetry off`.
 - **session-dashboard** (own mod): `/plugin install session-dashboard --marketplace EduardoBojer98/claude-setup`.
 - **ponytail** (optional): `/plugin marketplace add DietrichGebert/ponytail`; keep it on `lite`/`full`. It injects rules every turn, so check `/context` to see its cost.

@@ -48,7 +48,7 @@ Free first; paid only with strong evidence (see MAINTENANCE.md). Retired tools a
 ## Claude Code (local machine), reviewed 2026-10-22 from its own usage stats
 | Tool | Decision | Evidence |
 |---|---|---|
-| figma (claude-plugins-official) | **Keep in Claude Code**; re-authenticate its MCP | `figma-design-to-code` used 62× in 20 days: Figma designs are implemented in code. Still off on claude.ai (no use there) |
+| figma (claude-plugins-official) | **Keep installed, off by default** (2026-10-28 CachyOS): used rarely now and the Figma account changes per job; enable + sign in when needed | `figma-design-to-code` used 62× in 20 days: Figma designs are implemented in code. Still off on claude.ai (no use there) |
 | ponytail (DietrichGebert/ponytail) | Keep (user's choice) | Code-minimalism rules injected each turn; matches web-dev-standards. Avoid `ultra` mode on client sites |
 | hyperframes (heygen-com) | Disable | 21 skills, never used; HTML-to-video, not daily work |
 | mattpocock-skills (claude-plugins-official) | Disable | 27 skills, one use (setup) in 9 days |
