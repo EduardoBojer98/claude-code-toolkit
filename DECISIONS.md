@@ -63,10 +63,14 @@ Free first; paid only with strong evidence (see MAINTENANCE.md). Retired tools a
 | figma (claude.ai plugin + connector) | Not used on claude.ai; the Claude Code install is kept (see above) |
 | github plugin | Inactive (needs PAT); `gh` CLI covers it |
 
+## Adopted 2026-10-28 (Claude Code, CachyOS)
+| Tool | Kind | Why | Condition |
+|---|---|---|---|
+| wordpress-official-agent-skills 1.0.0 (mralaminahamed fork of WordPress/agent-skills) | Claude Code plugin, community | Required dependency of WordPress Dev Skills v1.3.0; content only (17 skills, no hooks/MCP) | Installed on user approval; ~3.6k tokens/request together with WP Dev Skills. Re-check upstream WordPress/agent-skills for an official plugin each review |
+
 ## Watchlist
 | Tool | Status | Re-check |
 |---|---|---|
-| wordpress-official-agent-skills (mralaminahamed, fork of WordPress/agent-skills) | Required by WordPress Dev Skills v1.3.0; 0 stars, content only (17 skills, no hooks/MCP). Not installed: blocked as untrusted by auto mode on 2026-10-28, so WP Dev Skills is disabled in Claude Code. Options: install it, or use the official WordPress/agent-skills per WP project | decide now |
 | WordPress MCP Adapter (WordPress AI Team) | v0.7.0, pre-1.0; local WP-CLI stdio only if adopted | next review |
 | Elementor MCP (official) | Beta since 2026-09-15; needs Atomic Editor | when out of beta |
 | Taste Skill (Leonxlnx) | v2.1, MIT; overlaps frontend-design/Impeccable | if Impeccable is rejected |

@@ -161,7 +161,8 @@
     "figma@claude-plugins-official": true,
     "impeccable@impeccable": true,
     "session-dashboard@claude-setup": true,
-    "ponytail@ponytail": true
+    "ponytail@ponytail": true,
+    "wordpress-official-agent-skills@wordpress-official-agent-skills": true
   },
   "extraKnownMarketplaces": {
     "impeccable": {
@@ -180,6 +181,12 @@
       "source": {
         "source": "github",
         "repo": "EduardoBojer98/claude-setup"
+      }
+    },
+    "wordpress-official-agent-skills": {
+      "source": {
+        "source": "github",
+        "repo": "mralaminahamed/wordpress-official-agent-skills"
       }
     }
   },

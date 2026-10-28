@@ -40,6 +40,16 @@
         "lastUpdated": "2026-10-28T11:52:51.234Z",
         "gitCommitSha": "09c434ab73ca43761c5d8b0c5d341926c2fba710"
       }
+    ],
+    "wordpress-official-agent-skills@wordpress-official-agent-skills": [
+      {
+        "scope": "user",
+        "installPath": "/home/eduardo/.claude/plugins/cache/wordpress-official-agent-skills/wordpress-official-agent-skills/1.0.0",
+        "version": "1.0.0",
+        "installedAt": "2026-10-28T11:56:55.137Z",
+        "lastUpdated": "2026-10-28T11:56:55.137Z",
+        "gitCommitSha": "bcb9eb44b26f9a3d02ee5d343d26a2e12a13dd04"
+      }
     ]
   }
 }

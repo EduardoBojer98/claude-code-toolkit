@@ -85,6 +85,7 @@ Plugins can also be installed from the terminal: `claude plugin marketplace add 
 - **Impeccable** (design critique/polish trial): `/plugin marketplace add pbakaus/impeccable`, install, then `npx impeccable telemetry off`.
 - **session-dashboard** (own mod): `/plugin install session-dashboard --marketplace EduardoBojer98/claude-setup`.
 - **ponytail** (optional): `/plugin marketplace add DietrichGebert/ponytail`; keep it on `lite`/`full`. It injects rules every turn, so check `/context` to see its cost.
+- **WordPress Dev Skills** (synced from claude.ai) needs its dependency: `claude plugin marketplace add mralaminahamed/wordpress-official-agent-skills` then `claude plugin install wordpress-official-agent-skills@wordpress-official-agent-skills --scope user`.
 - **React projects only**, in the project: `npx skills add vercel-labs/agent-skills --skill react-best-practices`.
 
 ## 8. Free-model fallback (optional)

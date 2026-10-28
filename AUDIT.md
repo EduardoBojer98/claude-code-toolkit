@@ -71,7 +71,7 @@ permissions; CachyOS setup guide; WSL snapshot archived; measured results in [BE
 
 1. ~~Install Node~~ Done 2026-10-28 (nvm.fish v24.22.1, linked by the installer). Playwright and Shopify Dev MCP connect; figma, impeccable, session-dashboard and ponytail are installed.
 2. Figma: authenticate in `/mcp` (plugin and claude.ai connector both point at mcp.figma.com).
-2b. WordPress Dev Skills is disabled in Claude Code: its v1.3.0 needs `wordpress-official-agent-skills` (see DECISIONS watchlist). Decide whether to install it.
+2b. ~~WordPress Dev Skills dependency~~ Installed 2026-10-28 on approval; WP Dev Skills loads again.
 3. Upload `skills/web-dev-standards` (now a folder with `references/`) and `skills/toolkit-maintainer` to claude.ai
    so the account copies match v2.2 / v1.3 (Settings → Capabilities → Skills → upload zip).
 4. After a week, check `/usage` attribution and add it to BENCHMARKS.md.

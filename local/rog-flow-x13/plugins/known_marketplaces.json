@@ -30,5 +30,13 @@
     },
     "installLocation": "/home/eduardo/.claude/plugins/marketplaces/claude-setup",
     "lastUpdated": "2026-10-28T11:52:34.245Z"
+  },
+  "wordpress-official-agent-skills": {
+    "source": {
+      "source": "github",
+      "repo": "mralaminahamed/wordpress-official-agent-skills"
+    },
+    "installLocation": "/home/eduardo/.claude/plugins/marketplaces/wordpress-official-agent-skills",
+    "lastUpdated": "2026-10-28T11:56:54.254Z"
   }
 }

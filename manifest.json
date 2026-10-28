@@ -31,7 +31,7 @@
       "directoryName": "WordPress Dev Skills",
       "publisher": "Al Amin Ahamed",
       "status": "enabled",
-      "note": "v1.3.0 depends on wordpress-official-agent-skills (mralaminahamed fork of WordPress/agent-skills); not installed on CachyOS, so the plugin is disabled in Claude Code until decided (2026-10-28)"
+      "note": "v1.3.0; its dependency wordpress-official-agent-skills installed in Claude Code 2026-10-28 (user approved)"
     },
     {
       "name": "github",
@@ -174,6 +174,13 @@
       "kind": "local gateway (this repo: fallback/)",
       "status": "added 2026-10-22",
       "install": "bash fallback/install.sh --settings; add keys to ~/.config/claude-fallback/.env; use claude-fb"
+    },
+    {
+      "name": "wordpress-official-agent-skills",
+      "kind": "plugin (mralaminahamed/wordpress-official-agent-skills, fork of WordPress/agent-skills)",
+      "install": "claude plugin marketplace add mralaminahamed/wordpress-official-agent-skills && claude plugin install wordpress-official-agent-skills@wordpress-official-agent-skills --scope user",
+      "status": "installed 2026-10-28, dependency of WordPress Dev Skills",
+      "version": "1.0.0"
     }
   ],
   "ownMods": [
