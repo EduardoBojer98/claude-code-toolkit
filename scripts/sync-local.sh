@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Back up the Claude Code setup on THIS machine (WSL now, CachyOS later) into the repo.
+# Back up the Claude Code setup on THIS machine into the repo (local/<hostname>/).
 # Copies settings, global CLAUDE.md, installed plugins + marketplaces, MCP servers,
 # own agents/commands/skills/hooks. Secrets are redacted; nothing is ever deleted
 # from the repo except the previous copy of the same machine folder.
@@ -53,7 +53,11 @@ copied=()
 for f in settings.json keybindings.json; do
   [[ -f "$SRC/$f" ]] && { redact_json "$SRC/$f" "$OUT/$f"; copied+=("$f"); }
 done
-[[ -f "$SRC/CLAUDE.md" ]] && { cp "$SRC/CLAUDE.md" "$OUT/CLAUDE.md"; copied+=("CLAUDE.md"); }
+if [[ -L "$SRC/CLAUDE.md" ]]; then
+  echo "CLAUDE.md -> $(readlink "$SRC/CLAUDE.md")" > "$OUT/CLAUDE.md.symlink.txt"; copied+=("CLAUDE.md (symlink)")
+elif [[ -f "$SRC/CLAUDE.md" ]]; then
+  cp "$SRC/CLAUDE.md" "$OUT/CLAUDE.md"; copied+=("CLAUDE.md")
+fi
 for f in installed_plugins.json known_marketplaces.json; do
   if [[ -f "$SRC/plugins/$f" ]]; then
     mkdir -p "$OUT/plugins"; redact_json "$SRC/plugins/$f" "$OUT/plugins/$f"; copied+=("plugins/$f")

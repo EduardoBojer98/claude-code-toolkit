@@ -1,0 +1,4 @@
+Explore.md -> /home/eduardo/Documents/projects/claude-setup/claude-code/agents/Explore.md
+implementer.md -> /home/eduardo/Documents/projects/claude-setup/claude-code/agents/implementer.md
+researcher.md -> /home/eduardo/Documents/projects/claude-setup/claude-code/agents/researcher.md
+test-runner.md -> /home/eduardo/Documents/projects/claude-setup/claude-code/agents/test-runner.md

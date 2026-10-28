@@ -1,0 +1,164 @@
+{
+  "theme": "dark",
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "effortLevel": "high",
+  "env": {
+    "CLAUDE_CODE_SUBAGENT_MODEL": "<redacted>",
+    "CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH": "<redacted>"
+  },
+  "permissions": {
+    "allow": [
+      "Bash(git diff *)",
+      "Bash(git log *)",
+      "Bash(git show *)",
+      "Bash(git branch *)",
+      "Bash(git blame *)",
+      "Bash(git grep *)",
+      "Bash(rg *)",
+      "Bash(fd *)",
+      "Bash(jq *)",
+      "Bash(gh pr view *)",
+      "Bash(gh pr list *)",
+      "Bash(gh pr diff *)",
+      "Bash(gh pr checks *)",
+      "Bash(gh issue view *)",
+      "Bash(gh issue list *)",
+      "Bash(gh run list *)",
+      "Bash(gh run view *)",
+      "Bash(npm run lint *)",
+      "Bash(npm run test *)",
+      "Bash(npm run typecheck *)",
+      "Bash(npm run build *)",
+      "Bash(npm test *)",
+      "Bash(npx tsc --noEmit *)",
+      "Bash(npx vitest run *)",
+      "Bash(npx eslint *)",
+      "Bash(npx prettier --check *)",
+      "Bash(php -l *)",
+      "Bash(vendor/bin/phpcs *)",
+      "Bash(vendor/bin/phpstan *)",
+      "Bash(vendor/bin/phpunit *)",
+      "Bash(composer audit *)",
+      "Bash(npm audit *)",
+      "Bash(lando info *)",
+      "Bash(lando list *)",
+      "Bash(lando logs *)",
+      "Bash(lando wp plugin list *)",
+      "Bash(lando wp option get *)",
+      "Bash(shopify theme check *)",
+      "Bash(docker ps *)",
+      "WebFetch(domain:developer.wordpress.org)",
+      "WebFetch(domain:make.wordpress.org)",
+      "WebFetch(domain:shopify.dev)",
+      "WebFetch(domain:react.dev)",
+      "WebFetch(domain:vite.dev)",
+      "WebFetch(domain:developer.mozilla.org)",
+      "WebFetch(domain:www.php.net)",
+      "WebFetch(domain:nodejs.org)",
+      "WebFetch(domain:docs.lando.dev)",
+      "WebFetch(domain:code.claude.com)"
+    ],
+    "ask": [
+      "Bash(git push *)",
+      "Bash(git reset --hard *)",
+      "Bash(git clean *)",
+      "Bash(git rebase *)",
+      "Bash(git checkout -- *)",
+      "Bash(git restore *)",
+      "Bash(rm -rf *)",
+      "Bash(gh pr merge *)",
+      "Bash(gh release *)",
+      "Bash(lando destroy *)",
+      "Bash(lando rebuild *)",
+      "Bash(lando db-import *)",
+      "Bash(lando wp db *)",
+      "Bash(lando wp search-replace *)",
+      "Bash(wp db *)",
+      "Bash(shopify theme push *)",
+      "Bash(shopify theme publish *)",
+      "Bash(shopify theme delete *)",
+      "Bash(docker system prune *)",
+      "Bash(docker volume rm *)",
+      "Bash(npm publish *)",
+      "Edit(**/vendor/**)",
+      "Edit(**/node_modules/**)",
+      "Edit(**/wp-admin/**)",
+      "Edit(**/wp-includes/**)",
+      "Edit(**/package-lock.json)",
+      "Edit(**/composer.lock)"
+    ],
+    "deny": [
+      "Read(**/.env)",
+      "Read(**/.env.*)",
+      "Read(!**/.env.example)",
+      "Read(!**/.env.sample)",
+      "Read(~/.ssh/id_*)",
+      "Read(~/.aws/credentials)",
+      "Read(~/.claude/.credentials.json)",
+      "Read(~/.config/claude-fallback/.env)",
+      "Read(~/.config/gh/hosts.yml)",
+      "Read(~/.npmrc)",
+      "Read(~/.netrc)",
+      "Bash(gh repo delete *)",
+      "Bash(git push --force *)",
+      "Bash(git push -f *)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit|NotebookEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/claude-setup/guard-secrets.sh",
+            "timeout": 10
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/claude-setup/guard-bash.sh",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/claude-setup/format-file.sh",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  },
+  "enabledPlugins": {
+    "searchfit-seo@synced": false
+  },
+  "skillOverrides": {
+    "morning": "off",
+    "google-workspace": "off",
+    "import-memory": "off",
+    "computer-use": "off",
+    "docs": "name-only",
+    "docx": "name-only",
+    "pptx": "name-only",
+    "xlsx": "name-only",
+    "pdf": "name-only",
+    "skill-creator": "name-only",
+    "deep-research": "name-only",
+    "built-in-browser": "name-only",
+    "chrome-browser": "name-only",
+    "toolkit-maintainer": "name-only",
+    "anthropic-skills:web-dev-standards": "off",
+    "anthropic-skills:toolkit-maintainer": "off"
+  }
+}

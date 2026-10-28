@@ -1,2 +1,0 @@
-toolkit-maintainer -> /home/flowx13/claude-setup/skills/toolkit-maintainer
-web-dev-standards -> /home/flowx13/claude-setup/skills/web-dev-standards
