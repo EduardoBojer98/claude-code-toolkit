@@ -36,7 +36,7 @@ Figma, Impeccable, session-dashboard and ponytail installed; Shopify Dev MCP add
 | Messages at start | 10 | 1.5k | rules ponytail injects into each session |
 | MCP tools (deferred, names only until used) | 3.2k | 16.4k | figma, playwright, shopify-dev-mcp |
 
-Adding WordPress Dev Skills' dependency (WP Dev Skills 20 + wordpress-official-agent-skills 17 skills) takes the skills listing to **10k**, now above the 7.9k baseline. These are only useful in WordPress repos: disabling both at user level and enabling them in WordPress projects' `.claude/settings.local.json` would save ~3.6k per request elsewhere.
+Adding WordPress Dev Skills' dependency (WP Dev Skills 20 + wordpress-official-agent-skills 17 skills) takes the skills listing to **10k**, now above the 7.9k baseline. These are only useful in WordPress repos, so they are now **off at user level and on per project** (`claude-code/enable-plugins.sh wordpress <dir>`). Verified: 6.4k skills / 0 WordPress skills in other folders, 10k / 37 in an enabled project.
 
 That was still below the 7.9k skills baseline before the WordPress plugins. If you stop using Figma or ponytail, disabling them is the
 biggest remaining lever (`claude plugin disable <name>`).

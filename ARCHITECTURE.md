@@ -37,7 +37,7 @@ Instructions load the same way: `~/.claude/CLAUDE.md` (global, this repo) → pr
 | Hooks | `claude-code/hooks/*.sh` → `~/.claude/hooks/claude-setup/` | Every matching tool call (shell, < 50 ms) | no tokens unless they block |
 | Settings | `claude-code/settings.json` merged into `~/.claude/settings.json` | Startup / live reload | — |
 | Synced claude.ai skills | managed by claude.ai | Listing trimmed via `skillOverrides` | ~20 tokens each when `name-only` |
-| Plugins | claude.ai sync (a11y-enforcer, perf-profiler, playwright, caveman); searchfit-seo disabled in Claude Code | Skills/commands listed | see BENCHMARKS.md |
+| Plugins | claude.ai sync (a11y-enforcer, perf-profiler, playwright, caveman) + local (figma, impeccable, ponytail, session-dashboard). Off globally, on per project with `claude-code/enable-plugins.sh`: searchfit-seo (`seo`), WordPress Dev Skills + wordpress-official-agent-skills (`wordpress`) | Skills/commands listed | see BENCHMARKS.md |
 | MCP | claude.ai connectors (Context7, Claude Docs, Figma); playwright via plugin | Tool names deferred until used | ~4.7k incl. deferred |
 
 ## Model routing

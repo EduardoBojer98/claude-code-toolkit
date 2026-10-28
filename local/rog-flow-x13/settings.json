@@ -162,7 +162,8 @@
     "impeccable@impeccable": true,
     "session-dashboard@claude-setup": true,
     "ponytail@ponytail": true,
-    "wordpress-official-agent-skills@wordpress-official-agent-skills": true
+    "wordpress-official-agent-skills@wordpress-official-agent-skills": false,
+    "wp-dev-skills@synced": false
   },
   "extraKnownMarketplaces": {
     "impeccable": {

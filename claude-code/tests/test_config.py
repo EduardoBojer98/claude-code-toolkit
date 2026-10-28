@@ -164,5 +164,29 @@ class Installer(unittest.TestCase):
             self.assertEqual(json.loads((cfg / "settings.json").read_text()), s)
 
 
+class EnablePlugins(unittest.TestCase):
+    def test_profile_on_and_off_in_local_settings(self):
+        with tempfile.TemporaryDirectory() as d:
+            subprocess.run(["git", "init", "-q", d], check=True)
+            local = Path(d, ".claude", "settings.local.json")
+            local.parent.mkdir()
+            local.write_text(json.dumps({"permissions": {"allow": ["Bash(make *)"]}}))
+            script = str(LAYER / "enable-plugins.sh")
+
+            on = subprocess.run(["bash", script, "wordpress", d], capture_output=True, text=True)
+            self.assertEqual(on.returncode, 0, on.stderr)
+            s = json.loads(local.read_text())
+            self.assertTrue(s["enabledPlugins"]["wp-dev-skills@synced"])
+            self.assertTrue(s["enabledPlugins"]["wordpress-official-agent-skills@wordpress-official-agent-skills"])
+            self.assertEqual(s["permissions"]["allow"], ["Bash(make *)"], "other keys are kept")
+            ignored = subprocess.run(["git", "-C", d, "check-ignore", "-q", str(local)])
+            self.assertEqual(ignored.returncode, 0, "local settings must stay out of commits")
+
+            off = subprocess.run(["bash", script, "wordpress", d, "--off"], capture_output=True, text=True)
+            self.assertEqual(off.returncode, 0, off.stderr)
+            self.assertFalse(json.loads(local.read_text())["enabledPlugins"]["wp-dev-skills@synced"])
+            self.assertNotEqual(subprocess.run(["bash", script, "nope", d], capture_output=True).returncode, 0)
+
+
 if __name__ == "__main__":
     unittest.main()

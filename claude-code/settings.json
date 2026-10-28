@@ -140,7 +140,9 @@
     ]
   },
   "enabledPlugins": {
-    "searchfit-seo@synced": false
+    "searchfit-seo@synced": false,
+    "wp-dev-skills@synced": false,
+    "wordpress-official-agent-skills@wordpress-official-agent-skills": false
   },
   "skillOverrides": {
     "morning": "off",

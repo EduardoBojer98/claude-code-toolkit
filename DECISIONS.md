@@ -66,7 +66,7 @@ Free first; paid only with strong evidence (see MAINTENANCE.md). Retired tools a
 ## Adopted 2026-10-28 (Claude Code, CachyOS)
 | Tool | Kind | Why | Condition |
 |---|---|---|---|
-| wordpress-official-agent-skills 1.0.0 (mralaminahamed fork of WordPress/agent-skills) | Claude Code plugin, community | Required dependency of WordPress Dev Skills v1.3.0; content only (17 skills, no hooks/MCP) | Installed on user approval; ~3.6k tokens/request together with WP Dev Skills. Re-check upstream WordPress/agent-skills for an official plugin each review |
+| wordpress-official-agent-skills 1.0.0 (mralaminahamed fork of WordPress/agent-skills) | Claude Code plugin, community | Required dependency of WordPress Dev Skills v1.3.0; content only (17 skills, no hooks/MCP) | Installed on user approval; ~3.6k tokens/request together with WP Dev Skills, so both are off globally and enabled per WordPress project (`claude-code/enable-plugins.sh wordpress`). Re-check upstream WordPress/agent-skills for an official plugin each review |
 
 ## Watchlist
 | Tool | Status | Re-check |

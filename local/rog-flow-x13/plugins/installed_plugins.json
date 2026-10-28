@@ -49,6 +49,15 @@
         "installedAt": "2026-10-28T11:56:55.137Z",
         "lastUpdated": "2026-10-28T11:56:55.137Z",
         "gitCommitSha": "bcb9eb44b26f9a3d02ee5d343d26a2e12a13dd04"
+      },
+      {
+        "scope": "local",
+        "installPath": "/home/eduardo/.claude/plugins/cache/wordpress-official-agent-skills/wordpress-official-agent-skills/1.0.0",
+        "version": "1.0.0",
+        "installedAt": "2026-10-28T11:59:27.908Z",
+        "lastUpdated": "2026-10-28T11:59:27.908Z",
+        "gitCommitSha": "bcb9eb44b26f9a3d02ee5d343d26a2e12a13dd04",
+        "projectPath": "/tmp/claude-1000/-home-eduardo-Documents-projects-claude-setup/fabf92c9-6209-44b6-b63f-0e8597b19842/scratchpad/wp-project"
       }
     ]
   }

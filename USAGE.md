@@ -46,8 +46,16 @@ Force a route when you want one:
 - `/clear` between unrelated tasks; `/compact keep goal, decisions, files changed, failing checks` for long ones.
 - `/usage` shows plan usage and what consumed it (skills, agents, MCP); `/context` shows what loads each turn.
 - Name files/functions in requests; vague asks cause broad scans.
-- Enable SEO tooling only where needed: in that project's `.claude/settings.local.json` set
-  `{"enabledPlugins": {"searchfit-seo@synced": true}}`.
+- Plugins only useful for one kind of project are off globally. Turn them on for one project (writes its
+  gitignored `.claude/settings.local.json`; `--off` reverts):
+
+  ```bash
+  bash ~/Documents/projects/claude-setup/claude-code/enable-plugins.sh wordpress ~/path/to/wp-site
+  bash ~/Documents/projects/claude-setup/claude-code/enable-plugins.sh seo ~/path/to/site
+  ```
+
+  `wordpress` = WordPress Dev Skills + wordpress-official-agent-skills (~3.6k tokens/request), `seo` = searchfit-seo.
+  Add a profile by editing `PROFILES` in that script.
 
 ## Swap in a better tool (example: a design skill)
 
