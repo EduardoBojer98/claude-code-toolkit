@@ -6,8 +6,8 @@ Free first; paid only with strong evidence (see MAINTENANCE.md). Retired tools a
 ## In (enabled)
 | Tool | Kind | Role | Why | Added | Re-check |
 |---|---|---|---|---|---|
-| web-dev-standards v2.1 | Own skill | Core | Standards, routing per stack (incl. CodeMate starter), Definition of Done | 2026-10-16 (v2.1 2026-10-22) | every review |
-| toolkit-maintainer v1.1 | Own skill | Maintenance | Runs reviews, archives retired tools | 2026-10-16 (v1.1 2026-10-22) | every review |
+| web-dev-standards v2.2 | Own skill | Core | Standards, routing per stack (incl. CodeMate starter), Definition of Done; per-stack references | 2026-10-16 (v2.2 2026-10-28) | every review |
+| toolkit-maintainer v1.3 | Own skill | Maintenance | Runs reviews, archives retired tools | 2026-10-16 (v1.1 2026-10-22) | every review |
 | frontend-design (built-in) | Built-in skill | Core | Visual direction on new pages | built-in | — |
 | Context7 | Connector | Core | Current docs; pinned IDs for Elementor, ACF, nopCommerce | 2026-10-16 | **free tier (watchlist)** |
 | playwright | Plugin (Microsoft) | Review | Screenshots at 375/768/1280, E2E; runs `@latest` (pin if a release breaks) | 2026-10-16 | release notes |
@@ -16,6 +16,18 @@ Free first; paid only with strong evidence (see MAINTENANCE.md). Retired tools a
 | WordPress Dev Skills | Plugin (community) | Conditional | WP plugin / WooCommerce / PHPCS / testing depth | 2026-10-16 | maintenance activity |
 | caveman | Plugin (community) | Optional | Terse replies on request ("caveman mode"); kept by user preference, restored 2026-10-22. Only active when asked for | 2026-10-22 | — |
 | searchfit-seo | Plugin | Optional | SEO audits and schema; ignore its SearchFit.ai promotion lines | before 2026-10-16 | — |
+
+## Built 2026-10-28: Claude Code layer (`claude-code/`)
+| Choice | Decision | Why |
+|---|---|---|
+| Routing | Built-in subagents + frontmatter `model`, `CLAUDE_CODE_SUBAGENT_MODEL=sonnet`; no custom orchestrator | Officially supported; resolution order documented; verified in stream-json |
+| Explore | Override built-in with a Haiku read-only agent | Built-in uses the main model/Opus; same answer at ~45% lower list cost (BENCHMARKS.md) |
+| Review | Built-in `/code-review`, `/security-review` instead of a custom reviewer agent | Avoid duplicating built-ins |
+| Agent teams | Not enabled | ~7x tokens per docs; no need for a solo developer |
+| Synced claude.ai skills | `skillOverrides` off/name-only per machine (claude.ai unchanged) | ~3.6k tokens/request, unused in a terminal |
+| searchfit-seo | Off in Claude Code, on in claude.ai; per-project opt-in | ~2k tokens/request for occasional use |
+| Hooks | Deterministic shell (secret guards, opt-in Prettier); no LLM hooks | No token cost; predictable |
+| Effort | Default `high` (was `xhigh` on WSL); raise per task | Thinking tokens are billed as output |
 
 ## Built 2026-10-22: free-model fallback (ccfb, `fallback/`)
 | Choice | Decision | Why |

@@ -1,19 +1,19 @@
 {
   "repo": "EduardoBojer98/claude-setup",
-  "backedUp": "2026-10-24",
+  "backedUp": "2026-10-28",
   "account": "claude.ai",
   "customSkills": [
     {
       "name": "web-dev-standards",
-      "path": "skills/web-dev-standards/SKILL.md",
+      "path": "skills/web-dev-standards/ (SKILL.md + references/)",
       "description": "Personal web design and development standards and routing for this user's client work - design direction, accessibility, performance, security, Definition of Done, and stack rules for WordPress (CodeMate starter with SCF sections, block themes, Elementor, ACF, WooCommerce), Shopify (Liquid, metafields, metaobjects), nopCommerce (.NET plugins), React + Vite + TypeScript + Tailwind, and plain HTML/CSS/JS. Use when building, designing, fixing or reviewing a website, theme, plugin, store or web app.",
-      "version": "2.1"
+      "version": "2.2"
     },
     {
       "name": "toolkit-maintainer",
       "path": "skills/toolkit-maintainer/SKILL.md",
       "description": "Review and update the user's Claude web design and development toolkit and its claude-setup backup and archive repo. Use when asked to review, update, maintain, audit, archive, restore or back up skills, plugins or connectors, on the scheduled monthly review, or when the user asks \"is there something better\".",
-      "version": "1.2"
+      "version": "1.3"
     }
   ],
   "plugins": [
@@ -116,7 +116,7 @@
       "name": "Figma",
       "purpose": "Figma files (used from Claude Code via the figma plugin)",
       "auth": "Figma account",
-      "status": "disconnected on claude.ai 2026-10-22"
+      "status": "drift 2026-10-28: enabled on claude.ai again, needs authentication"
     }
   ],
   "builtInSkillsNotBackedUp": "docs, docx, xlsx, pptx, pdf, skill-creator, deep-research, chrome-browser, built-in-browser, computer-use, google-workspace, import-memory, morning - these come with every Claude account.",
@@ -125,13 +125,13 @@
       "name": "shopify-dev-mcp",
       "kind": "mcp",
       "install": "claude mcp add --scope user --transport stdio shopify-dev-mcp -- npx -y @shopify/dev-mcp@1.17.0",
-      "status": "installed 2026-10-22, pinned 1.17.0, connected (WSL)"
+      "status": "installed 2026-10-22, pinned 1.17.0, connected (WSL); not yet installed on CachyOS (needs Node)"
     },
     {
       "name": "impeccable",
       "kind": "plugin",
       "install": "/plugin marketplace add pbakaus/impeccable",
-      "status": "trial 2026-10-22, telemetry off",
+      "status": "trial 2026-10-22, telemetry off; not yet installed on CachyOS (needs Node)",
       "version": "4.7.0"
     },
     {
@@ -143,13 +143,13 @@
     {
       "name": "figma",
       "kind": "plugin (claude-plugins-official)",
-      "status": "kept 2026-10-22: 62 uses of figma-design-to-code in 20 days; MCP needs re-auth",
+      "status": "kept 2026-10-22: 62 uses of figma-design-to-code in 20 days; MCP needs re-auth; not yet installed on CachyOS (needs Node)",
       "version": "2.2.157"
     },
     {
       "name": "ponytail",
       "kind": "plugin (DietrichGebert/ponytail)",
-      "status": "kept, user preference",
+      "status": "kept, user preference; not yet installed on CachyOS (needs Node)",
       "version": "5.3.0"
     },
     {
@@ -187,7 +187,54 @@
   "localSync": {
     "script": "scripts/sync-local.sh",
     "folder": "local/<machine>/",
-    "run": "bash scripts/sync-local.sh --push (in WSL / on the laptop)",
-    "status": "last run 2026-10-24 on Flow-X13 (Claude Code 2.1.308)"
+    "run": "bash scripts/sync-local.sh [--push]",
+    "status": "last run 2026-10-28 on rog-flow-x13 (Claude Code 2.1.310); WSL snapshot archived"
+  },
+  "claudeCodeLayer": {
+    "path": "claude-code/",
+    "install": "bash claude-code/install.sh",
+    "test": "bash scripts/test.sh",
+    "agents": {
+      "Explore": "haiku",
+      "test-runner": "haiku",
+      "researcher": "sonnet",
+      "implementer": "sonnet"
+    },
+    "skills": [
+      "debug",
+      "web-dev-standards (link)",
+      "toolkit-maintainer (link)"
+    ],
+    "hooks": [
+      "guard-secrets",
+      "guard-bash",
+      "format-file"
+    ],
+    "disabledInClaudeCode": {
+      "plugins": [
+        "searchfit-seo@synced"
+      ],
+      "skillsOff": [
+        "morning",
+        "google-workspace",
+        "import-memory",
+        "computer-use",
+        "anthropic-skills:web-dev-standards",
+        "anthropic-skills:toolkit-maintainer"
+      ],
+      "skillsNameOnly": [
+        "docs",
+        "docx",
+        "pptx",
+        "xlsx",
+        "pdf",
+        "skill-creator",
+        "deep-research",
+        "built-in-browser",
+        "chrome-browser",
+        "toolkit-maintainer"
+      ]
+    },
+    "status": "installed 2026-10-28 on rog-flow-x13 (CachyOS, Claude Code 2.1.310)"
   }
 }

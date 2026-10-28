@@ -1,5 +1,21 @@
 # Changelog
 
+## 2026-10-28: Claude Code layer, model routing, CachyOS
+- New `claude-code/` installed into `~/.claude` by an idempotent `install.sh` (symlinks; settings merged with your values winning; backups `*.bak-<time>`, nothing deleted):
+  - Global `CLAUDE.md` (~60 lines): recon before editing, root cause first, minimal diffs, verify-then-report, model routing table, git safety, context hygiene.
+  - Agents: `Explore` (overrides the built-in; Haiku, read-only), `test-runner` (Haiku), `researcher` (Sonnet), `implementer` (Sonnet). None can spawn agents; all have `maxTurns` and a fixed output format.
+  - Settings template: `CLAUDE_CODE_SUBAGENT_MODEL=sonnet`, `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH=2`, `effortLevel: high` (if unset), allow/ask/deny permissions, hooks, `skillOverrides` for 13 synced claude.ai skills and the duplicate synced copies of own skills, `searchfit-seo@synced` off in Claude Code.
+  - Hooks: `guard-secrets` (blocks writing live keys), `guard-bash` (blocks printing credential files), `format-file` (project Prettier only).
+  - `debug` skill with per-stack diagnostics reference (Lando/WP-CLI, Shopify, Vite, Node, CI).
+  - Tests (`claude-code/tests/`) and `scripts/test.sh` for every offline check.
+- `web-dev-standards` v2.2: same rules, split into a 6 KB core + per-stack `references/` (progressive disclosure); delegation line follows the global routing; routes bugs to `debug`. v2.1 archived.
+- `toolkit-maintainer` v1.3: checks the Claude Code layer; new "Replacing a tool" procedure. v1.2 archived.
+- `SETUP-LINUX.md` rewritten for CachyOS (pacman, fish, fnm). `local/Flow-X13` (WSL) archived; new `local/rog-flow-x13`. `sync-local.sh` records a symlinked CLAUDE.md instead of copying it.
+- New docs: `AUDIT.md`, `ARCHITECTURE.md`, `USAGE.md`, `BENCHMARKS.md`.
+- Measured: skills listing 7.9k → 3.2k tokens per request; Haiku Explore 45% cheaper (list price) than the built-in on the same search with the same answer.
+
+**Migration:** `git pull && bash claude-code/install.sh`, then a new session. To undo: remove the symlinks in `~/.claude` and restore `~/.claude/settings.json.bak-<time>`. To use SEO tools in one project: `{"enabledPlugins": {"searchfit-seo@synced": true}}` in its `.claude/settings.local.json`.
+
 ## 2026-10-24: sync + local Claude Code backup
 - Synced with claude.ai: 6 plugins, 2 own skills and connectors match the manifest; plugin snapshots and own skills unchanged (no drift).
 - New `scripts/sync-local.sh`: copies the Claude Code setup of the machine it runs on (settings, global CLAUDE.md, installed plugins and marketplaces, user MCP servers, own agents/commands/hooks/skills, status line) into `local/<machine>/`, with secrets redacted and a guard that stops on anything that looks like a live key. `--push` commits and pushes.

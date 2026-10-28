@@ -1,152 +1,116 @@
-# Linux setup (new machine)
+# Linux setup (CachyOS / Arch)
 
-Clean setup for Claude Code on a new Linux machine. Commands are for **Ubuntu / Debian**; Fedora
-equivalents are noted where they differ. Install only what is listed here: the rest was retired on
-2026-10-22 (see `DECISIONS.md` and `archive/README.md`).
+Clean Claude Code setup on a new machine. Commands are for **CachyOS / Arch** (pacman, fish shell);
+Ubuntu/Debian equivalents are noted. Install only what is listed; retired tools are in `archive/README.md`.
 
-_Last checked: 2026-10-22._
+_Last checked: 2026-10-28 on rog-flow-x13 (CachyOS, Claude Code 2.1.310)._
 
 ## 0. What needs nothing
 
-Signing in to claude.ai brings everything account-level with it, on any OS:
-your skills (`web-dev-standards`, `toolkit-maintainer`), the 6 active plugins (A11y Enforcer,
-Perf Profiler, WordPress Dev Skills, Playwright, searchfit-seo, caveman), the Context7 connector and the
-"Monthly toolkit review" scheduled task. Plugins also sync into Claude Code once you log in there.
+Signing in to claude.ai brings the account items with it: the `web-dev-standards` and `toolkit-maintainer`
+skills, the plugins (A11y Enforcer, Perf Profiler, WordPress Dev Skills, Playwright, searchfit-seo, caveman),
+Context7 and the "Monthly toolkit review" task. They sync into Claude Code when you log in there.
 
 ## 1. Base packages
 
 ```bash
-sudo apt update && sudo apt install -y git curl unzip build-essential python3
-# Fedora: sudo dnf install -y git curl unzip gcc-c++ make python3
+sudo pacman -S --needed git curl unzip base-devel python jq ripgrep fd github-cli docker docker-compose
+# Ubuntu: sudo apt install -y git curl unzip build-essential python3 jq ripgrep fd-find gh
 ```
 
-Python 3 is used by the A11y Enforcer and Perf Profiler scripts.
+`jq` and `python` are needed by the installer and hooks; `rg`/`fd` make searches cheap.
 
-## 2. Node.js 24 (LTS)
+## 2. Node.js 24 (LTS) — needed for Playwright, Shopify Dev MCP, Impeccable, React work
 
-The CodeMate starter pins Node 24 (`.nvmrc`); Shopify Dev MCP, Impeccable and Playwright run on Node.
-Install nvm from <https://github.com/nvm-sh/nvm#installing-and-updating>, open a new terminal, then:
+fnm works with fish and reads `.nvmrc` (the CodeMate starter pins Node 24):
 
 ```bash
-nvm install 24 && nvm alias default 24
-node --version   # v24.x
+sudo pacman -S fnm
+echo 'fnm env --use-on-cd --shell fish | source' >> ~/.config/fish/config.fish
 ```
 
-Install Node only once, on Linux itself. Don't share `node_modules` with another OS.
+Open a new terminal, then:
+
+```bash
+fnm install 24
+fnm default 24
+node --version
+```
 
 ## 3. Claude Code
 
 ```bash
 curl -fsSL https://claude.ai/install.sh | bash
-# open a new terminal
 claude --version
-claude          # log in with your claude.ai account on first run
 ```
 
-Native installs update themselves. (Alternatives: apt/dnf packages; see
-<https://code.claude.com/docs/en/setup>.)
+Run `claude` once and log in with your claude.ai account.
 
-## 4. GitHub CLI
-
-Install `gh` following the official Linux instructions:
-<https://github.com/cli/cli/blob/trunk/docs/install_linux.md>, then:
+## 4. GitHub CLI and Git
 
 ```bash
-gh auth login        # GitHub.com → HTTPS → log in with a browser
-git config --global user.name  "Eduardo Bojer"
-git config --global user.email "<your email>"
+gh auth login
+gh auth setup-git
+git config --global user.name "Eduardo Bojer"
 ```
-
-Claude Code uses `gh` for branches and pull requests, so the GitHub plugin isn't needed.
 
 ## 5. Docker and Lando (WordPress sites)
 
 ```bash
-/bin/bash -c "$(curl -fsSL https://get.lando.dev/setup-lando.sh)"
-lando version
-docker --version
+sudo systemctl enable --now docker.socket
+sudo usermod -aG docker $USER
 ```
 
-If `docker --version` fails, install Docker Engine (not Docker Desktop) from
-<https://docs.docker.com/engine/install/>, then `sudo usermod -aG docker $USER` and log out and back in.
-Requirements: <https://docs.lando.dev/getting-started/requirements>.
+Log out and back in, then install Lando: `/bin/bash -c "$(curl -fsSL https://get.lando.dev/setup-lando.sh)"` and check `lando version`.
 
-## 6. Browser for screenshots and checks
-
-Playwright (breakpoint screenshots), Perf Profiler (Lighthouse) and Impeccable (URL scans) need a browser:
+## 6. This repo and the Claude Code layer
 
 ```bash
-npx playwright install --with-deps chromium
+git clone https://github.com/EduardoBojer98/claude-setup ~/Documents/projects/claude-setup
+cd ~/Documents/projects/claude-setup
+bash claude-code/install.sh
+bash scripts/test.sh
 ```
 
-Installing Google Chrome or Chromium as a normal browser also works for Lighthouse.
+This links the global CLAUDE.md, the routed agents, the hooks and the own skills into `~/.claude`, and merges
+the settings template (permissions, hooks, skill trimming, subagent model). Details: [ARCHITECTURE.md](ARCHITECTURE.md),
+daily use: [USAGE.md](USAGE.md).
 
-## 7. Claude Code tools kept by the plan
+## 7. Optional Claude Code tools (need Node)
 
 ```bash
-# Shopify Dev MCP: Liquid docs + Theme Check validation (pin the version)
-V=$(npm view @shopify/dev-mcp version) && npm cache add @shopify/dev-mcp@$V
+npx playwright install chromium      # browser for Playwright / Lighthouse
+V=$(npm view @shopify/dev-mcp version)
 claude mcp add --scope user --transport stdio shopify-dev-mcp -- npx -y @shopify/dev-mcp@$V
-
-# Impeccable: design critique / audit / polish, with usage reporting off
-npx impeccable telemetry off
 ```
 
-Then inside Claude Code: `/plugin marketplace add pbakaus/impeccable`, and install **impeccable** from `/plugin`.
+Inside Claude Code:
+- **figma** (you implement Figma designs): `/plugin` → install `figma` from `claude-plugins-official`, then `/mcp` to sign in.
+- **Impeccable** (design critique/polish trial): `/plugin marketplace add pbakaus/impeccable`, install, then `npx impeccable telemetry off`.
+- **session-dashboard** (own mod): `/plugin install session-dashboard --marketplace EduardoBojer98/claude-setup`.
+- **ponytail** (optional): `/plugin marketplace add DietrichGebert/ponytail`; keep it on `lite`/`full`. It injects rules every turn, so check `/context` to see its cost.
+- **React projects only**, in the project: `npx skills add vercel-labs/agent-skills --skill react-best-practices`.
 
-**Figma** (you implement Figma designs): inside Claude Code run `/plugin`, install **figma** from
-`claude-plugins-official`, then select its MCP and sign in.
-
-**Ponytail** (optional, your choice): `/plugin marketplace add DietrichGebert/ponytail`, install it, and keep it on `lite` or `full`, not `ultra`, for client sites.
-
-**React projects only**, inside each project folder:
+## 8. Free-model fallback (optional)
 
 ```bash
-npx skills add vercel-labs/agent-skills --skill react-best-practices
+bash fallback/install.sh --settings
 ```
 
-## 8. This repo and client projects
+Then add your free keys to `~/.config/claude-fallback/.env` and run `ccfb doctor`. Start with `claude-fb`. See [fallback/README.md](fallback/README.md).
+
+## 9. Check it worked
 
 ```bash
-git clone https://github.com/EduardoBojer98/claude-setup ~/claude-setup
+claude mcp list
+claude -p "/context" | sed -n '1,25p'
 ```
 
-- Ask Claude Code "which skills do you have?". If `web-dev-standards` is **not** listed (account skills
-  not synced to Claude Code), link it: `mkdir -p ~/.claude/skills && ln -s ~/claude-setup/skills/web-dev-standards ~/.claude/skills/web-dev-standards`.
-  If it **is** listed, don't link it, or it loads twice. After a linked skill changes, `git -C ~/claude-setup pull`.
-- New WordPress client site: copy the CodeMate starter (`github.com/EduardoBojer98/wordpress-starter`) and follow its `docs/new-project.md`.
-- Any other client project: copy `templates/CLAUDE.md` to the project root and fill it in.
+Compare `claude -p "/context"` with [BENCHMARKS.md](BENCHMARKS.md). In a session: `/agents` lists Explore,
+implementer, researcher and test-runner; `/hooks` lists the three claude-setup hooks.
 
-## 8b. Free-model fallback (ccfb)
+Then back up the machine's state: `bash scripts/sync-local.sh` (writes `local/<hostname>/`, secrets redacted).
 
-Keeps Claude Code going on free models when your plan limit is reached
-([fallback/README.md](fallback/README.md)).:
+## Don't install (retired)
 
-```bash
-bash ~/claude-setup/fallback/install.sh --settings
-nano ~/.config/claude-fallback/.env      # add OPENROUTER_API_KEY and/or GEMINI_API_KEY (free)
-ccfb doctor
-```
-
-Then start Claude Code with `claude-fb` instead of `claude`.
-
-## 9. Don't install (retired 2026-10-22)
-
-VectorLab UI/UX Skills, the frontend-design plugin (Impeccable covers it in Claude Code), the claude.ai Figma connector,
-GitHub plugin, hyperframes, mattpocock-skills. Restore steps are in `archive/README.md`
-if one is ever needed.
-
-## 10. Check it worked
-
-```bash
-claude mcp list        # shopify-dev-mcp ✔ Connected, and playwright
-```
-
-In Claude Code:
-- `/plugin`: A11y Enforcer, Perf Profiler, WordPress Dev Skills, playwright, searchfit-seo, caveman, impeccable, figma (+ ponytail if you use it), and nothing from section 9.
-- `/skills`: disable the claude.ai-synced skills you don't use in Claude Code (built-in-browser, chrome-browser,
-  computer-use, deep-research, docs, docx, google-workspace, import-memory, morning, pdf, pptx, skill-creator, xlsx).
-  They stay on for claude.ai. Keep exactly one `web-dev-standards` and one `toolkit-maintainer`.
-- `/context`: note the number for skills and tools. That's the baseline for the next toolkit review.
-
-Then tell Claude "check my Claude Code setup against SETUP-LINUX.md in claude-setup".
+VectorLab UI/UX Skills, the frontend-design plugin, the GitHub plugin, hyperframes, mattpocock-skills. See `archive/README.md`.
