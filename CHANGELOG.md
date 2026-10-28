@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-10-28 (later): local tools on CachyOS
+- Node 24.22.1 via nvm.fish; `install.sh` links the newest nvm Node into `~/.local/bin` so Claude Code finds `npx` (fish nvm hooks don't apply to it).
+- Playwright MCP connected (uses Google Chrome); Shopify Dev MCP 1.18.0 added (pinned).
+- Installed plugins: figma, impeccable (telemetry off), session-dashboard, ponytail (ledger on, no webhook).
+- Found: WordPress Dev Skills v1.3.0 is disabled because its dependency `wordpress-official-agent-skills` isn't installed; left for a decision (DECISIONS watchlist).
+- Context: skills listing 3.2k → 6.4k with the new plugins (BENCHMARKS.md).
+
 ## 2026-10-28: Claude Code layer, model routing, CachyOS
 - New `claude-code/` installed into `~/.claude` by an idempotent `install.sh` (symlinks; settings merged with your values winning; backups `*.bak-<time>`, nothing deleted):
   - Global `CLAUDE.md` (~60 lines): recon before editing, root cause first, minimal diffs, verify-then-report, model routing table, git safety, context hygiene.

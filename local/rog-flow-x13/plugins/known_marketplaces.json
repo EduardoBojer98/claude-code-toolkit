@@ -5,6 +5,30 @@
       "repo": "anthropics/claude-plugins-official"
     },
     "installLocation": "/home/eduardo/.claude/plugins/marketplaces/claude-plugins-official",
-    "lastUpdated": "2026-10-28T11:24:27.804Z"
+    "lastUpdated": "2026-10-28T11:52:46.695Z"
+  },
+  "impeccable": {
+    "source": {
+      "source": "github",
+      "repo": "pbakaus/impeccable"
+    },
+    "installLocation": "/home/eduardo/.claude/plugins/marketplaces/impeccable",
+    "lastUpdated": "2026-10-28T11:52:28.652Z"
+  },
+  "ponytail": {
+    "source": {
+      "source": "github",
+      "repo": "DietrichGebert/ponytail"
+    },
+    "installLocation": "/home/eduardo/.claude/plugins/marketplaces/ponytail",
+    "lastUpdated": "2026-10-28T11:52:31.343Z"
+  },
+  "claude-setup": {
+    "source": {
+      "source": "github",
+      "repo": "EduardoBojer98/claude-setup"
+    },
+    "installLocation": "/home/eduardo/.claude/plugins/marketplaces/claude-setup",
+    "lastUpdated": "2026-10-28T11:52:34.245Z"
   }
 }

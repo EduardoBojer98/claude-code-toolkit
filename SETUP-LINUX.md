@@ -22,20 +22,14 @@ sudo pacman -S --needed git curl unzip base-devel python jq ripgrep fd github-cl
 
 ## 2. Node.js 24 (LTS) — needed for Playwright, Shopify Dev MCP, Impeccable, React work
 
-fnm works with fish and reads `.nvmrc` (the CodeMate starter pins Node 24):
+With fish, use nvm.fish (it reads `.nvmrc`; the CodeMate starter pins Node 24):
 
 ```bash
-sudo pacman -S fnm
-echo 'fnm env --use-on-cd --shell fish | source' >> ~/.config/fish/config.fish
+fish -c 'fisher install jorgebucaran/nvm.fish; nvm install lts; set --universal nvm_default_version 24'
 ```
 
-Open a new terminal, then:
-
-```bash
-fnm install 24
-fnm default 24
-node --version
-```
+Claude Code doesn't load fish's nvm hooks. `claude-code/install.sh` (step 6) links the newest nvm Node into
+`~/.local/bin` so MCP servers can find `npx`. After installing a new Node version, re-run the installer.
 
 ## 3. Claude Code
 
@@ -78,13 +72,15 @@ daily use: [USAGE.md](USAGE.md).
 
 ## 7. Optional Claude Code tools (need Node)
 
+Playwright MCP and Lighthouse use the installed Google Chrome (`google-chrome-stable`); no extra browser download is needed.
+
 ```bash
-npx playwright install chromium      # browser for Playwright / Lighthouse
 V=$(npm view @shopify/dev-mcp version)
 claude mcp add --scope user --transport stdio shopify-dev-mcp -- npx -y @shopify/dev-mcp@$V
 ```
 
-Inside Claude Code:
+Plugins can also be installed from the terminal: `claude plugin marketplace add <owner/repo>` then
+`claude plugin install <name>@<marketplace> --scope user`. Inside Claude Code:
 - **figma** (you implement Figma designs): `/plugin` → install `figma` from `claude-plugins-official`, then `/mcp` to sign in.
 - **Impeccable** (design critique/polish trial): `/plugin marketplace add pbakaus/impeccable`, install, then `npx impeccable telemetry off`.
 - **session-dashboard** (own mod): `/plugin install session-dashboard --marketplace EduardoBojer98/claude-setup`.

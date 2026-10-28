@@ -1,7 +1,5 @@
 {
-  "theme": "dark",
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
-  "effortLevel": "high",
   "env": {
     "CLAUDE_CODE_SUBAGENT_MODEL": "<redacted>",
     "CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH": "<redacted>"
@@ -58,6 +56,22 @@
       "WebFetch(domain:docs.lando.dev)",
       "WebFetch(domain:code.claude.com)"
     ],
+    "deny": [
+      "Read(**/.env)",
+      "Read(**/.env.*)",
+      "Read(!**/.env.example)",
+      "Read(!**/.env.sample)",
+      "Read(~/.ssh/id_*)",
+      "Read(~/.aws/credentials)",
+      "Read(~/.claude/.credentials.json)",
+      "Read(~/.config/claude-fallback/.env)",
+      "Read(~/.config/gh/hosts.yml)",
+      "Read(~/.npmrc)",
+      "Read(~/.netrc)",
+      "Bash(gh repo delete *)",
+      "Bash(git push --force *)",
+      "Bash(git push -f *)"
+    ],
     "ask": [
       "Bash(git push *)",
       "Bash(git reset --hard *)",
@@ -86,23 +100,25 @@
       "Edit(**/wp-includes/**)",
       "Edit(**/package-lock.json)",
       "Edit(**/composer.lock)"
-    ],
-    "deny": [
-      "Read(**/.env)",
-      "Read(**/.env.*)",
-      "Read(!**/.env.example)",
-      "Read(!**/.env.sample)",
-      "Read(~/.ssh/id_*)",
-      "Read(~/.aws/credentials)",
-      "Read(~/.claude/.credentials.json)",
-      "Read(~/.config/claude-fallback/.env)",
-      "Read(~/.config/gh/hosts.yml)",
-      "Read(~/.npmrc)",
-      "Read(~/.netrc)",
-      "Bash(gh repo delete *)",
-      "Bash(git push --force *)",
-      "Bash(git push -f *)"
     ]
+  },
+  "skillOverrides": {
+    "morning": "off",
+    "google-workspace": "off",
+    "import-memory": "off",
+    "computer-use": "off",
+    "docs": "name-only",
+    "docx": "name-only",
+    "pptx": "name-only",
+    "xlsx": "name-only",
+    "pdf": "name-only",
+    "skill-creator": "name-only",
+    "deep-research": "name-only",
+    "built-in-browser": "name-only",
+    "chrome-browser": "name-only",
+    "toolkit-maintainer": "name-only",
+    "anthropic-skills:web-dev-standards": "off",
+    "anthropic-skills:toolkit-maintainer": "off"
   },
   "hooks": {
     "PreToolUse": [
@@ -141,24 +157,46 @@
     ]
   },
   "enabledPlugins": {
-    "searchfit-seo@synced": false
+    "searchfit-seo@synced": false,
+    "figma@claude-plugins-official": true,
+    "impeccable@impeccable": true,
+    "session-dashboard@claude-setup": true,
+    "ponytail@ponytail": true
   },
-  "skillOverrides": {
-    "morning": "off",
-    "google-workspace": "off",
-    "import-memory": "off",
-    "computer-use": "off",
-    "docs": "name-only",
-    "docx": "name-only",
-    "pptx": "name-only",
-    "xlsx": "name-only",
-    "pdf": "name-only",
-    "skill-creator": "name-only",
-    "deep-research": "name-only",
-    "built-in-browser": "name-only",
-    "chrome-browser": "name-only",
-    "toolkit-maintainer": "name-only",
-    "anthropic-skills:web-dev-standards": "off",
-    "anthropic-skills:toolkit-maintainer": "off"
-  }
+  "extraKnownMarketplaces": {
+    "impeccable": {
+      "source": {
+        "source": "github",
+        "repo": "pbakaus/impeccable"
+      }
+    },
+    "ponytail": {
+      "source": {
+        "source": "github",
+        "repo": "DietrichGebert/ponytail"
+      }
+    },
+    "claude-setup": {
+      "source": {
+        "source": "github",
+        "repo": "EduardoBojer98/claude-setup"
+      }
+    }
+  },
+  "effortLevel": "high",
+  "pluginConfigs": {
+    "session-dashboard@claude-setup": {
+      "options": {
+        "band": "on",
+        "budget": "none"
+      }
+    },
+    "ponytail@ponytail": {
+      "options": {
+        "ledger": true,
+        "sendNames": true
+      }
+    }
+  },
+  "theme": "dark"
 }

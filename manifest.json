@@ -30,7 +30,8 @@
       "folder": "plugins/wp-dev-skills",
       "directoryName": "WordPress Dev Skills",
       "publisher": "Al Amin Ahamed",
-      "status": "enabled"
+      "status": "enabled",
+      "note": "v1.3.0 depends on wordpress-official-agent-skills (mralaminahamed fork of WordPress/agent-skills); not installed on CachyOS, so the plugin is disabled in Claude Code until decided (2026-10-28)"
     },
     {
       "name": "github",
@@ -124,14 +125,14 @@
     {
       "name": "shopify-dev-mcp",
       "kind": "mcp",
-      "install": "claude mcp add --scope user --transport stdio shopify-dev-mcp -- npx -y @shopify/dev-mcp@1.17.0",
-      "status": "installed 2026-10-22, pinned 1.17.0, connected (WSL); not yet installed on CachyOS (needs Node)"
+      "install": "claude mcp add --scope user --transport stdio shopify-dev-mcp -- npx -y @shopify/dev-mcp@1.18.0",
+      "status": "installed 2026-10-28 on CachyOS, pinned 1.18.0, connected"
     },
     {
       "name": "impeccable",
       "kind": "plugin",
       "install": "/plugin marketplace add pbakaus/impeccable",
-      "status": "trial 2026-10-22, telemetry off; not yet installed on CachyOS (needs Node)",
+      "status": "installed 2026-10-28 on CachyOS (trial), telemetry off",
       "version": "4.7.0"
     },
     {
@@ -143,13 +144,13 @@
     {
       "name": "figma",
       "kind": "plugin (claude-plugins-official)",
-      "status": "kept 2026-10-22: 62 uses of figma-design-to-code in 20 days; MCP needs re-auth; not yet installed on CachyOS (needs Node)",
+      "status": "installed 2026-10-28 on CachyOS; MCP needs authentication (/mcp)",
       "version": "2.2.157"
     },
     {
       "name": "ponytail",
       "kind": "plugin (DietrichGebert/ponytail)",
-      "status": "kept, user preference; not yet installed on CachyOS (needs Node)",
+      "status": "installed 2026-10-28 on CachyOS, ledger on, no webhook (user preference)",
       "version": "5.3.0"
     },
     {
@@ -181,7 +182,7 @@
       "path": "mods/session-dashboard",
       "version": "0.1.0",
       "install": "/plugin install session-dashboard --marketplace EduardoBojer98/claude-setup",
-      "status": "enabled"
+      "status": "installed 2026-10-28 on CachyOS (band on, no budget alert)"
     }
   ],
   "localSync": {

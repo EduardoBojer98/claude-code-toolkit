@@ -47,6 +47,22 @@ link "$REPO/skills/web-dev-standards" "$DEST/skills/web-dev-standards"
 link "$REPO/skills/toolkit-maintainer" "$DEST/skills/toolkit-maintainer"
 chmod +x "$HERE"/hooks/*.sh
 
+# Node for MCP servers/plugins (npx). Claude Code doesn't load fish/bash nvm hooks, so when node isn't
+# already on PATH, link the newest nvm.fish (~/.local/share/nvm) or nvm (~/.nvm) install into ~/.local/bin.
+node_bin=""
+for base in "${XDG_DATA_HOME:-$HOME/.local/share}/nvm" "$HOME/.nvm/versions/node"; do
+  latest="$(ls -d "$base"/v* 2>/dev/null | sort -V | tail -n1 || true)"
+  [[ -n "$latest" && -x "$latest/bin/node" ]] && { node_bin="$latest/bin"; break; }
+done
+if [[ -n "$node_bin" ]]; then
+  current="$(command -v node || true)"
+  if [[ -z "$current" || "$current" == "$HOME/.local/bin/node" ]]; then
+    for b in node npm npx; do link "$node_bin/$b" "$HOME/.local/bin/$b"; done
+  else
+    echo "ok      node on PATH ($current)"
+  fi
+fi
+
 if [[ $SETTINGS -eq 1 ]]; then
   target="$DEST/settings.json"
   merged="$(python3 - "$HERE/settings.json" "$target" <<'PY'

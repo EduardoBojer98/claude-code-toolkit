@@ -25,6 +25,20 @@ Only the category rows above are attributed to this work.
 Per-skill load size when invoked: `web-dev-standards` went from 14.1 KB (all stacks) to 6.3 KB core + one 1–3 KB
 stack reference, so a Shopify task no longer loads WordPress/nopCommerce/React rules.
 
+### After installing the local plugins (same day)
+
+Figma, Impeccable, session-dashboard and ponytail installed; Shopify Dev MCP added. `claude -p "/context"`:
+
+| Category | Before plugins | After | Main contributors |
+|---|---|---|---|
+| Skills listing | 3.2k | 6.4k | figma ~2.4k (16 skills), ponytail ~0.6k, impeccable ~0.5k |
+| Custom agents | 343 | 602 | plugin agents |
+| Messages at start | 10 | 1.5k | rules ponytail injects into each session |
+| MCP tools (deferred, names only until used) | 3.2k | 16.4k | figma, playwright, shopify-dev-mcp |
+
+That's still below the 7.9k skills baseline. If you stop using Figma or ponytail, disabling them is the
+biggest remaining lever (`claude plugin disable <name>`).
+
 ## 2. Delegation smoke test (routing actually happens)
 
 Scratch repo with two JS files and a fake `.env`. Lead on Sonnet:

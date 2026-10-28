@@ -1,0 +1,45 @@
+{
+  "version": 2,
+  "plugins": {
+    "figma@claude-plugins-official": [
+      {
+        "scope": "user",
+        "installPath": "/home/eduardo/.claude/plugins/cache/claude-plugins-official/figma/2.2.157",
+        "version": "2.2.157",
+        "installedAt": "2026-10-28T11:52:48.672Z",
+        "lastUpdated": "2026-10-28T11:52:48.672Z",
+        "gitCommitSha": "f2789420e7e8b4e2465dfeb1e12e1fc6a31397e5"
+      }
+    ],
+    "impeccable@impeccable": [
+      {
+        "scope": "user",
+        "installPath": "/home/eduardo/.claude/plugins/cache/impeccable/impeccable/4.8.0",
+        "version": "4.8.0",
+        "installedAt": "2026-10-28T11:52:49.527Z",
+        "lastUpdated": "2026-10-28T11:52:49.527Z",
+        "gitCommitSha": "8409a564d1baee90b2dde4f7a8f06288838e3921"
+      }
+    ],
+    "session-dashboard@claude-setup": [
+      {
+        "scope": "user",
+        "installPath": "/home/eduardo/.claude/plugins/cache/claude-setup/session-dashboard/0.1.0",
+        "version": "0.1.0",
+        "installedAt": "2026-10-28T11:52:50.378Z",
+        "lastUpdated": "2026-10-28T11:52:50.378Z",
+        "gitCommitSha": "add3cb3def246ee9f09cca389fb57b1cd0330563"
+      }
+    ],
+    "ponytail@ponytail": [
+      {
+        "scope": "user",
+        "installPath": "/home/eduardo/.claude/plugins/cache/ponytail/ponytail/5.3.2",
+        "version": "5.3.2",
+        "installedAt": "2026-10-28T11:52:51.234Z",
+        "lastUpdated": "2026-10-28T11:52:51.234Z",
+        "gitCommitSha": "09c434ab73ca43761c5d8b0c5d341926c2fba710"
+      }
+    ]
+  }
+}
