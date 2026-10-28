@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-28 (evening): manual and health check
+- `HOW-TO.md` (replaces `USAGE.md`): every feature with its manual command: install/undo, models/effort, agents, skills, plugins and per-project profiles, MCP, Figma sign-in and account switching, hooks, permissions, CLAUDE.md, context/usage, stacks, swapping tools, backups, review, fallback, troubleshooting.
+- `scripts/doctor.sh`: live health check (tools, links, settings vs template, plugins, MCP status, context size); no model calls.
+- Re-verified: doctor all green, 53 offline tests pass, live smoke test (Explore + test-runner on Haiku, guard-bash and guard-secrets blocking) passed at $0.008 list.
+
 ## 2026-10-28 (later): local tools on CachyOS
 - Node 24.22.1 via nvm.fish; `install.sh` links the newest nvm Node into `~/.local/bin` so Claude Code finds `npx` (fish nvm hooks don't apply to it).
 - Playwright MCP connected (uses Google Chrome); Shopify Dev MCP 1.18.0 added (pinned).

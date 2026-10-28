@@ -68,7 +68,7 @@ bash scripts/test.sh
 
 This links the global CLAUDE.md, the routed agents, the hooks and the own skills into `~/.claude`, and merges
 the settings template (permissions, hooks, skill trimming, subagent model). Details: [ARCHITECTURE.md](ARCHITECTURE.md),
-daily use: [USAGE.md](USAGE.md).
+daily use: [HOW-TO.md](HOW-TO.md).
 
 ## 7. Optional Claude Code tools (need Node)
 

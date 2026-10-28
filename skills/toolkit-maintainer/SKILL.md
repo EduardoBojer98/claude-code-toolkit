@@ -39,7 +39,7 @@ The repo is the memory. Read it first, update it last.
 | `archive/` | Retired plugins, old skill versions, old scheduled-task prompts + `README.md` index with restore steps |
 | `templates/CLAUDE.md` | Starter project file for client repos |
 | `claude-code/` | Claude Code user layer (global CLAUDE.md, agents, hooks, settings template, `debug` skill) linked into `~/.claude` by `claude-code/install.sh`; tests in `claude-code/tests/` |
-| `AUDIT.md`, `ARCHITECTURE.md`, `USAGE.md`, `BENCHMARKS.md` | Why the setup looks like this, how it fits together, how to use it, measured cost/context numbers |
+| `AUDIT.md`, `ARCHITECTURE.md`, `HOW-TO.md`, `BENCHMARKS.md` | Why the setup looks like this, how it fits together, how to use it, measured cost/context numbers |
 | `fallback/` | ccfb free-model fallback for Claude Code; `config/providers.toml` lists free providers with sources |
 | `plugins/<name>/` | Snapshot of enabled plugin files (fallback if one vanishes from the directory) |
 | `scripts/refresh-snapshot.sh` | Re-copies plugin + skill files from this session into the repo |

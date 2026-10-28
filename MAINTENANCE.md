@@ -20,7 +20,7 @@ This repo is kept current by the `toolkit-maintainer` skill (`skills/toolkit-mai
 - `web-dev-standards`: facts and practices that changed (WordPress, CodeMate starter, Elementor, ACF, Shopify, nopCommerce, PHP, React, Vite, Tailwind, WCAG, Core Web Vitals, CSS)
 - `fallback/config/providers.toml`: free-provider limits and models (each entry cites its source and date)
 - Snapshot of plugin files (`scripts/refresh-snapshot.sh`), `manifest.json`, `CHANGELOG.md`
-- Claude Code layer (`claude-code/`): run `bash scripts/test.sh`; on the machine compare `claude -p "/context"` with `BENCHMARKS.md`; swapping a tool follows [USAGE.md](USAGE.md#swap-in-a-better-tool-example-a-design-skill)
+- Claude Code layer (`claude-code/`): run `bash scripts/test.sh`; on the machine compare `claude -p "/context"` with `BENCHMARKS.md`; swapping a tool follows [HOW-TO.md](HOW-TO.md#14-swap-in-a-better-tool-example-a-design-skill)
 
 ## Approving a review
 1. Open the PR, read `reviews/YYYY-MM.md`.

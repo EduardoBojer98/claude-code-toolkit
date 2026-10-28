@@ -7,7 +7,8 @@ nopCommerce; React + Vite). It holds two things:
 
 Last updated: 28 Oct 2026. Everything here is free to use.
 
-**New machine?** Follow [SETUP-LINUX.md](SETUP-LINUX.md). **Daily use:** [USAGE.md](USAGE.md).
+**How do I…? → [HOW-TO.md](HOW-TO.md)**: every feature with the manual command.
+**New machine?** Follow [SETUP-LINUX.md](SETUP-LINUX.md).
 **How it works:** [ARCHITECTURE.md](ARCHITECTURE.md). **Why it looks like this:** [AUDIT.md](AUDIT.md), [BENCHMARKS.md](BENCHMARKS.md), [DECISIONS.md](DECISIONS.md).
 
 ## What's in here
@@ -24,7 +25,7 @@ Last updated: 28 Oct 2026. Everything here is free to use.
 | `plugins/` | Snapshot of every enabled claude.ai plugin, a fallback if one leaves the directory |
 | `archive/` | Retired plugins, old skill versions, old snapshots and task prompts, with restore steps. Never deleted |
 | `reviews/` | One report per toolkit review |
-| `scripts/` | `test.sh` (all offline checks), `sync-local.sh` (machine snapshot), `refresh-snapshot.sh` (plugin snapshot from a claude.ai session) |
+| `scripts/` | `doctor.sh` (live health check of this machine, no model calls), `test.sh` (all offline checks), `sync-local.sh` (machine snapshot), `refresh-snapshot.sh` (plugin snapshot from a claude.ai session) |
 | `manifest.json`, `DECISIONS.md`, `CHANGELOG.md` | What is installed, why, and what changed |
 
 Plugins are third-party, open-licensed (see each folder's `LICENSE`). The copies are a fallback; installing
@@ -53,5 +54,5 @@ risky work stays on the main model. Secret reads and writes are blocked, and des
 
 - Change a skill, agent or CLAUDE.md here, then run `git pull` on the machine. The files are symlinked, so nothing else is needed.
 - Change `claude-code/settings.json` → re-run `bash claude-code/install.sh`.
-- Swap a tool (e.g. a better design skill) → [USAGE.md § Swap in a better tool](USAGE.md#swap-in-a-better-tool-example-a-design-skill).
+- Swap a tool (e.g. a better design skill) → [HOW-TO.md § Swap in a better tool](HOW-TO.md#14-swap-in-a-better-tool-example-a-design-skill).
 - Monthly or on demand: *"review my toolkit"* (toolkit-maintainer).
