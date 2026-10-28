@@ -5,7 +5,7 @@ description: Review and update the user's Claude web design and development tool
 
 # Toolkit maintainer
 
-_Version 1.2 · 2026-10-22 (v1.0 in archive/)_
+_Version 1.3 · 2026-10-28 (older versions in archive/)_
 
 Keeps the user's web-dev setup current: finds better free tools, retires weak or newly-paid ones,
 archives what is retired, refreshes the `web-dev-standards` skill with current best practice, and records every decision in the
@@ -38,6 +38,8 @@ The repo is the memory. Read it first, update it last.
 | `skills/<name>/SKILL.md` | Source of truth for the user's own skills |
 | `archive/` | Retired plugins, old skill versions, old scheduled-task prompts + `README.md` index with restore steps |
 | `templates/CLAUDE.md` | Starter project file for client repos |
+| `claude-code/` | Claude Code user layer (global CLAUDE.md, agents, hooks, settings template, `debug` skill) linked into `~/.claude` by `claude-code/install.sh`; tests in `claude-code/tests/` |
+| `AUDIT.md`, `ARCHITECTURE.md`, `USAGE.md`, `BENCHMARKS.md` | Why the setup looks like this, how it fits together, how to use it, measured cost/context numbers |
 | `fallback/` | ccfb free-model fallback for Claude Code; `config/providers.toml` lists free providers with sources |
 | `plugins/<name>/` | Snapshot of enabled plugin files (fallback if one vanishes from the directory) |
 | `scripts/refresh-snapshot.sh` | Re-copies plugin + skill files from this session into the repo |
@@ -63,6 +65,11 @@ Also re-check `manifest.json` → `localClaudeCode` (tools installed in Claude C
 Shopify Dev MCP, Impeccable, figma, ponytail, …). A cloud run can't see that machine: research new
 versions, security notices and pricing changes only, and list what the user should check with `/plugin`.
 Open items from the latest `reviews/` file (e.g. the Impeccable trial result) go into the report as questions.
+
+### 3a. Claude Code layer
+Run `bash scripts/test.sh` (config, hooks, installer, fallback). On the user's machine, compare
+`claude -p "/context"` with `BENCHMARKS.md` (no model call, no usage). Check `claude-code/settings.json`
+`skillOverrides` still matches the synced skill names, and that agent `model` aliases are still documented.
 
 ### 3b. Free-model fallback (ccfb)
 Re-verify every provider and model in `fallback/config/providers.toml` against its cited source: free
@@ -112,6 +119,17 @@ with the full updated SKILL.md files, wait, then confirm with `ListPlugins` / `L
 **Unattended (scheduled run):** apply nothing to the account. Commit the report and proposed skill files on a branch
 `review/YYYY-MM`, open a PR (if that isn't possible, push the branch and give the compare link
 `https://github.com/<repo>/pull/new/review/YYYY-MM`), and send the user a short message: what's recommended and the link.
+
+### 8b. Replacing a tool (e.g. a better design skill)
+1. Archive the old one (`archive/…`, row in `archive/README.md`), never delete.
+2. Install the new one the way it ships: claude.ai plugin/skill card; Claude Code plugin
+   (`/plugin marketplace add …` + `/plugin install …`); own skill → `skills/<name>/` (claude.ai + Claude Code)
+   or `claude-code/skills/<name>/` (Claude Code only) and re-run `claude-code/install.sh`.
+3. Point the routing at it: the routing table in `skills/web-dev-standards/SKILL.md` §2 (design row:
+   one design skill at a time) and, only if it changes delegation, `claude-code/CLAUDE.md`.
+4. Hide what it replaces in Claude Code with `skillOverrides` (`"off"` or `"name-only"`) or
+   `enabledPlugins: {"<plugin>@<marketplace>": false}` in `claude-code/settings.json`.
+5. Measure with `claude -p "/context"`, run `bash scripts/test.sh`, record the result in `DECISIONS.md`, `manifest.json`, `CHANGELOG.md`.
 
 ### 9. Update the repo
 After changes are confirmed (or on the review branch if unattended):
