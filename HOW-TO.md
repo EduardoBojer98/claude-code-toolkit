@@ -130,7 +130,7 @@ What's installed and why:
 | a11y-enforcer, perf-profiler, playwright, caveman | on (synced from claude.ai) | caveman only acts when you say "caveman mode" |
 | impeccable | on | design critique/polish: `/impeccable`; telemetry off (`npx impeccable telemetry off`) |
 | ponytail | on | minimal-code style; levels `lite`/`full`/`ultra` ("ponytail lite"); avoid `ultra` on client sites; `/ponytail-help` |
-| session-dashboard (own) | on | band above the prompt + `/dash`; options: `claude plugin configure session-dashboard@claude-setup` |
+| session-dashboard (own) | on | band above the prompt + `/dash` panel: agents (type, model, status, cost, tools, skills), skills and who loaded them, tokens, cost, context, tools, files. Options: `claude plugin configure session-dashboard@claude-setup`. After a repo change: `claude plugin marketplace update claude-setup && claude plugin update session-dashboard@claude-setup` |
 | figma | off | see [§8](#8-figma-sign-in-when-needed-switch-accounts) |
 | searchfit-seo, WordPress Dev Skills (+ dependency) | off | per-project profiles above |
 

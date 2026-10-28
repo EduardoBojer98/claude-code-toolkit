@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-10-28: session-dashboard 0.2.0
+- The mod now shows every subagent (type, model, status, duration, tokens, cost, task, tools, skills, nested by who spawned it), the cost split lead/agents and agents per model, plus every skill loaded and who loaded it (lead, an agent, or you). Band: `N agents (k running) · M skills`. Tests cover the new views; validated and type-checked.
+
 ## 2026-10-28 (evening): manual and health check
 - `HOW-TO.md` (replaces `USAGE.md`): every feature with its manual command: install/undo, models/effort, agents, skills, plugins and per-project profiles, MCP, Figma sign-in and account switching, hooks, permissions, CLAUDE.md, context/usage, stacks, swapping tools, backups, review, fallback, troubleshooting.
 - `scripts/doctor.sh`: live health check (tools, links, settings vs template, plugins, MCP status, context size); no model calls.
