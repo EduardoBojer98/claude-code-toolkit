@@ -42,3 +42,46 @@ test('a stats value from an older version is read as blank', async ($, on) => {
   expect((await ui.find({ type: 'Text', text: /No tool calls yet/ }))?.text).toBe('No tool calls yet.')
   await ui.unmount()
 })
+
+test('subagents, their models and the skills they load show in the panel', async ($, on) => {
+  on('command.register', () => ({ value: { command: 'dash' } }))
+  on('session.start', (_, e) => ({ cwd: e.cwd }))
+  on('agent.spawn', () => ({ model: 'claude-haiku-5-5', agentId: 'agent-explore-0001' }))
+  on('turn.complete', (_, e) => ({ text: e.answer }))
+  on('skill.prompt', (_, e) => ({ text: e.text }))
+  // A Skill tool call loads its skill inside the call, as in a session.
+  on('clock.now', () => ({ value: 1_000 }))
+  on('tool.call', async (_, e) => {
+    if (e.tool === 'Skill') {
+      await $.skill.prompt({ skill: 'debug', text: '# Debug', frontmatter: {}, source: 'userSettings' })
+    }
+    return { result: {} }
+  })
+
+  await $.session.start({ cwd: '/', surface: 'desktop', isInteractive: true })
+  await $.agent.spawn({
+    prompt: 'find priceWithTax',
+    description: 'Find priceWithTax',
+    subagentType: 'Explore',
+    tool_use_id: 'toolu_1',
+    provider: { plugin: 'engine', tier: 'core' },
+    parentModel: 'claude-opus-5-5',
+    background: false,
+    fork: false,
+  })
+  await $.tool.call({ tool: 'Read', file_path: '/repo/src/price.js', agentId: 'agent-explore-0001' })
+  await $.tool.call({ tool: 'Skill', skill: 'debug', agentId: 'agent-explore-0001' })
+  await $.tool.call({ tool: 'Skill', skill: 'debug' })
+  await $.turn.complete({ answer: 'src/price.js:1', durationMs: 4200, isAborted: false, turnId: 't1', agentId: 'agent-explore-0001', reason: 'answer' })
+
+  for (const surface of ['terminal', 'desktop'] as const) {
+    const ui = await $.ui.mount({ ...PANE, surface })
+    expect((await ui.find({ type: 'Text', text: /^Agents · / }))?.text).toBe('Agents · 1')
+    expect((await ui.find({ type: 'Text', text: /Find priceWithTax/ }))?.text).toContain('Read 1')
+    expect((await ui.find({ type: 'Text', text: /^haiku ×/ }))?.text).toBe('haiku ×1')
+    expect((await ui.find({ type: 'Text', text: /^✓$/ }))?.text).toBe('✓')
+    expect((await ui.find({ type: 'Text', text: /^Skills · / }))?.text).toBe('Skills · 1')
+    expect((await ui.find({ type: 'Text', text: /×2 · / }))?.text).toBe('×2 · Explore#0001, lead')
+    await ui.unmount()
+  }
+})

@@ -1,7 +1,7 @@
 import { atom, read, update } from 'claude-code'
 import type { EngineInterface, Register } from 'claude-code'
 
-import type { Stats } from '../types'
+import type { AgentRun, Stats } from '../types'
 
 const PANE = 'session-dashboard'
 const TITLE = 'Session'
@@ -11,6 +11,7 @@ const WARN = '#e0b050'
 const BAD = '#e06c75'
 const FILE_TOOLS = ['Edit', 'Write', 'MultiEdit', 'NotebookEdit']
 const MAX_FILES = 200
+const MAX_AGENTS = 60
 
 const blank = (): Stats => ({
   startedAt: 0,
@@ -29,11 +30,14 @@ const blank = (): Stats => ({
   tools: {},
   files: [],
   isBudgetWarned: false,
+  agents: {},
+  agentOrder: [],
+  skills: {},
 })
 
 // Change the tag when Stats' fields change: a value stored by an older version
 // is then read as blank instead of half-matching.
-const stats = atom({ plugin: 'session-dashboard', key: 'stats' } as const, blank(), { shape: 'stats-1' })
+const stats = atom({ plugin: 'session-dashboard', key: 'stats' } as const, blank(), { shape: 'stats-2' })
 const now = atom({ plugin: 'session-dashboard', key: 'now' } as const, 0)
 
 // ---------------------------------------------------------------------------
@@ -121,6 +125,49 @@ function bar(pct: number, width: number): string {
   return '█'.repeat(full) + '░'.repeat(width - full)
 }
 
+// Model family for a row: "haiku", "sonnet", "opus", "fable", or the id as given.
+const family = (model: string): string => /haiku|sonnet|opus|fable|mythos/i.exec(model)?.[0].toLowerCase() ?? shortModel(model)
+
+const agentLabel = (s: Stats, id: string): string => (s.agents[id] ? `${s.agents[id].type}#${id.slice(-4)}` : `agent#${id.slice(-4)}`)
+
+const STATUS_MARK: Record<AgentRun['status'], [string, string]> = {
+  running: ['●', WARN],
+  done: ['✓', GOOD],
+  failed: ['✗', BAD],
+  aborted: ['■', BAD],
+}
+
+const agentCost = (s: Stats): number => s.agentOrder.reduce((sum, id) => sum + (s.agents[id]?.costUsd ?? 0), 0)
+const runningCount = (s: Stats): number => s.agentOrder.filter(id => s.agents[id]?.status === 'running').length
+
+// Agents in start order, each followed by the agents it spawned, with their depth.
+function agentTree(s: Stats): [string, number][] {
+  const out: [string, number][] = []
+  const walk = (parent: string, depth: number) => {
+    for (const id of s.agentOrder) {
+      if ((s.agents[id]?.parent ?? '') === parent) {
+        out.push([id, depth])
+        walk(id, depth + 1)
+      }
+    }
+  }
+  walk('', 0)
+  // Agents whose parent was dropped from the list still show, at the top level.
+  for (const id of s.agentOrder) if (!out.some(([o]) => o === id)) out.push([id, 0])
+  return out
+}
+
+function addAgent(s: Stats, id: string, run: AgentRun): Stats {
+  const order = [...s.agentOrder.filter(o => o !== id), id]
+  const dropped = order.length > MAX_AGENTS ? order.slice(0, order.length - MAX_AGENTS) : []
+  const agents = { ...s.agents, [id]: run }
+  for (const d of dropped) delete agents[d]
+  return { ...s, agents, agentOrder: order.slice(-MAX_AGENTS) }
+}
+
+const patchAgent = (s: Stats, id: string | undefined, fn: (a: AgentRun) => AgentRun): Stats =>
+  id && s.agents[id] ? { ...s, agents: { ...s.agents, [id]: fn(s.agents[id]) } } : s
+
 // ---------------------------------------------------------------------------
 
 async function togglePane($: EngineInterface): Promise<boolean> {
@@ -143,6 +190,8 @@ export const register: Register = (on, options) => {
   const showBand = options.band !== 'off'
   const budget = Number(options.budget)
   const hasBudget = Number.isFinite(budget) && budget > 0
+  // Skill tool calls waiting for their skill.prompt: skill name -> caller loop ('' = main).
+  const skillCallers = new Map<string, string>()
 
   on('session.start', async ($, e, next) => {
     const started = await next(e)
@@ -153,7 +202,7 @@ export const register: Register = (on, options) => {
 
     await $.command.register({
       name: 'dash',
-      description: 'Show or hide the session dashboard (tokens, cost, time, tools, files). "/dash reset" starts the counts over',
+      description: 'Show or hide the session dashboard (agents, skills, tokens, cost, time, tools, files). "/dash reset" starts the counts over',
     })
 
     // Ticks the elapsed time; one cheap write a second.
@@ -189,9 +238,17 @@ export const register: Register = (on, options) => {
 
     const model = usage.model || e.model
     const isMain = !e.agentId
+    const stepCost = costOf(model, usage)
     let crossed = false
-    await update($, stats, s => {
-      const costUsd = s.costUsd + costOf(model, usage)
+    await update($, stats, prev => {
+      const s = patchAgent(prev, e.agentId, a => ({
+        ...a,
+        model: model || a.model,
+        requests: a.requests + 1,
+        tokens: a.tokens + promptOf(usage) + (usage.output_tokens || 0),
+        costUsd: a.costUsd + stepCost,
+      }))
+      const costUsd = s.costUsd + stepCost
       crossed = hasBudget && !s.isBudgetWarned && costUsd >= budget
       return {
         ...s,
@@ -217,24 +274,99 @@ export const register: Register = (on, options) => {
   })
 
   on('tool.call', async ($, e, next) => {
+    const args = e as unknown as Record<string, unknown>
+    // The Skill tool loads its skill inside the call: note who asked, for skill.prompt.
+    if (e.tool === 'Skill' && typeof args.skill === 'string') skillCallers.set(args.skill, e.agentId ?? '')
     const ran = await next(e)
     try {
-      const args = e as unknown as Record<string, unknown>
       const raw = args.file_path ?? args.notebook_path
       const path = FILE_TOOLS.includes(e.tool) && typeof raw === 'string' ? raw : ''
       const isError = 'deny' in ran || ('isError' in ran && (ran as { isError?: unknown }).isError === true)
 
-      await update($, stats, s => ({
-        ...s,
-        toolCalls: s.toolCalls + 1,
-        toolErrors: s.toolErrors + (isError ? 1 : 0),
-        tools: { ...s.tools, [e.tool]: (s.tools[e.tool] ?? 0) + 1 },
-        files: path && !isError ? [...s.files.filter(f => f !== path), path].slice(-MAX_FILES) : s.files,
-      }))
+      await update($, stats, prev => {
+        const s = patchAgent(prev, e.agentId, a => ({
+          ...a,
+          toolCalls: a.toolCalls + 1,
+          tools: { ...a.tools, [e.tool]: (a.tools[e.tool] ?? 0) + 1 },
+        }))
+        return {
+          ...s,
+          toolCalls: s.toolCalls + 1,
+          toolErrors: s.toolErrors + (isError ? 1 : 0),
+          tools: { ...s.tools, [e.tool]: (s.tools[e.tool] ?? 0) + 1 },
+          files: path && !isError ? [...s.files.filter(f => f !== path), path].slice(-MAX_FILES) : s.files,
+        }
+      })
     } catch {
       // Bookkeeping only: it never costs the tool its result.
     }
     return ran
+  })
+
+  // A subagent starts: its type, model and who spawned it.
+  on('agent.spawn', async ($, e, next) => {
+    const started = await next(e)
+    if (started.deny !== undefined || !started.agentId) return started
+    const id = started.agentId
+    try {
+      const at = await $.clock.now()
+      await update($, stats, s =>
+        addAgent(s, id, {
+          type: e.subagentType,
+          description: e.description,
+          model: started.model || e.model || e.parentModel,
+          parent: e.parentAgentId ?? '',
+          status: 'running',
+          isBackground: e.background,
+          startedAt: at,
+          durationMs: 0,
+          requests: 0,
+          tokens: 0,
+          costUsd: 0,
+          toolCalls: 0,
+          tools: {},
+          skills: [],
+        }),
+      )
+    } catch {
+      // Bookkeeping only.
+    }
+    return started
+  })
+
+  // A subagent's loop ends: how it ended and how long it took.
+  on('turn.complete', async ($, e, next) => {
+    const done = await next(e)
+    if (e.agentId) {
+      const status: AgentRun['status'] = e.isAborted ? 'aborted' : e.reason === 'answer' ? 'done' : 'failed'
+      try {
+        await update($, stats, s => patchAgent(s, e.agentId, a => ({ ...a, status, durationMs: e.durationMs })))
+      } catch {
+        // Bookkeeping only.
+      }
+    }
+    return done
+  })
+
+  // A skill's text is loaded: by the main session, an agent, or you (slash command / preload).
+  on('skill.prompt', async ($, e, next) => {
+    const loaded = await next(e)
+    const caller = skillCallers.get(e.skill)
+    skillCallers.delete(e.skill)
+    try {
+      await update($, stats, prev => {
+        const s = caller ? patchAgent(prev, caller, a => ({ ...a, skills: [...new Set([...a.skills, e.skill])] })) : prev
+        const who = caller === undefined ? 'you' : caller === '' ? 'lead' : agentLabel(s, caller)
+        const use = s.skills[e.skill] ?? { count: 0, source: e.pluginName ?? e.source, by: {} }
+        return {
+          ...s,
+          skills: { ...s.skills, [e.skill]: { ...use, count: use.count + 1, by: { ...use.by, [who]: (use.by[who] ?? 0) + 1 } } },
+        }
+      })
+    } catch {
+      // Bookkeeping only.
+    }
+    return loaded
   })
 
   // ---- Band above the prompt ------------------------------------------------
@@ -246,6 +378,7 @@ export const register: Register = (on, options) => {
 
     const t = await read($, now)
     const pct = contextPct(s)
+    const skillCount = Object.keys(s.skills).length
     const { Box, Button, Text } = $.ui.resolve(e)
     const dot = <Text dimColor> · </Text>
 
@@ -259,6 +392,14 @@ export const register: Register = (on, options) => {
         <Text>{duration(t - s.startedAt)}</Text>
         {dot}
         <Text>{s.toolCalls} tools</Text>
+        {s.agentOrder.length > 0 && dot}
+        {s.agentOrder.length > 0 && (
+          <Text color={runningCount(s) > 0 ? WARN : undefined}>
+            {s.agentOrder.length} agents{runningCount(s) > 0 ? ` (${runningCount(s)} running)` : ''}
+          </Text>
+        )}
+        {skillCount > 0 && dot}
+        {skillCount > 0 && <Text>{skillCount} skills</Text>}
         {s.files.length > 0 && dot}
         {s.files.length > 0 && <Text>{s.files.length} files</Text>}
         {s.contextMax > 0 && dot}
@@ -293,8 +434,16 @@ export const register: Register = (on, options) => {
     const topTools = Object.entries(s.tools)
       .sort((a, b) => b[1] - a[1])
       .slice(0, 8)
-    const fileRoom = Math.max(3, rows - 34)
+    const tree = agentTree(s).slice(-12)
+    const fileRoom = Math.max(3, rows - 40 - tree.length * 2 - Math.min(10, Object.keys(s.skills).length))
     const recentFiles = s.files.slice(-fileRoom).reverse()
+    const subCost = agentCost(s)
+    const skillRows = Object.entries(s.skills).sort((a, b) => b[1].count - a[1].count)
+    const byModel: Record<string, number> = {}
+    for (const id of s.agentOrder) {
+      const a = s.agents[id]
+      if (a) byModel[family(a.model)] = (byModel[family(a.model)] ?? 0) + 1
+    }
 
     return (
       <Box flexDirection="column" gap={1} paddingX={1}>
@@ -330,6 +479,75 @@ export const register: Register = (on, options) => {
             </Text>
           </Box>
         )}
+
+        <Box flexDirection="column">
+          {heading(
+            'h-agents',
+            `Agents · ${s.agentOrder.length}${runningCount(s) ? ` (${runningCount(s)} running)` : ''}`,
+          )}
+          {s.agentOrder.length === 0 && <Text dimColor>No subagents yet: the main session did everything.</Text>}
+          {s.agentOrder.length > 0 &&
+            row(
+              'agents-split',
+              'Cost lead / agents',
+              `${money(Math.max(0, s.costUsd - subCost))} / ${money(subCost)}`,
+            )}
+          {s.agentOrder.length > 0 &&
+            row(
+              'agents-models',
+              'By model',
+              Object.entries(byModel)
+                .map(([m, n]) => `${m} ×${n}`)
+                .join('  '),
+            )}
+          {tree.map(([id, depth]) => {
+            const a = s.agents[id]
+            if (!a) return null
+            const [mark, color] = STATUS_MARK[a.status]
+            const ran = a.status === 'running' ? t - a.startedAt : a.durationMs
+            const top = Object.entries(a.tools)
+              .sort((x, y) => y[1] - x[1])
+              .slice(0, 3)
+              .map(([n, c]) => `${n} ${c}`)
+              .join(', ')
+            const pad = '  '.repeat(depth)
+            return (
+              <Box key={`agent-${id}`} flexDirection="column">
+                <Box flexDirection="row" justifyContent="space-between">
+                  <Text>
+                    {pad}
+                    <Text color={color}>{mark}</Text> {a.type}
+                    <Text dimColor> · {family(a.model)}</Text>
+                    {a.isBackground ? <Text dimColor> · bg</Text> : null}
+                  </Text>
+                  <Text dimColor>
+                    {duration(ran)} · {count(a.tokens)} tok · {money(a.costUsd)}
+                  </Text>
+                </Box>
+                <Text dimColor>
+                  {pad}  {a.description}
+                  {a.toolCalls ? ` — ${a.toolCalls} tools${top ? `: ${top}` : ''}` : ''}
+                  {a.skills.length ? ` — skills: ${a.skills.join(', ')}` : ''}
+                </Text>
+              </Box>
+            )
+          })}
+          {s.agentOrder.length > tree.length && <Text dimColor>+{s.agentOrder.length - tree.length} earlier</Text>}
+        </Box>
+
+        <Box flexDirection="column">
+          {heading('h-skills', `Skills · ${skillRows.length}`)}
+          {skillRows.length === 0 && <Text dimColor>No skills loaded yet.</Text>}
+          {skillRows.slice(0, 10).map(([name, use]) =>
+            row(
+              `skill-${name}`,
+              name,
+              `×${use.count} · ${Object.entries(use.by)
+                .map(([who, n]) => (n > 1 ? `${who} ×${n}` : who))
+                .join(', ')}`,
+            ),
+          )}
+        </Box>
 
         <Box flexDirection="column">
           {heading('h-tools', `Tools · ${s.toolCalls}${s.toolErrors ? ` (${s.toolErrors} failed)` : ''}`)}

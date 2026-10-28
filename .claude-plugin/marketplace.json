@@ -1,11 +1,13 @@
 {
   "name": "claude-setup",
-  "owner": { "name": "EduardoBojer98" },
+  "owner": {
+    "name": "EduardoBojer98"
+  },
   "plugins": [
     {
       "name": "session-dashboard",
       "source": "./mods/session-dashboard",
-      "description": "Band above the prompt and a /dash panel: tokens, estimated cost, time, context, tool calls and files edited this session."
+      "description": "Band above the prompt and a /dash panel: subagents (type, model, status, cost), skills and who loaded them, tokens, estimated cost, time, context, tool calls and files edited."
     }
   ]
 }

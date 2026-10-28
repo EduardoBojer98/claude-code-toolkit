@@ -9,8 +9,17 @@ A Claude Code mod that shows what the current session is using, in the spirit of
 - **Panel** (`/dash` shows or hides it, `/dash open` opens it, `/dash reset` starts the counts over):
   time, model, requests (main and subagent), cost, input/output/cache tokens, a context bar, the
   most used tools with failures, and the files edited, newest first.
+- **Agents** (since 0.2.0): every subagent the session started, nested under the agent that spawned it:
+  status (● running, ✓ done, ✗ failed, ■ stopped), type (`Explore`, `implementer`, …), model family,
+  background or not, time, tokens, estimated cost, its task description, the tools it called and the skills
+  it loaded. On top: cost split lead / agents and how many agents ran on each model. The band shows
+  `N agents (k running)`.
+- **Skills** (since 0.2.0): each skill loaded this session, how often, and who loaded it: `lead` (main
+  session), an agent (`Explore#1a2b`, the last 4 characters of its id), or `you` (a slash command or a
+  skill preloaded into an agent).
 
-Counts include subagents. The context bar is the main conversation's.
+Counts include subagents. The context bar is the main conversation's. Agent and skill details come from the
+`agent.spawn`, `turn.step`, `turn.complete`, `tool.call` and `skill.prompt` events; up to 60 agents are kept per session.
 
 Cost is a rough estimate from token counts and a per-model price table (`PRICES` in
 `hooks/register.tsx`, adapted from savvy-progress, list prices as of 2026-10-10), not a bill. On a

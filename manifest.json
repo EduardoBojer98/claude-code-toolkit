@@ -187,7 +187,7 @@
     {
       "name": "session-dashboard",
       "path": "mods/session-dashboard",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "install": "/plugin install session-dashboard --marketplace EduardoBojer98/claude-setup",
       "status": "installed 2026-10-28 on CachyOS (band on, no budget alert)"
     }
