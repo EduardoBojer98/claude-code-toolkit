@@ -37,7 +37,8 @@ mv "$tmp" "$file"
 
 # Keep it out of commits: hand-made local files aren't auto-ignored.
 if git -C "$root" rev-parse --git-dir >/dev/null 2>&1 && ! git -C "$root" check-ignore -q "$file"; then
-  echo ".claude/settings.local.json" >> "$(git -C "$root" rev-parse --git-path info/exclude)"
+  # --path-format=absolute: a relative --git-path resolves against the caller's cwd, not $root.
+  echo ".claude/settings.local.json" >> "$(git -C "$root" rev-parse --path-format=absolute --git-path info/exclude)"
   echo "ignored .claude/settings.local.json via .git/info/exclude"
 fi
 
