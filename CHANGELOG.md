@@ -4,6 +4,7 @@
 - `web-dev-standards` 2.3: PHP 8.3+ floor, WordPress 7.1 (responsive `theme.json`, iframed editor), ACF Blocks V3, Elementor 4 note, Shopify strict Liquid, Vite 8 / React Compiler, newly Baseline CSS. v2.2 archived.
 - Fix `claude-code/enable-plugins.sh`: the ignore rule went to the caller's repo when run from another directory (now `--path-format=absolute`). `scripts/test.sh` passes again.
 - `fallback/config/providers.toml`: sources re-checked 2026-11-01; added `google/gemma-4-26b-a4b-it:free` as a backup; Cerebras free context noted (65K). 43 ccfb tests pass.
+- Scheduled task "Monthly toolkit review" disabled at your request (reviews now run manually); prompt archived in `archive/scheduled-tasks/`.
 - DECISIONS: watchlist and pricing re-checked; new Watch (Shopify AI toolkit) and Skip entries. Manifest: account skill copies are behind (2.1 / 1.2), Figma connector disconnected, new built-in `video-making`.
 
 ## 2026-10-28: session-dashboard 0.2.0
