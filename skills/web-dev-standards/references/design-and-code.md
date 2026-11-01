@@ -17,7 +17,7 @@ Part of web-dev-standards. Load for new pages, sections, redesigns, UI review or
 
 ## Code quality (all projects)
 
-- HTML: semantic landmarks, one `main`; buttons for actions, links for navigation, never a clickable `div`; native `<dialog>`, `<details>`, `popover` before custom widgets.
+- HTML: semantic landmarks, one `main`; buttons for actions, links for navigation, never a clickable `div`; native `<dialog>`, `<details>`, `popover` before custom widgets. Baseline newly available (use with a fallback): CSS anchor positioning for tooltips and menus, `@scope`, container style queries, `field-sizing: content`; customizable `<select>` only as progressive enhancement.
 - CSS: no inline styles (except custom-property values); cascade layers (`reset, tokens, base, layout, components, utilities`); low specificity with `:where()`; logical properties; no `!important` except third-party overrides, with a comment; no IDs for styling; one approach per project (BEM-ish or Tailwind, SCSS with `@use`).
 - JS: ES modules, `const`, early returns, no jQuery in new code, progressive enhancement, `AbortController` to clean up listeners, explicit loading/empty/error states.
 - Naming: `kebab-case` files, `PascalCase.tsx` components, `camelCase` JS, prefixed `snake_case` PHP functions per WPCS. Comments explain why. Extract on the third repetition, not the first.
