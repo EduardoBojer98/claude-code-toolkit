@@ -1,19 +1,21 @@
 {
   "repo": "EduardoBojer98/claude-setup",
-  "backedUp": "2026-10-28",
+  "backedUp": "2026-11-01",
   "account": "claude.ai",
   "customSkills": [
     {
       "name": "web-dev-standards",
       "path": "skills/web-dev-standards/ (SKILL.md + references/)",
       "description": "Personal web design and development standards and routing for this user's client work - design direction, accessibility, performance, security, Definition of Done, and stack rules for WordPress (CodeMate starter with SCF sections, block themes, Elementor, ACF, WooCommerce), Shopify (Liquid, metafields, metaobjects), nopCommerce (.NET plugins), React + Vite + TypeScript + Tailwind, and plain HTML/CSS/JS. Use when building, designing, fixing or reviewing a website, theme, plugin, store or web app.",
-      "version": "2.2"
+      "version": "2.3",
+      "accountCopy": "2.1 (2.2 and 2.3 not yet saved to claude.ai; found 2026-11-01)"
     },
     {
       "name": "toolkit-maintainer",
       "path": "skills/toolkit-maintainer/SKILL.md",
       "description": "Review and update the user's Claude web design and development toolkit and its claude-setup backup and archive repo. Use when asked to review, update, maintain, audit, archive, restore or back up skills, plugins or connectors, on the scheduled monthly review, or when the user asks \"is there something better\".",
-      "version": "1.3"
+      "version": "1.3",
+      "accountCopy": "1.2 (1.3 not yet saved to claude.ai; found 2026-11-01)"
     }
   ],
   "plugins": [
@@ -110,30 +112,32 @@
     {
       "name": "Context7",
       "purpose": "Up-to-date library docs",
-      "auth": "free Context7 account (1,000 requests/month)",
+      "auth": "free Context7 account (1,000 requests/month per third-party source 2026-10-06; official plans page gives no number)",
       "status": "connected"
     },
     {
       "name": "Figma",
       "purpose": "Figma files (used from Claude Code via the figma plugin)",
       "auth": "Figma account",
-      "status": "drift 2026-10-28: enabled on claude.ai again, needs authentication"
+      "status": "installed, disconnected (2026-11-01); was archived 2026-10-22 - remove or keep, user decision"
     }
   ],
-  "builtInSkillsNotBackedUp": "docs, docx, xlsx, pptx, pdf, skill-creator, deep-research, chrome-browser, built-in-browser, computer-use, google-workspace, import-memory, morning - these come with every Claude account.",
+  "builtInSkillsNotBackedUp": "docs, docx, xlsx, pptx, pdf, skill-creator, deep-research, chrome-browser, built-in-browser, computer-use, google-workspace, import-memory, morning, video-making (new, seen 2026-11-01) - these come with every Claude account.",
   "localClaudeCode": [
     {
       "name": "shopify-dev-mcp",
       "kind": "mcp",
       "install": "claude mcp add --scope user --transport stdio shopify-dev-mcp -- npx -y @shopify/dev-mcp@1.18.0",
-      "status": "installed 2026-10-28 on CachyOS, pinned 1.18.0, connected"
+      "status": "installed 2026-10-28 on CachyOS, pinned 1.18.0, connected",
+      "review": "2026-11-01: 1.18.0 is still latest (npm)"
     },
     {
       "name": "impeccable",
       "kind": "plugin",
       "install": "/plugin marketplace add pbakaus/impeccable",
       "status": "installed 2026-10-28 on CachyOS (trial), telemetry off",
-      "version": "4.7.0"
+      "version": "4.7.0",
+      "review": "2026-11-01: npm impeccable 4.8.0 (2026-10-26); check /plugin for a plugin update"
     },
     {
       "name": "vercel react-best-practices",
@@ -159,7 +163,8 @@
       "status": "disable 2026-10-22 (never used)",
       "restore": "/plugin → enable hyperframes",
       "version": "0.8.152",
-      "drift": "still enabled in settings.json on Flow-X13 (2026-10-24), though marked disabled 2026-10-22"
+      "drift": "still enabled in settings.json on Flow-X13 (2026-10-24), though marked disabled 2026-10-22",
+      "review": "2026-11-01: upstream at 0.8.226 (npm); irrelevant while disabled"
     },
     {
       "name": "mattpocock-skills",
@@ -173,7 +178,8 @@
       "name": "ccfb",
       "kind": "local gateway (this repo: fallback/)",
       "status": "added 2026-10-22",
-      "install": "bash fallback/install.sh --settings; add keys to ~/.config/claude-fallback/.env; use claude-fb"
+      "install": "bash fallback/install.sh --settings; add keys to ~/.config/claude-fallback/.env; use claude-fb",
+      "review": "2026-11-01: registry re-checked, 43 tests pass"
     },
     {
       "name": "wordpress-official-agent-skills",

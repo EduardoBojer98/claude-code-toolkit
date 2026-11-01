@@ -6,8 +6,8 @@ Free first; paid only with strong evidence (see MAINTENANCE.md). Retired tools a
 ## In (enabled)
 | Tool | Kind | Role | Why | Added | Re-check |
 |---|---|---|---|---|---|
-| web-dev-standards v2.2 | Own skill | Core | Standards, routing per stack (incl. CodeMate starter), Definition of Done; per-stack references | 2026-10-16 (v2.2 2026-10-28) | every review |
-| toolkit-maintainer v1.3 | Own skill | Maintenance | Runs reviews, archives retired tools | 2026-10-16 (v1.1 2026-10-22) | every review |
+| web-dev-standards v2.3 | Own skill | Core | Standards, routing per stack (incl. CodeMate starter), Definition of Done; per-stack references | 2026-10-16 (v2.3 2026-11-01) | every review |
+| toolkit-maintainer v1.3 | Own skill | Maintenance | Runs reviews, archives retired tools | 2026-10-16 (v1.3 2026-10-28) | every review |
 | frontend-design (built-in) | Built-in skill | Core | Visual direction on new pages | built-in | — |
 | Context7 | Connector | Core | Current docs; pinned IDs for Elementor, ACF, nopCommerce | 2026-10-16 | **free tier (watchlist)** |
 | playwright | Plugin (Microsoft) | Review | Screenshots at 375/768/1280, E2E; runs `@latest` (pin if a release breaks) | 2026-10-16 | release notes |
@@ -71,14 +71,21 @@ Free first; paid only with strong evidence (see MAINTENANCE.md). Retired tools a
 ## Watchlist
 | Tool | Status | Re-check |
 |---|---|---|
-| WordPress MCP Adapter (WordPress AI Team) | v0.7.0, pre-1.0; local WP-CLI stdio only if adopted | next review |
-| Elementor MCP (official) | Beta since 2026-09-15; needs Atomic Editor | when out of beta |
+| WordPress MCP Adapter (WordPress AI Team) | v0.7.1 (2026-10-15), still pre-1.0, needs WP 6.9+; local WP-CLI stdio only if adopted. Client bridge: @automattic/mcp-wordpress-remote 0.5.4 (MIT). Directory plugin "wordpress-mcp" (MSApps, community, 0.1.0) wraps it: not before the adapter hits 1.0 | at 1.0 |
+| Elementor MCP (official) | Sources disagree on 2026-11-01: beta post (needs beta channel + Atomic Editor) vs. a launch post with Elementor 4.3 (admin-only, drafts, some abilities need Angie). Only Atomic (V4) layouts; client Elementor sites are mostly V3 | next review |
 | Taste Skill (Leonxlnx) | v2.1, MIT; overlaps frontend-design/Impeccable | if Impeccable is rejected |
 | Vercel web-design-guidelines | Fetches rules from GitHub every run; overlaps Impeccable audit + A11y Enforcer | if Impeccable is rejected |
+| Shopify AI toolkit (Shopify, claude-plugins-official, Claude Code) | Official; 18 dev skills incl. themes; may overlap Shopify Dev MCP. Licence/contents not verified 2026-11-01 | next review (compare with Dev MCP) |
 
 ## Skip
 | Tool | Reason | Checked |
 |---|---|---|
+| Design (Anthropic, knowledge-work-plugins) | Product-design workflow (research, handoff) plus 10 remote SaaS MCPs (Slack, Asana, Gmail…); critique overlaps Impeccable, a11y overlaps A11y Enforcer | 2026-11-01 |
+| Shopify DevKit (community) | Privileged reach with SessionStart/PostToolUse hooks; Shopify Dev MCP + Theme Check cover it | 2026-11-01 |
+| Shopify App Builder (community) | App development, not themes or migrations; privileged | 2026-11-01 |
+| Code Review (16urls, community) / code-review (Anthropic) | Built-in `/code-review` already used | 2026-11-01 |
+| Shopify connector (claude.ai) | Store admin operations; useful only for a migration, add then | 2026-11-01 |
+| Novamira, InstaWP mcp-wp | WordPress MCP servers; Novamira has paid Pro, licences unverified; wait for the official adapter | 2026-11-01 |
 | UI/UX Pro Max | Preset catalogue (styles/palettes) works against distinct direction; can't be uploaded to claude.ai (>200 files) | 2026-10-22 |
 | nopStation MCP Server | Paid; store operations only; nopCommerce 4.90 only | 2026-10-22 |
 | Axe Accessibility (Deque) | Needs paid axe DevTools subscription | 2026-10-16 |
@@ -93,8 +100,8 @@ Free first; paid only with strong evidence (see MAINTENANCE.md). Retired tools a
 ## Pricing watchlist
 | Tool | Current free terms | Source | Checked |
 |---|---|---|---|
-| Context7 | 1,000 requests/month, free account | blog.devgenius.io (Jan 2026) | 2026-10-22 |
-| Figma MCP | View/Collab seats 20 reads/month; Full/Dev not on Starter | developers.figma.com rate limits | 2026-10-22 |
-| Netlify | 300 credits/month | netli.fyi | 2026-10-16 |
-| Vercel Hobby | Free but non-commercial | deploywise.dev | 2026-10-16 |
-| PageSpeed Insights API | Free with a free Google API key | unlighthouse.dev | 2026-10-16 |
+| Context7 | 1,000 requests/month, free account (official plans page: "limited monthly allowance", no number) | blog.picassoia.com (2026-10-06); context7.com/docs/docs7/plans | 2026-11-01 |
+| Figma MCP | View/Collab seats 20 reads/month; Full/Dev Pro 200/day + 10/min | developers.figma.com/docs/figma-mcp-server/rate-limits-access/ | 2026-11-01 |
+| Netlify | 300 credits/month, hard cap | netlify.com/pricing | 2026-11-01 |
+| Vercel Hobby | Free but non-commercial | vercel.com/docs/plans/hobby (updated 2026-09-14) | 2026-11-01 |
+| PageSpeed Insights API | Free with a key, 25,000/day per project (secondary source) | unlighthouse.dev | 2026-11-01 |

@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-11-01: monthly review (reviews/2026-11.md)
+- `web-dev-standards` 2.3: PHP 8.3+ floor, WordPress 7.1 (responsive `theme.json`, iframed editor), ACF Blocks V3, Elementor 4 note, Shopify strict Liquid, Vite 8 / React Compiler, newly Baseline CSS. v2.2 archived.
+- Fix `claude-code/enable-plugins.sh`: the ignore rule went to the caller's repo when run from another directory (now `--path-format=absolute`). `scripts/test.sh` passes again.
+- `fallback/config/providers.toml`: sources re-checked 2026-11-01; added `google/gemma-4-26b-a4b-it:free` as a backup; Cerebras free context noted (65K). 43 ccfb tests pass.
+- DECISIONS: watchlist and pricing re-checked; new Watch (Shopify AI toolkit) and Skip entries. Manifest: account skill copies are behind (2.1 / 1.2), Figma connector disconnected, new built-in `video-making`.
+
 ## 2026-10-28: session-dashboard 0.2.0
 - The mod now shows every subagent (type, model, status, duration, tokens, cost, task, tools, skills, nested by who spawned it), the cost split lead/agents and agents per model, plus every skill loaded and who loaded it (lead, an agent, or you). Band: `N agents (k running) · M skills`. Tests cover the new views; validated and type-checked.
 
