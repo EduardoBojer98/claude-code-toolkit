@@ -19,7 +19,9 @@ fi
 
 step "Dependencies (osv-scanner)"
 if has osv-scanner "sudo pacman -S osv-scanner"; then
-  osv-scanner scan source -r . || fail=1
+  osv-scanner scan source -r .; rc=$?
+  # 0 clean, 1 vulnerabilities, 128 no lockfiles to scan, anything else an error.
+  case $rc in 0) ;; 128) echo "nothing to scan: no lockfiles (package-lock.json, composer.lock, …)" ;; *) fail=1 ;; esac
 fi
 
 step "Code patterns (semgrep)"

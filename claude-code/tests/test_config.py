@@ -221,6 +221,17 @@ class SecurityScan(unittest.TestCase):
             self.assertIn("WordPress plugins", r.stdout)
             self.assertIn("security-scan:", r.stdout)
 
+    def test_osv_without_lockfiles_is_not_a_finding(self):
+        with tempfile.TemporaryDirectory() as d, tempfile.TemporaryDirectory() as fake:
+            Path(fake, "osv-scanner").write_text("#!/bin/sh\nexit 128\n")
+            os.chmod(Path(fake, "osv-scanner"), 0o755)
+            env = dict(os.environ, PATH=f"{fake}:/bin")  # only the fake scanner; other tools skip
+            r = subprocess.run(["bash", str(LAYER / "bin" / "security-scan"), d], env=env,
+                               capture_output=True, text=True, timeout=60)
+            self.assertIn("no lockfiles", r.stdout)
+            self.assertIn("security-scan: no findings", r.stdout)
+            self.assertEqual(r.returncode, 0)
+
 
 if __name__ == "__main__":
     unittest.main()
