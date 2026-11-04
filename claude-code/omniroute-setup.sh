@@ -11,6 +11,17 @@ quiet() { grep -v 'Loaded env\|is ignored' || true; }
 
 command -v omniroute >/dev/null || { echo "Install OmniRoute first: npm i -g omniroute" >&2; exit 1; }
 command -v jq >/dev/null || { echo "Missing jq (sudo pacman -S jq)." >&2; exit 1; }
+
+# OmniRoute accepts anonymous /v1 calls (REQUIRE_API_KEY=false, and it does not validate Claude Code's
+# key either), so it must listen on loopback only, never the LAN (OmniRoute's own .env.example says so).
+ENV_FILE="$HOME/.omniroute/.env"
+mkdir -p "$(dirname "$ENV_FILE")"
+if ! grep -q '^OMNIROUTE_SERVER_HOST=127.0.0.1$' "$ENV_FILE" 2>/dev/null; then
+  sed -i '/^OMNIROUTE_SERVER_HOST=/d' "$ENV_FILE" 2>/dev/null || true
+  echo 'OMNIROUTE_SERVER_HOST=127.0.0.1' >> "$ENV_FILE"
+  omniroute stop >/dev/null 2>&1 || true
+  echo "OmniRoute now listens on 127.0.0.1 only"
+fi
 curl -fs --max-time 3 http://localhost:20128/api/health >/dev/null || omniroute serve --daemon --no-open >/dev/null 2>&1
 for _ in $(seq 1 30); do curl -fs --max-time 2 http://localhost:20128/api/health >/dev/null && break; sleep 1; done
 

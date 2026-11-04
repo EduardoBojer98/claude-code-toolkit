@@ -5,7 +5,7 @@ description: Personal web design and development standards and routing for this 
 
 # Web Dev Standards
 
-_Version 2.4 · 2026-11-04 (last reviewed 2026-11-04) · Source of truth: github.com/EduardoBojer98/claude-setup_
+_Version 2.5 · 2026-11-04 (last reviewed 2026-11-04) · Source of truth: github.com/EduardoBojer98/claude-setup_
 
 Apply by default. When a project has its own conventions or a `CLAUDE.md`/`AGENTS.md`, follow them for
 style and naming, but never go below the floors in §3.

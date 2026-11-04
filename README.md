@@ -191,10 +191,16 @@ Starts Claude Code on free models through OmniRoute (it starts OmniRoute if need
 `claude-free -c` continues the last session, `claude-free -p "…"` for one question.
 
 - Uses the OmniRoute combo **`free-coding`**: NVIDIA Nemotron 3 Ultra → OpenRouter free models
-  (Nemotron 3 Ultra, Nemotron 3.5 Super VL, North Mini Code, Gemma 4 31B) → Ollama Cloud Kimi K2.6.
+  (Nemotron 3 Ultra, Nemotron 3.5 Super VL, North Mini Code). Tested 2026-11-04.
+- **Not for client code.** NVIDIA's trial terms let it use prompts to improve its models
+  ([API Trial Terms §3.3](https://assets.ngc.nvidia.com/products/api-catalog/legal/NVIDIA%20API%20Trial%20Terms%20of%20Service.pdf));
+  OpenRouter's Nemotron `:free` endpoints are served by NVIDIA. Use it for your own and weekend projects.
+- OmniRoute listens on 127.0.0.1 only (set by `omniroute-setup.sh`): it serves `/v1` without checking keys.
   The first model that answers wins; the next is tried on an error or quota limit. Edit the order in
   `claude-code/omniroute-combo.json`, then re-run `omniroute-setup.sh`.
-- The key (`~/.config/claude-free/token`, private) can only use that combo, and every model alias points at it.
+- Every model alias points at that combo. The key (`~/.config/claude-free/token`) is meant to allow only
+  that combo, but OmniRoute 3.8.52 doesn't enforce it (it logs "invalid bearer" and serves the request
+  anonymously). What keeps your Claude subscription out is that the `claude` provider stays inactive.
 - Normal `claude` is untouched: it always uses your Claude subscription directly.
 - Free models are weaker than Claude: use them to keep going on clear tasks, not for hard decisions.
 
@@ -215,15 +221,17 @@ architecture, unknown bugs or final decisions, and you review its diff like any 
 
 ### More free providers (sign up, then add the key in the dashboard → Providers)
 
-Checked 2026-11-04 against OmniRoute's terms catalog and the providers' pages. Only you can create the accounts.
+Re-checked 2026-11-04 (afternoon) with real requests and each provider's terms. Only you can create accounts.
+**No sign-up is worth it right now**; the table says why.
 
-| Provider (OmniRoute id) | Models to add | Free quota | Note |
-|---|---|---|---|
-| Groq (`groq`) | `openai/gpt-oss-120b`, `qwen/qwen3.6-27b` | daily per-model caps, hard stop, no card | very fast; low tokens-per-minute may reject big Claude Code prompts: test first |
-| Cloudflare Workers AI (`cloudflare-ai`) | `@cf/moonshotai/kimi-k2.6` (262k, tools) | 10,000 Neurons/day | different vendor, strong agentic model; Neurons run out fast on big prompts |
-| Z.ai GLM (`glm`) | `glm-4.7-flash` | free Flash models | extra capacity, weaker at agentic coding |
-| SambaNova (`sambanova`) | `gpt-oss-120b`, `DeepSeek-V3.1` | 20 requests/day | emergency fallback only |
-| Mistral (`mistral`), Gemini (`gemini`) | Devstral; Gemini 3.8 Flash | large | **free tiers train on your prompts**: not for client code |
+| Provider (OmniRoute id) | Status | Why |
+|---|---|---|
+| Groq (`groq`) | key added, **not in the combo** | answers small prompts, but the free tier returns 413 on a Claude Code-sized request (~39k tokens, tested) |
+| Cloudflare Workers AI (`cloudflare-ai`) | best for client code if it ever fits | only provider with a primary-source "no training" statement ([data usage](https://developers.cloudflare.com/workers-ai/platform/data-usage/)); Kimi K2.6 now needs Workers Paid ([pricing](https://developers.cloudflare.com/workers-ai/platform/pricing/)) |
+| SambaNova (`sambanova`) | skip | 20 requests/day ([rate limits](https://docs.sambanova.ai/docs/en/models/rate-limits)): one Claude Code task uses more |
+| Cerebras (`cerebras`) | skip | free context 64–65k, below the 128k Claude Code needs ([models](https://inference-docs.cerebras.ai/models/overview)) |
+| Ollama Cloud (`ollama-cloud`) | key kept, dropped from combo | Kimi K2.6 now returns 402 (paid) |
+| Gemini (`gemini`), OpenRouter `gemma-4-31b-it:free` | skip | Google's unpaid tier trains on prompts with human review ([terms](https://aistudio.google.com/docs/terms)) |
 
 After adding a provider: put its models in `claude-code/omniroute-combo.json` (best first) and run
 `bash claude-code/omniroute-setup.sh`, or ask Claude to do it with the audit prompt below.
@@ -242,7 +250,7 @@ After adding a provider: put its models in `claude-code/omniroute-combo.json` (b
 |---|---|---|
 | Quick edits, renames, copy | Sonnet | `/effort low`–`medium` |
 | Normal features, writing, planning | Sonnet or Opus | `medium`–`high` |
-| Bugs, security, architecture, strategy decisions | Opus | `high` (default) or `xhigh` |
+| Bugs, security, architecture, strategy decisions | Opus | `/effort high` or `xhigh` (Opus 5.5 starts at `medium`) |
 | Searches, test runs | Haiku agents (automatic) | low |
 
 - Rarely used skills are hidden (`skillOverrides` in the settings template); tool groups are per project (§2).

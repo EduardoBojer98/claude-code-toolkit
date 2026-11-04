@@ -47,7 +47,7 @@ print("\n".join(out))
 PY
 )"
 if [[ -z "$missing" ]]; then ok "template rules, hooks and skill overrides present"; else bad "missing from settings (re-run installer):"; echo "$missing" | sed 's/^/        /'; fi
-info "model: $(jq -r '.model // "default (your /model choice)"' "$DEST/settings.json"), effort: $(jq -r '.effortLevel // "unset"' "$DEST/settings.json"), subagent default: $(jq -r '.env.CLAUDE_CODE_SUBAGENT_MODEL // "main model"' "$DEST/settings.json")"
+info "model: $(jq -r '.model // "default (your /model choice)"' "$DEST/settings.json"), effort: $(jq -r '[(.modelSettings // {} | to_entries[] | select(.value.effortLevel) | "\(.key)=\(.value.effortLevel)"), "pre-5.5 models=\(.effortLevel // "unset")"] | join(", ")' "$DEST/settings.json") (5.5 models default: medium), subagent default: $(jq -r '.env.CLAUDE_CODE_SUBAGENT_MODEL // "main model"' "$DEST/settings.json")"
 
 echo "== Plugins (enabled = true in user settings)"
 jq -r '.enabledPlugins // {} | to_entries[] | "  \(if .value then "on " else "off" end)   \(.key)"' "$DEST/settings.json"
