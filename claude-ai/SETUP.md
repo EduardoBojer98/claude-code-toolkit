@@ -69,7 +69,7 @@ rm -f ~/web-dev-standards.zip && zip -r ~/web-dev-standards.zip web-dev-standard
 ```
 
 Upload the zip (**Upload skill**), replacing the old version (the account has 2.5 since 2026-11-04).
-**Delete `toolkit-maintainer`** from the same list: it is retired (reviews are now done on request).
+`toolkit-maintainer` is retired and was deleted from the account on 2026-11-04; delete it on any older account.
 Or, in a claude.ai chat, paste the full `SKILL.md` and say *"save this as my web-dev-standards skill through a
 skill card"*; for web-dev-standards the zip is better because the card alone would drop `references/`.
 
