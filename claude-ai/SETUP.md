@@ -68,7 +68,7 @@ cd ~/Documents/projects/claude-setup/skills
 rm -f ~/web-dev-standards.zip && zip -r ~/web-dev-standards.zip web-dev-standards
 ```
 
-Upload the zip (**Upload skill**), replacing the old version (the account had 2.1 on 2026-11-01).
+Upload the zip (**Upload skill**), replacing the old version (the account has 2.5 since 2026-11-04).
 **Delete `toolkit-maintainer`** from the same list: it is retired (reviews are now done on request).
 Or, in a claude.ai chat, paste the full `SKILL.md` and say *"save this as my web-dev-standards skill through a
 skill card"*; for web-dev-standards the zip is better because the card alone would drop `references/`.
