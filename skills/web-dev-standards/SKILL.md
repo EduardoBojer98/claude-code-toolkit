@@ -38,8 +38,8 @@ style and naming, but never go below the floors in §3.
 | `.liquid`, `config/settings_schema.json`, `shopify.theme.toml` | [shopify.md](references/shopify.md) + Shopify Dev MCP | WordPress skills |
 | `*.csproj`, `plugin.json` with `SystemName` | [nopcommerce.md](references/nopcommerce.md) | Front-end design skills unless views change |
 | `vite.config.*`, `tsconfig.json`, React | [react.md](references/react.md) + project's react-best-practices skill | WordPress skills |
-| New page, section, redesign, or any HTML/CSS/JS | [design-and-code.md](references/design-and-code.md); Claude Code: `/impeccable craft` (turn on per project: `enable-plugins.sh design`); claude.ai: `frontend-design` | More than one design skill at once |
-| Animation, scroll effects, page transitions | design-and-code.md → Motion (CSS first); GSAP skills only if the project already uses GSAP (`enable-plugins.sh motion`) | Adding GSAP/Motion to a project for a fade |
+| New page, section, redesign, or any HTML/CSS/JS | [design-and-code.md](references/design-and-code.md); Claude Code: `/impeccable craft` + tasteskill (on everywhere); claude.ai: `frontend-design` | More than one design skill at once |
+| Animation, scroll effects, page transitions | design-and-code.md → Motion (CSS first); Claude Code: `animate`, `choreograph`, `animation-performance` skills; GSAP skills only if the project already uses GSAP (`enable-plugins.sh motion`) | Adding GSAP/Motion to a project for a fade |
 | UI work about to be called done | §4 review: `/impeccable critique` → `polish`, A11y Enforcer, Perf Profiler, Playwright | — |
 | Before deploy or merging client work | `security-scan` in the project (secrets, dependencies, code patterns, WP plugins), then `/security-review`; fix or explain each finding | Paid scanners, `npm audit` + `composer audit` on top (OSV covers both) |
 | A live site to look at, no code | Built-in browser; Chrome only for signed-in client admin | Playwright |
