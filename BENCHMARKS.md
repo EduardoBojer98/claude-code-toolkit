@@ -48,18 +48,20 @@ half the 7.9k baseline.
 
 `claude -p "/context"` from `/tmp`, same machine. "After" = live settings plus the new template keys
 (`claude -p "/context" --settings "$(jq -c '{skillOverrides, enabledPlugins}' claude-code/settings.json)"`),
-because the template isn't installed on the machine until you re-run `install.sh`.
+because the template isn't installed on the machine until you re-run `install.sh`. Re-measured after the real
+`install.sh` run the same day (the "After" column): skills and memory match the estimate.
 
 | Category | Before | After | Change | Why |
 |---|---|---|---|---|
 | Skills listing | 4.3k | 2.7k | **−1.6k** | `dataviz`, `claude-api`, `artifact-capabilities` name-only; synced `cowork-plugin-management` off; the synced duplicates of own skills off again (live settings had drifted) |
-| Memory files | 1.7k | ≈1.7k (est.: 4,458 → 4,089 visible bytes) | ≈ −0.1k | maintainer note moved into a stripped HTML comment, per-project section folded in |
+| Memory files | 1.7k | 1.6k | −0.1k | maintainer note moved into a stripped HTML comment, per-project section folded in |
 | Impeccable hooks + listing | 0 (disabled) | 0 outside design projects | — | `design` profile instead of global on |
 | GSAP skills (8) | — | 0 outside motion projects | — | `motion` profile |
 | security-scan | — | 0 | — | local CLI; only its output enters context when Claude runs it |
-| **Total reported** | 27k | ≈25.4k (est.) | **≈ −1.6k / request** | |
+| **Attributable to this setup** | | | **−1.7k / request** | skills + memory rows |
+| Total reported | 27k | 26.9k | −0.1k | Claude Code's own *System tools* rose 15.5k → 17.1k between the runs, independently of this setup (same drift as §1) |
 
-Unchanged and still the largest blocks: system tools 15.5k + deferred names 31k (Claude Code itself, MCP tool search).
+Unchanged and still the largest blocks: system tools 15.5k–17.1k + deferred names 31k (Claude Code itself, MCP tool search).
 
 ## 2. Delegation smoke test (routing actually happens)
 
