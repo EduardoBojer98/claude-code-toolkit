@@ -48,7 +48,7 @@ Delegate only when the work is independent and its output is bulky or parallel:
 | Run tests/lint/build and summarise failures | `test-runner` | haiku |
 | Read docs/web and return a sourced answer | `researcher` | sonnet |
 | Bounded edit with a known file list and acceptance check | `implementer` | sonnet |
-| Low-risk bulk work: drafts, boilerplate, summaries, simple specified edits | `free-worker` | free models via OmniRoute (0 plan usage) |
+| Low-risk bulk work, never client code (free providers train on prompts) | `free-worker` | free models via OmniRoute (0 plan usage) |
 | Independent multi-step task | `general-purpose` | sonnet (default) |
 
 - Escalate with the Agent tool's `model: "opus"` only for security-sensitive, architectural or

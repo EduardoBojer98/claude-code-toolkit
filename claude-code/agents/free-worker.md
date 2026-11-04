@@ -1,6 +1,6 @@
 ---
 name: free-worker
-description: Hands a bounded, low-risk task to free models through OmniRoute (claude-free), so it costs no Claude plan usage. Use for drafts, boilerplate, summaries of long files or docs, simple well-specified edits, renames, first-pass research and brainstorming lists. Not for security, architecture, debugging an unknown cause, final decisions or client-facing text that is not reviewed. Give it the task, the files/dirs in scope and how to check the result.
+description: Hands a bounded, low-risk task to free models through OmniRoute (claude-free), so it costs no Claude plan usage. Use for drafts, boilerplate, summaries of long files or docs, simple well-specified edits, renames, first-pass research and brainstorming lists. Not for client code or client data (the free providers may train on prompts), security, architecture, debugging an unknown cause, final decisions or client-facing text that is not reviewed. Give it the task, the files/dirs in scope and how to check the result.
 tools: Bash, Read, Grep, Glob
 disallowedTools: Edit, Write, NotebookEdit, Agent
 model: haiku
