@@ -200,12 +200,15 @@ export const register: Register = (on, options) => {
     const started = await next(e)
     const at = await $.clock.now()
     // A reload keeps the stored stats; only a fresh session starts the clock.
-    await update($, stats, s => (s.startedAt > 0 ? s : { ...blank(), startedAt: at }))
+    let isFresh = false
+    await update($, stats, s => (s.startedAt > 0 ? s : ((isFresh = true), { ...blank(), startedAt: at })))
 
     await $.command.register({
       name: 'dash',
       description: 'Show or hide the session dashboard (agents, skills, tokens, cost, time, tools, files). "/dash reset" starts the counts over',
     })
+    // Only on a fresh session, so a reload never reopens a pane the person closed.
+    if (isFresh && options.autoOpen !== 'off') await openPane($)
     return started
   })
 

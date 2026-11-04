@@ -33,6 +33,8 @@ not a bill: on a subscription it shows what the same usage would cost on the API
 `budget` (in `/config`, or `~/.claude/settings.json`): `none` (default), `1`, `2`, `5`, `10` or `25` dollars;
 a toast once the session's estimated cost passes it.
 
+`autoOpen`: `on` (default) opens the panel when a session starts; `off` leaves it to `/dash`.
+
 ```json
 { "pluginConfigs": { "session-dashboard": { "options": { "budget": "5" } } } }
 ```

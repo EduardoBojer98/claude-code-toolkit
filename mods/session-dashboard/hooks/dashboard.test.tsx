@@ -106,3 +106,16 @@ test('draws nothing outside its pane: no band above the prompt, no status line',
   await band?.unmount()
   expect(statusWrites).toBe(0)
 })
+
+for (const autoOpen of ['on', 'off'] as const) {
+  test(`autoOpen ${autoOpen}: the panel opens at a fresh session start only when on`, { options: { autoOpen } }, async ($, on) => {
+    let opened = 0
+    on('command.register', () => ({ value: { command: 'dash' } }))
+    on('clock.now', () => ({ value: 1_000 }))
+    on('ui.open', () => ((opened += 1), { value: { isPlaced: true } }))
+    on('session.start', (_, e) => ({ cwd: e.cwd }))
+
+    await $.session.start({ cwd: '/', surface: 'desktop', isInteractive: true })
+    expect(opened).toBe(autoOpen === 'on' ? 1 : 0)
+  })
+}

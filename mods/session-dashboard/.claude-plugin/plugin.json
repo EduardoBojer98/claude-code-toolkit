@@ -1,6 +1,6 @@
 {
   "name": "session-dashboard",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "A /dash panel: context, estimated cost, tokens and cache hit rate, subagents (type, model, status, cost), skills and who loaded them, tools and files edited. Draws nothing outside its panel, so it never clashes with other bands such as ponytail's.",
   "author": {
     "name": "EduardoBojer98",
@@ -20,6 +20,16 @@
         "5",
         "10",
         "25"
+      ]
+    },
+    "autoOpen": {
+      "type": "string",
+      "title": "Open at session start",
+      "description": "Open the dashboard panel when a session starts (/dash still toggles it)",
+      "default": "on",
+      "options": [
+        "on",
+        "off"
       ]
     }
   },
