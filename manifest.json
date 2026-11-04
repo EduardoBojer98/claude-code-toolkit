@@ -192,8 +192,9 @@
       "name": "gsap-skills",
       "kind": "plugin",
       "install": "claude plugin marketplace add greensock/gsap-skills && claude plugin install gsap-skills@gsap-skills",
-      "status": "picked 2026-11-04 as the motion add-on; off globally, on per project (enable-plugins.sh motion)",
-      "review": "MIT, last push 2026-07-29"
+      "status": "installed 2026-11-04 on CachyOS, disabled at user scope; on per project (enable-plugins.sh motion); ~1k tokens/request when on",
+      "review": "MIT, last push 2026-07-29",
+      "version": "1.0.0"
     }
   ],
   "ownMods": [

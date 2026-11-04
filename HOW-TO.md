@@ -127,7 +127,7 @@ Per-project profiles (in `claude-code/enable-plugins.sh`, edit `PROFILES` to add
 | `seo` | searchfit-seo | ~2k |
 | `figma` | figma | ~2.4k |
 | `design` | impeccable | ~0.2k listing + its hooks' output after edits |
-| `motion` | gsap-skills (8 skills) | ~0.8k (estimate) |
+| `motion` | gsap-skills (8 skills) | ~1k (measured 2026-11-04) |
 
 What's installed and why:
 
