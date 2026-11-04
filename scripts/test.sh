@@ -9,12 +9,10 @@ find "$REPO" -name '*.json' -not -path '*/archive/*' -not -path '*/.git/*' -not 
   | xargs -0 -n1 python3 -m json.tool >/dev/null && echo "ok"
 
 echo "== Shell syntax"
-for f in "$REPO"/claude-code/install.sh "$REPO"/claude-code/enable-plugins.sh "$REPO"/claude-code/bin/security-scan "$REPO"/claude-code/hooks/*.sh "$REPO"/scripts/*.sh "$REPO"/fallback/install.sh; do
+for f in "$REPO"/claude-code/install.sh "$REPO"/claude-code/enable-plugins.sh "$REPO"/claude-code/bin/security-scan "$REPO"/claude-code/hooks/*.sh "$REPO"/claude-code/bin/claude-free "$REPO"/claude-code/omniroute-setup.sh "$REPO"/scripts/*.sh; do
   bash -n "$f"
 done && echo "ok"
 
 echo "== Claude Code layer"
 python3 -m unittest discover -s "$REPO/claude-code/tests"
 
-echo "== Fallback (ccfb)"
-bash "$REPO/fallback/run-tests.sh"

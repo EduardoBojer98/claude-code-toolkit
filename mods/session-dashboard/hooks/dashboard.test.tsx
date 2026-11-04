@@ -85,3 +85,24 @@ test('subagents, their models and the skills they load show in the panel', async
     await ui.unmount()
   }
 })
+
+test('draws nothing outside its pane: no band above the prompt, no status line', async ($, on) => {
+  let statusWrites = 0
+  on('ui.status', () => {
+    statusWrites += 1
+    return { value: undefined }
+  })
+  on('command.register', () => ({ value: { command: 'dash' } }))
+  on('session.start', (_, e) => ({ cwd: e.cwd }))
+  on('tool.call', () => ({ result: {} }))
+
+  await $.session.start({ cwd: '/', surface: 'terminal', isInteractive: true })
+  await $.tool.call({ tool: 'Edit', file_path: '/repo/a.ts', old_string: 'a', new_string: 'b' })
+
+  const band = await $.ui
+    .mount({ plugin: 'session-dashboard', component: 'AbovePrompt', surface: 'terminal', props: { bodyColumns: 80, hasSurvey: false } } as never)
+    .catch(() => undefined)
+  expect(band ? await band.find({ type: 'Button' }) : undefined).toBeUndefined()
+  await band?.unmount()
+  expect(statusWrites).toBe(0)
+})

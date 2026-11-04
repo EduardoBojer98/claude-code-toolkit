@@ -64,6 +64,6 @@ export type Stats = {
 
 declare module 'claude-code' {
   interface PluginState {
-    'session-dashboard': { stats: Shaped<Stats>; now: number }
+    'session-dashboard': { stats: Shaped<Stats> }
   }
 }

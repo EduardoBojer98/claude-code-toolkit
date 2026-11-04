@@ -1,3 +1,0 @@
-debug -> /home/eduardo/Documents/projects/claude-setup/claude-code/skills/debug
-toolkit-maintainer -> /home/eduardo/Documents/projects/claude-setup/skills/toolkit-maintainer
-web-dev-standards -> /home/eduardo/Documents/projects/claude-setup/skills/web-dev-standards

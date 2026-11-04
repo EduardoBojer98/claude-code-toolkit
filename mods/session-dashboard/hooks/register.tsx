@@ -38,7 +38,6 @@ const blank = (): Stats => ({
 // Change the tag when Stats' fields change: a value stored by an older version
 // is then read as blank instead of half-matching.
 const stats = atom({ plugin: 'session-dashboard', key: 'stats' } as const, blank(), { shape: 'stats-2' })
-const now = atom({ plugin: 'session-dashboard', key: 'now' } as const, 0)
 
 // ---------------------------------------------------------------------------
 // Cost estimate. USD per million tokens: input, output, cache read, cache write.
@@ -119,6 +118,11 @@ function shortPath(path: string): string {
 const tokensOf = (s: Stats): number => s.input + s.output + s.cacheRead + s.cacheWrite
 const contextPct = (s: Stats): number => (s.contextMax > 0 ? Math.round((s.contextTokens / s.contextMax) * 100) : 0)
 const contextColor = (pct: number): string => (pct >= 80 ? BAD : pct >= 50 ? WARN : GOOD)
+// Share of prompt tokens served from the prompt cache: high is cheap and fast.
+const cacheHitPct = (s: Stats): number => {
+  const prompt = s.input + s.cacheRead + s.cacheWrite
+  return prompt > 0 ? Math.round((s.cacheRead / prompt) * 100) : 0
+}
 
 function bar(pct: number, width: number): string {
   const full = Math.round((Math.min(100, Math.max(0, pct)) / 100) * width)
@@ -181,13 +185,12 @@ async function togglePane($: EngineInterface): Promise<boolean> {
 }
 
 async function openPane($: EngineInterface): Promise<void> {
-  const at = await $.clock.now()
-  await update($, now, () => at)
   await $.ui.open({ id: PANE, title: TITLE })
 }
 
+// Draws only inside its own /dash pane: no band above the prompt and no status line, both of which
+// other plugins (ponytail) own. The only thing shown outside the pane is the opt-in cost toast.
 export const register: Register = (on, options) => {
-  const showBand = options.band !== 'off'
   const budget = Number(options.budget)
   const hasBudget = Number.isFinite(budget) && budget > 0
   // Skill tool calls waiting for their skill.prompt: skill name -> caller loop ('' = main).
@@ -198,19 +201,10 @@ export const register: Register = (on, options) => {
     const at = await $.clock.now()
     // A reload keeps the stored stats; only a fresh session starts the clock.
     await update($, stats, s => (s.startedAt > 0 ? s : { ...blank(), startedAt: at }))
-    await update($, now, () => at)
 
     await $.command.register({
       name: 'dash',
       description: 'Show or hide the session dashboard (agents, skills, tokens, cost, time, tools, files). "/dash reset" starts the counts over',
-    })
-
-    // Ticks the elapsed time; one cheap write a second.
-    $.clock.every(1000, () => {
-      void (async () => {
-        const t = await $.clock.now()
-        await update($, now, () => t)
-      })()
     })
     return started
   })
@@ -369,55 +363,16 @@ export const register: Register = (on, options) => {
     return loaded
   })
 
-  // ---- Band above the prompt ------------------------------------------------
-
-  on('ui.render', { component: 'AbovePrompt' }, async ($, e, next) => {
-    if (!showBand || e.props.hasSurvey) return next(e)
-    const s = await read($, stats)
-    if (s.requests === 0 && s.toolCalls === 0) return next(e)
-
-    const t = await read($, now)
-    const pct = contextPct(s)
-    const skillCount = Object.keys(s.skills).length
-    const { Box, Button, Text } = $.ui.resolve(e)
-    const dot = <Text dimColor> · </Text>
-
-    return (
-      <Box flexDirection="row">
-        <Text color={ACCENT}>◆ </Text>
-        <Text weight="bold">{money(s.costUsd)}</Text>
-        {dot}
-        <Text>{count(tokensOf(s))} tok</Text>
-        {dot}
-        <Text>{duration(t - s.startedAt)}</Text>
-        {dot}
-        <Text>{s.toolCalls} tools</Text>
-        {s.agentOrder.length > 0 && dot}
-        {s.agentOrder.length > 0 && (
-          <Text color={runningCount(s) > 0 ? WARN : undefined}>
-            {s.agentOrder.length} agents{runningCount(s) > 0 ? ` (${runningCount(s)} running)` : ''}
-          </Text>
-        )}
-        {skillCount > 0 && dot}
-        {skillCount > 0 && <Text>{skillCount} skills</Text>}
-        {s.files.length > 0 && dot}
-        {s.files.length > 0 && <Text>{s.files.length} files</Text>}
-        {s.contextMax > 0 && dot}
-        {s.contextMax > 0 && <Text color={contextColor(pct)}>ctx {pct}%</Text>}
-        <Text> </Text>
-        <Button key="open-dashboard" label="Dashboard" onPress={() => togglePane($)} />
-      </Box>
-    )
-  })
-
   // ---- Panel ------------------------------------------------------------------
 
   on('ui.render', { component: 'Pane', requestId: PANE }, async ($, e) => {
     const { Box, Button, Text } = $.ui.resolve(e)
     const s = await read($, stats)
-    const t = await read($, now)
+    // The pane redraws when the stats change; elapsed time is read then, so no timer is needed.
+    const t = await $.clock.now().catch(() => s.startedAt)
     const pct = contextPct(s)
     const rows = e.viewport?.rows ?? 40
+    const hit = cacheHitPct(s)
 
     const heading = (key: string, text: string) => (
       <Text key={key} color={ACCENT} weight="bold">
@@ -447,16 +402,28 @@ export const register: Register = (on, options) => {
 
     return (
       <Box flexDirection="column" gap={1} paddingX={1}>
+        <Text dimColor>
+          {s.model ? shortModel(s.model) : 'no model yet'} · {duration(t - s.startedAt)} · {s.requests} requests
+          {s.subagentRequests ? ` (${s.subagentRequests} by agents)` : ''}
+        </Text>
+
         <Box flexDirection="column">
-          {heading('h-session', 'Session')}
-          {row('time', 'Time', duration(t - s.startedAt))}
-          {row('model', 'Model', s.model ? shortModel(s.model) : '—')}
-          {row('requests', 'Requests', `${s.requests}${s.subagentRequests ? ` (${s.subagentRequests} subagent)` : ''}`)}
+          {heading('h-ctx', 'Context')}
+          {s.contextMax > 0 ? (
+            <Text color={contextColor(pct)}>
+              {bar(pct, 20)} {pct}% · {count(s.contextTokens)} of {count(s.contextMax)}
+            </Text>
+          ) : (
+            <Text dimColor>Shows after the first request.</Text>
+          )}
+          {pct >= 80 && <Text dimColor>Nearly full: /compact at a break, or /clear for a new task.</Text>}
         </Box>
 
         <Box flexDirection="column">
           {heading('h-cost', 'Cost (estimate)')}
           {row('cost', 'Total', money(s.costUsd), ACCENT)}
+          {s.agentOrder.length > 0 &&
+            row('agents-split', 'Lead / agents', `${money(Math.max(0, s.costUsd - subCost))} / ${money(subCost)}`)}
           {hasBudget && row('budget', 'Alert at', `$${budget}`, s.costUsd >= budget ? BAD : undefined)}
         </Box>
 
@@ -464,21 +431,9 @@ export const register: Register = (on, options) => {
           {heading('h-tokens', `Tokens · ${count(tokensOf(s))}`)}
           {row('in', 'Input', count(s.input))}
           {row('out', 'Output', count(s.output))}
-          {row('cr', 'Cache read', count(s.cacheRead))}
-          {row('cw', 'Cache write', count(s.cacheWrite))}
+          {row('cache', 'Cache read / write', `${count(s.cacheRead)} / ${count(s.cacheWrite)}`)}
+          {row('hit', 'Cache hit', `${hit}%`, hit >= 70 ? GOOD : hit >= 40 ? WARN : undefined)}
         </Box>
-
-        {s.contextMax > 0 && (
-          <Box flexDirection="column">
-            {heading('h-ctx', 'Context')}
-            <Text color={contextColor(pct)}>
-              {bar(pct, 20)} {pct}%
-            </Text>
-            <Text dimColor>
-              {count(s.contextTokens)} of {count(s.contextMax)}
-            </Text>
-          </Box>
-        )}
 
         <Box flexDirection="column">
           {heading(
@@ -486,12 +441,6 @@ export const register: Register = (on, options) => {
             `Agents · ${s.agentOrder.length}${runningCount(s) ? ` (${runningCount(s)} running)` : ''}`,
           )}
           {s.agentOrder.length === 0 && <Text dimColor>No subagents yet: the main session did everything.</Text>}
-          {s.agentOrder.length > 0 &&
-            row(
-              'agents-split',
-              'Cost lead / agents',
-              `${money(Math.max(0, s.costUsd - subCost))} / ${money(subCost)}`,
-            )}
           {s.agentOrder.length > 0 &&
             row(
               'agents-models',
@@ -564,10 +513,10 @@ export const register: Register = (on, options) => {
           {s.files.length > recentFiles.length && <Text dimColor>+{s.files.length - recentFiles.length} more</Text>}
         </Box>
 
-        <Box flexDirection="row" gap={1}>
+        <Box flexDirection="row">
           <Button
             key="reset"
-            label="Reset"
+            label="Reset counts"
             onPress={async () => {
               const at = await $.clock.now()
               await update($, stats, () => ({ ...blank(), startedAt: at }))

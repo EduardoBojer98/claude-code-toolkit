@@ -27,7 +27,9 @@ for f in "$REPO"/claude-code/agents/*.md; do check_link "$DEST/agents/$(basename
 check_link "$DEST/hooks/claude-setup" "$REPO/claude-code/hooks"
 check_link "$DEST/skills/debug" "$REPO/claude-code/skills/debug"
 check_link "$DEST/skills/web-dev-standards" "$REPO/skills/web-dev-standards"
-check_link "$DEST/skills/toolkit-maintainer" "$REPO/skills/toolkit-maintainer"
+for b in security-scan claude-free; do
+  [[ "$(readlink "$HOME/.local/bin/$b")" == "$REPO/claude-code/bin/$b" ]] && ok "~/.local/bin/$b" || bad "~/.local/bin/$b (run: bash claude-code/install.sh)"
+done
 for h in "$REPO"/claude-code/hooks/*.sh; do [[ -x "$h" ]] || bad "hook not executable: $h"; done
 
 echo "== Settings"

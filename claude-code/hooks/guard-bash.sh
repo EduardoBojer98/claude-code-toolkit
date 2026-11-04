@@ -10,7 +10,7 @@ cmd="$(jq -r '.tool_input.command // ""' <<<"$input")"
 [[ -n "$cmd" ]] || exit 0
 
 readers='(cat|less|more|head|tail|bat|batcat|strings|xxd|od|base64|grep|rg|awk|sed|cp|scp|curl|nc)'
-secrets='(\.env(\.[A-Za-z0-9_-]+)?|\.ssh/id_[A-Za-z0-9_]+|\.credentials\.json|\.aws/credentials|\.npmrc|auth\.json|\.netrc|\.pgpass|claude-fallback/\.env)'
+secrets='(\.env(\.[A-Za-z0-9_-]+)?|\.ssh/id_[A-Za-z0-9_]+|\.credentials\.json|\.aws/credentials|\.npmrc|auth\.json|\.netrc|\.pgpass|server\.env|claude-free/token)'
 
 # Template files are fine; counting/quiet matches don't print values.
 check="$(sed -E -e 's/\.env\.(example|sample|dist|template)//g' \

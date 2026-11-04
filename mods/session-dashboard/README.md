@@ -1,63 +1,54 @@
 # session-dashboard
 
-A Claude Code mod that shows what the current session is using, in the spirit of
-[savvy-progress](https://github.com/JohnnyVizz/claude-kit/tree/main/plugins/savvy-progress).
+A Claude Code mod: a `/dash` panel with what the current session is using.
 
-- **Band above the prompt**: estimated cost, total tokens, elapsed time, tool calls, files edited and
-  how full the context is (green under 50%, yellow under 80%, red after), plus a **Dashboard** button.
-  It appears after the first request of the session.
-- **Panel** (`/dash` shows or hides it, `/dash open` opens it, `/dash reset` starts the counts over):
-  time, model, requests (main and subagent), cost, input/output/cache tokens, a context bar, the
-  most used tools with failures, and the files edited, newest first.
-- **Agents** (since 0.2.0): every subagent the session started, nested under the agent that spawned it:
-  status (● running, ✓ done, ✗ failed, ■ stopped), type (`Explore`, `implementer`, …), model family,
-  background or not, time, tokens, estimated cost, its task description, the tools it called and the skills
-  it loaded. On top: cost split lead / agents and how many agents ran on each model. The band shows
-  `N agents (k running)`.
-- **Skills** (since 0.2.0): each skill loaded this session, how often, and who loaded it: `lead` (main
-  session), an agent (`Explore#1a2b`, the last 4 characters of its id), or `you` (a slash command or a
-  skill preloaded into an agent).
+**Draws nothing outside its panel.** No band above the prompt and no status line, so it never covers or
+crowds other mods that use those spots (ponytail's band). The only thing shown outside the panel is the
+opt-in cost toast.
 
-Counts include subagents. The context bar is the main conversation's. Agent and skill details come from the
-`agent.spawn`, `turn.step`, `turn.complete`, `tool.call` and `skill.prompt` events; up to 60 agents are kept per session.
+## Use
 
-Cost is a rough estimate from token counts and a per-model price table (`PRICES` in
-`hooks/register.tsx`, adapted from savvy-progress, list prices as of 2026-10-10), not a bill. On a
-subscription it shows what the same usage would cost on the API.
+| Command | Does |
+|---|---|
+| `/dash` | show or hide the panel (a sidebar in fullscreen terminal and the desktop app) |
+| `/dash open` | open it |
+| `/dash reset` | start the counts over (also the **Reset counts** button) |
+
+The panel, top to bottom:
+- model · elapsed time · requests (and how many came from agents)
+- **Context**: bar and % of the main conversation's window (green < 50%, yellow < 80%, red after; a hint to
+  `/compact` or `/clear` when nearly full)
+- **Cost (estimate)**: total, lead vs agents, the alert amount if set
+- **Tokens**: input, output, cache read/write, **cache hit %** (high = cheap and fast)
+- **Agents**: every subagent nested under who spawned it: status (● running, ✓ done, ✗ failed, ■ stopped),
+  type, model family, time, tokens, cost, task, top tools, skills it loaded; plus count per model
+- **Skills**: each skill loaded, how often, and by whom (`lead`, an agent such as `Explore#1a2b`, or `you`)
+- **Tools** (most used, failures) and **Files edited** (newest first)
+
+Cost is an estimate from token counts and list prices in `hooks/register.tsx` (`PRICES`, as of 2026-10-10),
+not a bill: on a subscription it shows what the same usage would cost on the API.
 
 ## Settings
 
-Set in `/config`, or in `~/.claude/settings.json`:
+`budget` (in `/config`, or `~/.claude/settings.json`): `none` (default), `1`, `2`, `5`, `10` or `25` dollars;
+a toast once the session's estimated cost passes it.
 
 ```json
-{ "pluginConfigs": { "session-dashboard": { "options": { "band": "on", "budget": "5" } } } }
+{ "pluginConfigs": { "session-dashboard": { "options": { "budget": "5" } } } }
 ```
 
-- `band`: `on` (default) or `off` (panel only).
-- `budget`: `none` (default), `1`, `2`, `5`, `10` or `25`: a toast once the session's estimated
-  cost passes that many dollars.
-
 ## Install
-
-At the prompt of a terminal Claude Code session:
 
 ```
 /plugin install session-dashboard --marketplace EduardoBojer98/claude-setup
 ```
 
-Answer `y` to add the marketplace, then pick the user scope. From a shell:
-
-```
-claude plugin install session-dashboard --marketplace EduardoBojer98/claude-setup
-```
-
-The repository is private: the machine needs a GitHub credential first
-(`gh auth login`, then `gh auth setup-git`, or an SSH key); the install never asks for one.
+The repository is private: run `gh auth login` and `gh auth setup-git` first. Update after a repo change:
+`claude plugin marketplace update claude-setup && claude plugin update session-dashboard@claude-setup`.
 
 ## Develop
 
 ```
 claude plugin validate mods/session-dashboard
 claude plugin test mods/session-dashboard
-claude --plugin-dir mods/session-dashboard   # run it from the folder, reloads on save
 ```

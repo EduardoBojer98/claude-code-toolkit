@@ -14,12 +14,12 @@ Token impact: **every turn** = paid on each request (mostly cached); **on use** 
 | 4 | File-type rules in `.claude/rules/*.md` with `paths:` | Loaded only when matching files are touched (CC/memory) | moves them from every turn to on use |
 | 5 | Procedures and reference → skills; keep `SKILL.md` < 500 lines, detail one level deep in `references/` | Only the description loads every turn; body on invoke; references when read ([CC/skills](https://code.claude.com/docs/en/skills), [PL best practices](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices)) | ~100 tokens/skill every turn |
 | 6 | Skill descriptions: what + when, trigger words first, third person; ≤ 1,024 chars for claude.ai, 1,536 in Claude Code | Truncated beyond that; the description is how Claude picks it (CC/skills, PL overview) | every turn |
-| 7 | Hide skills you rarely use: `skillOverrides` `name-only`/`off`; plugins you need in one project → per-project profile | Listings are paid every turn (CC/skills) | **−1.6k/turn here** (measured, BENCHMARKS §5) |
+| 7 | Hide skills you rarely use: `skillOverrides` `name-only`/`off`; plugins you need in one project → per-project profile | Listings are paid every turn (CC/skills) | **−1.6k/turn here** (measured 2026-11-04: 4.3k → 2.7k) |
 | 8 | Must-always-hold rules → hooks, not prose | CLAUDE.md is context, not enforcement; hooks cost 0 tokens unless they print ([CC/features-overview](https://code.claude.com/docs/en/features-overview), CC/costs) | 0 |
 | 9 | Deterministic checks → scripts/CLIs (`security-scan`, tests) | Only their output enters context (PL best practices) | output only |
 | 10 | Prefer CLIs (`gh`, `rg`, `lando`, `shopify`) over MCP; disable unused MCP servers | MCP tool search defers schemas, but names + server instructions still load (CC/costs, [CC/mcp](https://code.claude.com/docs/en/mcp)) | ~10.5k deferred names here |
 | 11 | Subagents for noisy or isolated work (search, test runs, docs); main thread for iterative work | Keeps logs out of the main context; their tokens still count ([CC/sub-agents](https://code.claude.com/docs/en/sub-agents)) | moves bulk off the main context |
-| 12 | Cheap models for cheap work: Explore/test-runner on Haiku, research/bounded edits on Sonnet, the decision on the main model | Agents inherit the main model unless set (CC/sub-agents); measured −45% on a search (BENCHMARKS §3) | large on delegated work |
+| 12 | Cheap models for cheap work: Explore/test-runner on Haiku, research/bounded edits on Sonnet, the decision on the main model | Agents inherit the main model unless set (CC/sub-agents); measured −45% list cost on a repo search (2026-10-28) | large on delegated work |
 | 13 | Effort by task: `low` renames/quick edits, `medium` routine scoped work, `high` bugs and edge cases (our default), `xhigh`/`max` hard problems | Official guidance; Claude Code's own default is `medium` ([CC/model-config](https://code.claude.com/docs/en/model-config)) | thinking is billed as output |
 | 14 | Pick model and effort at session start | Changing model breaks the prompt cache; effort changes keep it on the 5.5 models ([CC/prompt-caching](https://code.claude.com/docs/en/prompt-caching)) | a cache miss re-reads everything once |
 | 15 | `/clear` between unrelated tasks (`/rename` first to find it later) | Free and resets context (CC/costs) | biggest single saver |
@@ -30,7 +30,7 @@ Token impact: **every turn** = paid on each request (mostly cached); **on use** 
 | 20 | Check what loads: `/context`, `/usage`, `/skill-doctor`, `/doctor prompt-audit` | Built-in measurement (CC/memory, CC/skills) | — |
 
 Not verified this time: the claude.ai Styles help page (404), MCP tool-search token figures, a community
-source with measured savings beyond our own BENCHMARKS.md.
+source with measured savings beyond our own measurements.
 
 ## Audit of this setup (2026-11-04)
 

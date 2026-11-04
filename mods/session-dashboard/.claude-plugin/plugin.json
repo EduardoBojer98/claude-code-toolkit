@@ -1,23 +1,13 @@
 {
   "name": "session-dashboard",
-  "version": "0.2.0",
-  "description": "A band above the prompt and a /dash panel: subagents (type, model, status, cost), skills and who loaded them, tokens, estimated cost, time, context, tool calls and files edited.",
+  "version": "0.3.0",
+  "description": "A /dash panel: context, estimated cost, tokens and cache hit rate, subagents (type, model, status, cost), skills and who loaded them, tools and files edited. Draws nothing outside its panel, so it never clashes with other bands such as ponytail's.",
   "author": {
     "name": "EduardoBojer98",
     "url": "https://github.com/EduardoBojer98"
   },
   "types": "./types/index.d.ts",
   "userConfig": {
-    "band": {
-      "type": "string",
-      "title": "Band above the prompt",
-      "description": "on: show the one-line summary above the prompt; off: only the /dashboard panel",
-      "default": "on",
-      "options": [
-        "on",
-        "off"
-      ]
-    },
     "budget": {
       "type": "string",
       "title": "Cost alert (USD)",

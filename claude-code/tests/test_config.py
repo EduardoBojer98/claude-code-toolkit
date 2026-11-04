@@ -77,7 +77,7 @@ class ConfigFiles(unittest.TestCase):
             self.assertIn("Output", body, f"{a.name} needs an explicit output format")
 
     def test_skills_frontmatter_and_links(self):
-        skills = [LAYER / "skills" / "debug", REPO / "skills" / "web-dev-standards", REPO / "skills" / "toolkit-maintainer"]
+        skills = [LAYER / "skills" / "debug", REPO / "skills" / "web-dev-standards"]
         for d in skills:
             fields, body = frontmatter(d / "SKILL.md")
             self.assertEqual(fields["name"], d.name)
@@ -110,7 +110,7 @@ class Hooks(unittest.TestCase):
     def test_guard_bash(self):
         blocked = ["cat .env", "cat ./app/.env.local", "less ~/.ssh/id_ed25519", "head -5 ~/.claude/.credentials.json",
                    "cd x && cat .env", "grep KEY .env", "cat .env.example .env",
-                   "grep -q x .env; cat .env"]
+                   "grep -q x .env; cat .env", "cat ~/.omniroute/server.env", "cat ~/.config/claude-free/token"]
         allowed = ["cat .env.example", "grep -q '^DB_NAME=' .env && echo set", "rg process.env src/", "ls -la",
                    "npm test", "git diff", "cat README.md"]
         for c in blocked:
@@ -161,7 +161,8 @@ class Installer(unittest.TestCase):
                              "an old skill folder must not stay in skills/, where it would load as a duplicate")
             self.assertTrue((cfg / "skills" / "web-dev-standards" / "references" / "wordpress.md").is_file())
             self.assertTrue(os.access(cfg / "hooks" / "claude-setup" / "guard-bash.sh", os.X_OK))
-            self.assertTrue(os.access(Path(home, ".local", "bin", "security-scan"), os.X_OK))
+            for b in ("security-scan", "claude-free"):
+                self.assertTrue(os.access(Path(home, ".local", "bin", b), os.X_OK), b)
 
             second = self.install(home)
             self.assertEqual(second.returncode, 0, second.stderr)

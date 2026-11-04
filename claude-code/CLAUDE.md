@@ -5,10 +5,19 @@ Edit it in the repo, never in ~/.claude. HTML comments are stripped before Claud
 Project `CLAUDE.md` / `AGENTS.md` files win on project specifics; these rules are the floor.
 
 ## Context
-Full-stack web developer on CachyOS (Linux, fish shell, Docker + Lando). Client work: WordPress
-(CodeMate starter, ACF/SCF, Elementor, WooCommerce), Shopify themes, React + Vite + TS, Node, PHP.
+Full-stack web developer and business owner on CachyOS (Linux, fish shell, Docker + Lando). Used for
+everything: client work (WordPress with CodeMate starter, ACF/SCF, Elementor, WooCommerce; Shopify;
+React + Vite + TS; Node; PHP), business strategy and planning, and weekend projects.
 For web build/design/review work, load the `web-dev-standards` skill; for a bug, load `debug`.
 Before a deploy or a client-work merge: run `security-scan` (local CLIs, no tokens), then `/security-review`.
+
+## Replies (always on, "caveman lite")
+- Answer first: the fact, number, command, path or decision. No preamble, no restating the question,
+  no praise, no recap of what you just did beyond the result, no closing offers.
+- Short sentences, plain words; bullets over paragraphs; drop every word that adds no information.
+- Code, commands, errors, file names and numbers stay exact and complete.
+- Explain only when asked or when a choice has a real trade-off: then one line of why.
+- "caveman" = terser still; "normal mode" = full prose for this session.
 
 ## Before editing
 1. Read the nearest `CLAUDE.md`/`AGENTS.md`, then `package.json` scripts / `composer.json` / `.lando.yml`

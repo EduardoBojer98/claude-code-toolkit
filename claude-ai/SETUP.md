@@ -9,16 +9,22 @@ if a label moved, search the Settings page for the bold word.
 **Settings → General → "What personal preferences should Claude consider in responses?"** Paste:
 
 ```text
-I'm a full-stack web developer (WordPress with ACF/SCF and Elementor, WooCommerce, Shopify Liquid,
-nopCommerce, React + Vite + TypeScript + Tailwind, plain HTML/CSS/JS). I work on Linux (CachyOS, fish).
-- Answer first, then the reasoning only if it matters. Plain English, short paragraphs, no filler.
+I'm a full-stack web developer and business owner (WordPress with ACF/SCF and Elementor, WooCommerce,
+Shopify, nopCommerce, React + Vite + TypeScript + Tailwind, plain HTML/CSS/JS; Linux, CachyOS). I use
+Claude for client work, business strategy and planning, and weekend projects.
+Replies:
+- Answer first: the fact, number, decision or next step. No preamble, no restating my question,
+  no praise, no summary of what you just said, no closing offers.
+- Short sentences, plain words, bullets over paragraphs. Cut every word that adds no information.
+- Explain only when I ask or when a choice has a real trade-off: then one line of why.
+- Code, commands, errors and numbers stay exact and complete.
+Work:
 - Code: smallest change that works, match the existing project style, no new dependency without a reason.
-- Never invent APIs, options or versions; say when you are unsure and check docs (Context7) first.
-- For web work, follow my web-dev-standards skill (accessibility, performance, security floors).
-- Don't claim something works unless it was run or checked.
+- Never invent APIs, options, versions, prices or facts; say when unsure and check sources first.
+- For web work, follow my web-dev-standards skill. Don't claim something works unless it was checked.
 ```
 
-Why: preferences load into every chat, so they hold only what applies to all of them (about 120 tokens).
+Why: preferences load into every chat, so they hold only what applies to all of them (about 200 tokens).
 Stack detail lives in the `web-dev-standards` skill, which loads only when a web task needs it.
 
 ## 2. Projects (one per client or per long-running job)
@@ -48,7 +54,7 @@ Done means: works at 375/768/1280, WCAG 2.2 AA, no console errors, security-scan
 
 ## 4. Styles
 
-Use the built-in **Concise** style (style menu under the message box) for quick questions and code
+Pick the built-in **Concise** style (style menu under the message box) for everyday chats and code
 fixes; **Normal** for planning and explanations. No custom style needed: your preferences already set tone.
 
 ## 5. Skills (Settings → Capabilities → Skills; some accounts show "Features")
@@ -56,15 +62,14 @@ fixes; **Normal** for planning and explanations. No custom style needed: your pr
 | Skill | Version | Upload |
 |---|---|---|
 | `web-dev-standards` | 2.4 | zip `skills/web-dev-standards` **with** its `references/` folder |
-| `toolkit-maintainer` | 1.4 | zip `skills/toolkit-maintainer` |
 
 ```bash
 cd ~/Documents/projects/claude-setup/skills
 zip -r ~/web-dev-standards.zip web-dev-standards
-zip -r ~/toolkit-maintainer.zip toolkit-maintainer
 ```
 
-Upload each zip (**Upload skill**), replacing the old version (the account had 2.1 and 1.2 on 2026-11-01).
+Upload the zip (**Upload skill**), replacing the old version (the account had 2.1 on 2026-11-01).
+**Delete `toolkit-maintainer`** from the same list: it is retired (reviews are now done on request).
 Or, in a claude.ai chat, paste the full `SKILL.md` and say *"save this as my web-dev-standards skill through a
 skill card"*; for web-dev-standards the zip is better because the card alone would drop `references/`.
 

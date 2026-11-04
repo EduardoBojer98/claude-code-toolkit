@@ -1,0 +1,20 @@
+{
+  "name": "free-coding",
+  "strategy": "priority",
+  "config": {
+    "maxRetries": 1,
+    "retryDelayMs": 2000,
+    "fallbackDelayMs": 0,
+    "maxComboDepth": 3,
+    "trackMetrics": true,
+    "reasoningTokenBufferEnabled": true
+  },
+  "models": [
+    { "kind": "model", "model": "nvidia/nvidia/nemotron-3-ultra-550b-a55b", "providerId": "nvidia", "weight": 0 },
+    { "kind": "model", "model": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free", "providerId": "openrouter", "weight": 0 },
+    { "kind": "model", "model": "openrouter/nvidia/nemotron-3.5-super-vl:free", "providerId": "openrouter", "weight": 0 },
+    { "kind": "model", "model": "openrouter/cohere/north-mini-code:free", "providerId": "openrouter", "weight": 0 },
+    { "kind": "model", "model": "openrouter/google/gemma-4-31b-it:free", "providerId": "openrouter", "weight": 0 },
+    { "kind": "model", "model": "ollamacloud/kimi-k2.6", "providerId": "ollama-cloud", "weight": 0 }
+  ]
+}
