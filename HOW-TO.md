@@ -25,6 +25,10 @@ How the pieces fit: [ARCHITECTURE.md](ARCHITECTURE.md). Why: [AUDIT.md](AUDIT.md
 | Debug something | `/debug` or describe the bug |
 | Build/review a website | just ask; `web-dev-standards` loads itself |
 | WordPress skills in a WP project | `bash $R/claude-code/enable-plugins.sh wordpress <project-dir>` |
+| Design tools (Impeccable) in a project | `bash $R/claude-code/enable-plugins.sh design <project-dir>`, new session, `/impeccable craft` |
+| GSAP skills in a project that uses GSAP | `bash $R/claude-code/enable-plugins.sh motion <project-dir>` |
+| Security check before deploy | `security-scan` in the project, then `/security-review` in Claude Code ([§19](#19-security-scan)) |
+| Set up claude.ai | [claude-ai/SETUP.md](claude-ai/SETUP.md) |
 | Use Figma | `claude plugin enable figma@claude-plugins-official`, new session, `/mcp` → Figma → sign in |
 | See what fills my context / usage | `/context` · `/usage` |
 | Start fresh between tasks | `/clear` |
@@ -122,13 +126,16 @@ Per-project profiles (in `claude-code/enable-plugins.sh`, edit `PROFILES` to add
 | `wordpress` | WordPress Dev Skills + wordpress-official-agent-skills | ~3.6k tokens/request |
 | `seo` | searchfit-seo | ~2k |
 | `figma` | figma | ~2.4k |
+| `design` | impeccable | ~0.2k listing + its hooks' output after edits |
+| `motion` | gsap-skills (8 skills) | ~0.8k (estimate) |
 
 What's installed and why:
 
 | Plugin | Default | Notes |
 |---|---|---|
 | a11y-enforcer, perf-profiler, playwright, caveman | on (synced from claude.ai) | caveman only acts when you say "caveman mode" |
-| impeccable | on | design critique/polish: `/impeccable`; telemetry off (`npx impeccable telemetry off`) |
+| impeccable | off (profile `design`) | the design skill: `/impeccable craft`, `critique`, `polish`, `audit`; telemetry off (`npx impeccable telemetry off`) |
+| gsap-skills | off (profile `motion`) | install once: `claude plugin marketplace add greensock/gsap-skills && claude plugin install gsap-skills@gsap-skills --scope user`, then `claude plugin disable gsap-skills@gsap-skills` |
 | ponytail | on | minimal-code style; levels `lite`/`full`/`ultra` ("ponytail lite"); avoid `ultra` on client sites; `/ponytail-help` |
 | session-dashboard (own) | on | band above the prompt + `/dash` panel: agents (type, model, status, cost, tools, skills), skills and who loaded them, tokens, cost, context, tools, files. Options: `claude plugin configure session-dashboard@claude-setup`. After a repo change: `claude plugin marketplace update claude-setup && claude plugin update session-dashboard@claude-setup` |
 | figma | off | see [§8](#8-figma-sign-in-when-needed-switch-accounts) |
@@ -243,8 +250,8 @@ Git identity isn't set globally on this machine. Set it once with
 
 ## 16. Monthly toolkit review
 
-Runs on claude.ai on the 1st (scheduled task "Monthly toolkit review") and opens a PR with `reviews/YYYY-MM.md`.
-On demand: *"review my toolkit"* or *"is there something better than X?"*. Process: [MAINTENANCE.md](MAINTENANCE.md).
+Manual since 2026-11-01 (the scheduled task is disabled): ask *"run the monthly toolkit review"* once a month.
+It writes `reviews/YYYY-MM.md` and opens a PR. On demand: *"review my toolkit"* or *"is there something better than X?"*. Process: [MAINTENANCE.md](MAINTENANCE.md).
 
 ## 17. Free-model fallback (ccfb, optional)
 
@@ -270,3 +277,24 @@ Details: [fallback/README.md](fallback/README.md).
 | Too many permission prompts | add `allow` rules (§10) or run `/fewer-permission-prompts` |
 | Usage climbing fast | `/usage` attribution; `/clear` between tasks; lower `/effort`; disable unused plugins (§6) |
 | Figma "needs authentication" | expected until you need it (§8) |
+
+## 19. Security scan
+
+One-time install (CachyOS):
+
+```bash
+sudo pacman -S gitleaks osv-scanner python-pipx
+pipx install semgrep
+```
+
+| Task | Command |
+|---|---|
+| Scan a project before deploy | `security-scan` (in the project) or `security-scan <dir>` |
+| Then the AI review of your changes | `/security-review` inside Claude Code |
+| Only secrets / only dependencies | `gitleaks git . --redact -v` · `osv-scanner scan source -r .` |
+| WordPress plugins only | `lando wp plugin list --format=json \| python3 $R/claude-code/bin/wp-vuln-check.py` |
+| A finding is a false positive | gitleaks: add the path to a `.gitleaks.toml` allowlist (see this repo's); semgrep: `// nosemgrep` on that line with a reason |
+
+What leaves your machine: OSV-Scanner sends package names + versions to osv.dev; the WordPress check sends plugin
+slugs + versions to wpvulnerability.net; semgrep downloads rules (`--metrics=off`). Secrets and code stay local.
+Missing tools are skipped with the install command; the scan exits 1 when anything is found.

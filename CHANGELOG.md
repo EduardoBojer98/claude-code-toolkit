@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-11-04: best practices, design and security (`setup/best-practices`)
+- New [BEST-PRACTICES.md](BEST-PRACTICES.md): 20-item checklist from the official docs with token impact, and an audit of this setup.
+- Design: **Impeccable** is the one design skill in Claude Code, off globally and on per project (`enable-plugins.sh design`); **GSAP skills** as the only motion add-on (`enable-plugins.sh motion`). Motion rules (CSS → scroll-driven → View Transitions → library) in design-and-code.md.
+- Security: new `security-scan` command (gitleaks, OSV-Scanner, Semgrep, WordPress plugins via wpvulnerability.net), then `/security-review`; in CLAUDE.md, routing and Definition of Done. `.gitleaks.toml` for this repo's fixtures.
+- `web-dev-standards` 2.4 and `toolkit-maintainer` 1.4 (v2.3 / v1.3 archived).
+- Settings template: three built-in skill listings name-only, synced cowork plugin off, Impeccable/GSAP off globally, security CLIs allowed. Skills listing 4.3k → 2.7k per request.
+- CLAUDE.md: maintainer note in an HTML comment, "before deploy" line, per-project setup section (from the drifted live copy).
+- `templates/CLAUDE.md`: guidance in a stripped comment, `.claude/rules` hint, security step.
+- New [claude-ai/SETUP.md](claude-ai/SETUP.md): preferences, project instructions, memory, styles, skill uploads, how to write a request.
+- README rewritten; HOW-TO updated. Tests: profiles, security-scan, WordPress version ranges.
+
 ## 2026-11-01: monthly review (reviews/2026-11.md)
 - `web-dev-standards` 2.3: PHP 8.3+ floor, WordPress 7.1 (responsive `theme.json`, iframed editor), ACF Blocks V3, Elementor 4 note, Shopify strict Liquid, Vite 8 / React Compiler, newly Baseline CSS. v2.2 archived.
 - Fix `claude-code/enable-plugins.sh`: the ignore rule went to the caller's repo when run from another directory (now `--path-format=absolute`). `scripts/test.sh` passes again.

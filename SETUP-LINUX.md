@@ -82,7 +82,9 @@ claude mcp add --scope user --transport stdio shopify-dev-mcp -- npx -y @shopify
 Plugins can also be installed from the terminal: `claude plugin marketplace add <owner/repo>` then
 `claude plugin install <name>@<marketplace> --scope user`. Inside Claude Code:
 - **figma**: `claude plugin install figma@claude-plugins-official --scope user`. It stays off by default (settings template); enable it when you need it and sign in via `/mcp` with the Figma account for that job.
-- **Impeccable** (design critique/polish trial): `/plugin marketplace add pbakaus/impeccable`, install, then `npx impeccable telemetry off`.
+- **Impeccable** (the design skill, off globally): `claude plugin marketplace add pbakaus/impeccable && claude plugin install impeccable@impeccable --scope user && claude plugin disable impeccable@impeccable`, then `npx impeccable telemetry off`. Turn on per project with `enable-plugins.sh design`.
+- **GSAP skills** (motion, off globally): `claude plugin marketplace add greensock/gsap-skills && claude plugin install gsap-skills@gsap-skills --scope user && claude plugin disable gsap-skills@gsap-skills`.
+- **Security CLIs**: `sudo pacman -S gitleaks osv-scanner python-pipx && pipx install semgrep` (used by `security-scan`).
 - **session-dashboard** (own mod): `/plugin install session-dashboard --marketplace EduardoBojer98/claude-setup`.
 - **ponytail** (optional): `/plugin marketplace add DietrichGebert/ponytail`; keep it on `lite`/`full`. It injects rules every turn, so check `/context` to see its cost.
 - **WordPress Dev Skills** (synced from claude.ai) needs its dependency: `claude plugin marketplace add mralaminahamed/wordpress-official-agent-skills` then `claude plugin install wordpress-official-agent-skills@wordpress-official-agent-skills --scope user`. Both stay off globally (settings template); turn them on per WordPress project with `bash claude-code/enable-plugins.sh wordpress <dir>`.

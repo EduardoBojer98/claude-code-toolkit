@@ -7,15 +7,15 @@
       "name": "web-dev-standards",
       "path": "skills/web-dev-standards/ (SKILL.md + references/)",
       "description": "Personal web design and development standards and routing for this user's client work - design direction, accessibility, performance, security, Definition of Done, and stack rules for WordPress (CodeMate starter with SCF sections, block themes, Elementor, ACF, WooCommerce), Shopify (Liquid, metafields, metaobjects), nopCommerce (.NET plugins), React + Vite + TypeScript + Tailwind, and plain HTML/CSS/JS. Use when building, designing, fixing or reviewing a website, theme, plugin, store or web app.",
-      "version": "2.3",
-      "accountCopy": "2.1 (2.2 and 2.3 not yet saved to claude.ai; found 2026-11-01)"
+      "version": "2.4",
+      "accountCopy": "2.1 (2.2–2.4 not yet saved to claude.ai; upload per claude-ai/SETUP.md §5)"
     },
     {
       "name": "toolkit-maintainer",
       "path": "skills/toolkit-maintainer/SKILL.md",
       "description": "Review and update the user's Claude web design and development toolkit and its claude-setup backup and archive repo. Use when asked to review, update, maintain, audit, archive, restore or back up skills, plugins or connectors, on the scheduled monthly review, or when the user asks \"is there something better\".",
-      "version": "1.3",
-      "accountCopy": "1.2 (1.3 not yet saved to claude.ai; found 2026-11-01)"
+      "version": "1.4",
+      "accountCopy": "1.2 (1.3–1.4 not yet saved to claude.ai)"
     }
   ],
   "plugins": [
@@ -135,9 +135,9 @@
       "name": "impeccable",
       "kind": "plugin",
       "install": "/plugin marketplace add pbakaus/impeccable",
-      "status": "installed 2026-10-28 on CachyOS (trial), telemetry off",
-      "version": "4.7.0",
-      "review": "2026-11-01: npm impeccable 4.8.0 (2026-10-26); check /plugin for a plugin update"
+      "status": "installed 2026-10-28 on CachyOS, telemetry off; adopted 2026-11-04 as the design skill, off globally, on per project (enable-plugins.sh design)",
+      "version": "4.8.0",
+      "review": "2026-11-04: 4.8.0 installed; has SessionStart/PostToolUse/Stop hooks"
     },
     {
       "name": "vercel react-best-practices",
@@ -187,6 +187,13 @@
       "install": "claude plugin marketplace add mralaminahamed/wordpress-official-agent-skills && claude plugin install wordpress-official-agent-skills@wordpress-official-agent-skills --scope user",
       "status": "installed 2026-10-28, dependency of WordPress Dev Skills",
       "version": "1.0.0"
+    },
+    {
+      "name": "gsap-skills",
+      "kind": "plugin",
+      "install": "claude plugin marketplace add greensock/gsap-skills && claude plugin install gsap-skills@gsap-skills",
+      "status": "picked 2026-11-04 as the motion add-on; off globally, on per project (enable-plugins.sh motion)",
+      "review": "MIT, last push 2026-07-29"
     }
   ],
   "ownMods": [
@@ -216,8 +223,8 @@
     },
     "skills": [
       "debug",
-      "web-dev-standards (link)",
-      "toolkit-maintainer (link)"
+      "web-dev-standards 2.4 (link)",
+      "toolkit-maintainer 1.4 (link)"
     ],
     "hooks": [
       "guard-secrets",
@@ -229,7 +236,10 @@
         "searchfit-seo@synced",
         "wp-dev-skills@synced",
         "wordpress-official-agent-skills@wordpress-official-agent-skills",
-        "figma@claude-plugins-official"
+        "figma@claude-plugins-official",
+        "impeccable@impeccable",
+        "gsap-skills@gsap-skills",
+        "cowork-plugin-management@synced"
       ],
       "skillsOff": [
         "morning",
@@ -249,7 +259,10 @@
         "deep-research",
         "built-in-browser",
         "chrome-browser",
-        "toolkit-maintainer"
+        "toolkit-maintainer",
+        "dataviz",
+        "claude-api",
+        "artifact-capabilities"
       ]
     },
     "status": "installed 2026-10-28 on rog-flow-x13 (CachyOS, Claude Code 2.1.310)",
@@ -264,7 +277,25 @@
       ],
       "figma": [
         "figma@claude-plugins-official"
+      ],
+      "design": [
+        "impeccable@impeccable"
+      ],
+      "motion": [
+        "gsap-skills@gsap-skills"
       ]
-    }
+    },
+    "commands": {
+      "security-scan": "claude-code/bin/security-scan → ~/.local/bin (gitleaks, osv-scanner, semgrep, wpvulnerability.net)"
+    },
+    "securityTools": {
+      "secrets": "gitleaks 8.30.1 (pacman)",
+      "dependencies": "osv-scanner 2.7.0 (pacman)",
+      "sast": "semgrep 1.183.0 (pipx)",
+      "wordpress": "wpvulnerability.net API",
+      "review": "/security-review (built-in)",
+      "checked": "2026-11-04"
+    },
+    "claudeAi": "claude-ai/SETUP.md (preferences, project instructions, memory, styles, skill uploads)"
   }
 }

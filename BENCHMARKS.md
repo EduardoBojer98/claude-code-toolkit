@@ -44,6 +44,23 @@ biggest remaining lever (`claude plugin disable <name>`).
 With the figma plugin also off by default (enabled only when needed): **skills listing 4k** per request,
 half the 7.9k baseline.
 
+## 5. Best-practices pass (2026-11-04, Claude Code 2.1.317)
+
+`claude -p "/context"` from `/tmp`, same machine. "After" = live settings plus the new template keys
+(`claude -p "/context" --settings "$(jq -c '{skillOverrides, enabledPlugins}' claude-code/settings.json)"`),
+because the template isn't installed on the machine until you re-run `install.sh`.
+
+| Category | Before | After | Change | Why |
+|---|---|---|---|---|
+| Skills listing | 4.3k | 2.7k | **−1.6k** | `dataviz`, `claude-api`, `artifact-capabilities` name-only; synced `cowork-plugin-management` off; the synced duplicates of own skills off again (live settings had drifted) |
+| Memory files | 1.7k | ≈1.7k (est.: 4,458 → 4,089 visible bytes) | ≈ −0.1k | maintainer note moved into a stripped HTML comment, per-project section folded in |
+| Impeccable hooks + listing | 0 (disabled) | 0 outside design projects | — | `design` profile instead of global on |
+| GSAP skills (8) | — | 0 outside motion projects | — | `motion` profile |
+| security-scan | — | 0 | — | local CLI; only its output enters context when Claude runs it |
+| **Total reported** | 27k | ≈25.4k (est.) | **≈ −1.6k / request** | |
+
+Unchanged and still the largest blocks: system tools 15.5k + deferred names 31k (Claude Code itself, MCP tool search).
+
 ## 2. Delegation smoke test (routing actually happens)
 
 Scratch repo with two JS files and a fake `.env`. Lead on Sonnet:

@@ -6,9 +6,9 @@ Free first; paid only with strong evidence (see MAINTENANCE.md). Retired tools a
 ## In (enabled)
 | Tool | Kind | Role | Why | Added | Re-check |
 |---|---|---|---|---|---|
-| web-dev-standards v2.3 | Own skill | Core | Standards, routing per stack (incl. CodeMate starter), Definition of Done; per-stack references | 2026-10-16 (v2.3 2026-11-01) | every review |
-| toolkit-maintainer v1.3 | Own skill | Maintenance | Runs reviews, archives retired tools | 2026-10-16 (v1.3 2026-10-28) | every review |
-| frontend-design (built-in) | Built-in skill | Core | Visual direction on new pages | built-in | — |
+| web-dev-standards v2.4 | Own skill | Core | Standards, routing per stack (incl. CodeMate starter), design/motion/security routing, Definition of Done; per-stack references | 2026-10-16 (v2.4 2026-11-04) | every review |
+| toolkit-maintainer v1.4 | Own skill | Maintenance | Runs reviews, archives retired tools; checks security CLIs and profiles | 2026-10-16 (v1.4 2026-11-04) | every review |
+| frontend-design (built-in) | Built-in skill | Core (claude.ai) | Design skill on claude.ai; in Claude Code Impeccable replaces it in design projects | built-in | — |
 | Context7 | Connector | Core | Current docs; pinned IDs for Elementor, ACF, nopCommerce | 2026-10-16 | **free tier (watchlist)** |
 | playwright | Plugin (Microsoft) | Review | Screenshots at 375/768/1280, E2E; runs `@latest` (pin if a release breaks) | 2026-10-16 | release notes |
 | A11y Enforcer | Plugin (community) | Review | WCAG 2.2 scan + contrast; local scripts | 2026-10-16 | maintenance activity |
@@ -28,6 +28,20 @@ Free first; paid only with strong evidence (see MAINTENANCE.md). Retired tools a
 | searchfit-seo | Off in Claude Code, on in claude.ai; per-project opt-in | ~2k tokens/request for occasional use |
 | Hooks | Deterministic shell (secret guards, opt-in Prettier); no LLM hooks | No token cost; predictable |
 | Effort | Default `high` (was `xhigh` on WSL); raise per task | Thinking tokens are billed as output |
+
+## Built 2026-11-04: best practices, design and security (`setup/best-practices`, BEST-PRACTICES.md)
+| Choice | Decision | Why / source |
+|---|---|---|
+| Design skill (one) | **Impeccable** (Apache-2.0, pbakaus, 4.8.0) in Claude Code, **per project** (`enable-plugins.sh design`); built-in frontend-design on claude.ai | Only candidate that builds *and* critiques/audits/polishes (24 commands, 62-rule detector); ties go to the incumbent. Off globally because its plugin runs SessionStart, PostToolUse (every Edit/Write) and Stop hooks and fetches its direction catalog from impeccable.style. Telemetry off (`npx impeccable telemetry off`). github.com/pbakaus/impeccable |
+| Motion add-on (at most one) | **GSAP skills** (greensock/gsap-skills, MIT, official, 8 skills, 17.8k stars, last push 2026-07-29), **per project** (`enable-plugins.sh motion`) only where GSAP is already used | GSAP and all plugins are free incl. commercial. Its README says to prefer GSAP when no library is named, which conflicts with CSS-first, so it stays off globally. Default motion rules (CSS → scroll-driven → View Transitions → library) are in design-and-code.md at 0 extra tokens |
+| Security review | Built-in `/security-review` | Already in Claude Code, local, no install |
+| Secrets | **gitleaks 8.30.1** (pacman `extra`), via `security-scan` | Deterministic, offline, `--redact`. Repo allowlist `.gitleaks.toml` for fixtures |
+| Dependencies | **OSV-Scanner 2.7.0** (Google, Apache-2.0, pacman `extra`) | One tool for `package-lock.json` *and* `composer.lock`; only names+versions leave the machine. Replaces running `npm audit` + `composer audit` in routing |
+| SAST | **Semgrep CE 1.183.0** CLI (`pipx install semgrep`, engine LGPL-2.1, rules under Semgrep Rules License: fine for internal client work), `--metrics=off` | Local, deterministic. Generic PHP/JS rules, not WordPress-aware: the WP floors (nonces, capabilities, `prepare`) stay in web-dev-standards |
+| WordPress plugin advisories | **wpvulnerability.net** API (free, no key) via `claude-code/bin/wp-vuln-check.py` | Aggregates CVE, Patchstack, WPScan and Wordfence data; only slugs+versions sent. Terms page not verified 2026-11-04: read before heavy use |
+| Token cuts | `skillOverrides` name-only for `dataviz`, `claude-api`, `artifact-capabilities`; synced `cowork-plugin-management` off in Claude Code | Rarely used in web work; skills listing 4.3k → 2.7k/turn (BENCHMARKS §5) |
+| Effort default | Keep `high` (official default is `medium`) | Quality first; bug fixing is most of the work. Use `/effort medium` for routine edits (code.claude.com/docs/en/model-config) |
+| CLAUDE.md drift | Live `~/.claude/CLAUDE.md` was a copy (graphify's installer replaced the symlink); its per-project section moved into the repo file, the `/graphify` line dropped (the skill listing already says it) | One source of truth |
 
 ## Built 2026-10-22: free-model fallback (ccfb, `fallback/`)
 | Choice | Decision | Why |
@@ -73,13 +87,24 @@ Free first; paid only with strong evidence (see MAINTENANCE.md). Retired tools a
 |---|---|---|
 | WordPress MCP Adapter (WordPress AI Team) | v0.7.1 (2026-10-15), still pre-1.0, needs WP 6.9+; local WP-CLI stdio only if adopted. Client bridge: @automattic/mcp-wordpress-remote 0.5.4 (MIT). Directory plugin "wordpress-mcp" (MSApps, community, 0.1.0) wraps it: not before the adapter hits 1.0 | at 1.0 |
 | Elementor MCP (official) | Sources disagree on 2026-11-01: beta post (needs beta channel + Atomic Editor) vs. a launch post with Elementor 4.3 (admin-only, drafts, some abilities need Angie). Only Atomic (V4) layouts; client Elementor sites are mostly V3 | next review |
-| Taste Skill (Leonxlnx) | v2.1, MIT; overlaps frontend-design/Impeccable | if Impeccable is rejected |
-| Vercel web-design-guidelines | Fetches rules from GitHub every run; overlaps Impeccable audit + A11y Enforcer | if Impeccable is rejected |
+| Taste Skill (Leonxlnx) | MIT, 109.7k stars, no releases; needs Node 22+ + Chromium; overlaps Impeccable | if Impeccable is dropped |
+| Vercel web-design-guidelines | MIT; fetches rules from GitHub every run; audit only; overlaps Impeccable audit + A11y Enforcer | if Impeccable is dropped |
+| Betterleaks (gitleaks author's successor) | 1.9.0 (2026-09-29), MIT; v2 not yet stable, not in pacman/AUR | when stable and packaged |
+| Motion AI Kit (motion.dev) | Kit is free/open; MCP transition editor needs Motion+ ($399 one-time) | if a React project leans on Motion |
 | Shopify AI toolkit (Shopify, claude-plugins-official, Claude Code) | Official; 18 dev skills incl. themes; may overlap Shopify Dev MCP. Licence/contents not verified 2026-11-01 | next review (compare with Dev MCP) |
 
 ## Skip
 | Tool | Reason | Checked |
 |---|---|---|
+| security-guidance plugin (Anthropic) | Its Stop-hook and commit reviews send diffs to the API and cost tokens every turn; regex layer overlaps guard-secrets + gitleaks; `/security-review` covers the review | 2026-11-04 |
+| claude-code-security-review GitHub Action | Needs an API key, runs `@main`, "not hardened against prompt injection"; local `/security-review` does the same for a solo dev | 2026-11-04 |
+| Trail of Bits skills | CC-BY-SA-4.0, not PHP/WP-specific; each adds a listing; `insecure-defaults` the only candidate, on demand | 2026-11-04 |
+| `semgrep mcp` / semgrep/mcp | Standalone repo archived 2025-10-28; the CLI gives the same results with no MCP tokens | 2026-11-04 |
+| trufflehog | Verifies secrets by calling provider APIs (data leaves the machine); overlaps gitleaks | 2026-11-04 |
+| WPScan | Free API is 25 calls/day, non-commercial only; commercial needs custom pricing | 2026-11-04 |
+| Patchstack API | No public free tier | 2026-11-04 |
+| Wordfence Intelligence v3 API | Free with an account key; kept as the fallback if wpvulnerability.net goes away | 2026-11-04 |
+| Anthropic frontend-design in Claude Code | Same job as Impeccable (one tool per job); stays on claude.ai | 2026-11-04 |
 | Design (Anthropic, knowledge-work-plugins) | Product-design workflow (research, handoff) plus 10 remote SaaS MCPs (Slack, Asana, Gmail…); critique overlaps Impeccable, a11y overlaps A11y Enforcer | 2026-11-01 |
 | Shopify DevKit (community) | Privileged reach with SessionStart/PostToolUse hooks; Shopify Dev MCP + Theme Check cover it | 2026-11-01 |
 | Shopify App Builder (community) | App development, not themes or migrations; privileged | 2026-11-01 |
