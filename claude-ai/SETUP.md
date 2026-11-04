@@ -65,7 +65,7 @@ fixes; **Normal** for planning and explanations. No custom style needed: your pr
 
 ```bash
 cd ~/Documents/projects/claude-setup/skills
-zip -r ~/web-dev-standards.zip web-dev-standards
+rm -f ~/web-dev-standards.zip && zip -r ~/web-dev-standards.zip web-dev-standards
 ```
 
 Upload the zip (**Upload skill**), replacing the old version (the account had 2.1 on 2026-11-01).
