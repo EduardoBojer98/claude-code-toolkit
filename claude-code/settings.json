@@ -151,7 +151,8 @@
     "wp-dev-skills@synced": false,
     "wordpress-official-agent-skills@wordpress-official-agent-skills": false,
     "figma@claude-plugins-official": false,
-    "impeccable@impeccable": false,
+    "impeccable@impeccable": true,
+    "taste-skill@taste-skill": true,
     "gsap-skills@gsap-skills": false,
     "cowork-plugin-management@synced": false
   },

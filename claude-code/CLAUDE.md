@@ -74,6 +74,6 @@ Delegate only when the work is independent and its output is bulky or parallel:
 ## Per-project setup (only when asked to "set up" a project)
 1. `cp ~/Documents/projects/claude-setup/templates/CLAUDE.md ./CLAUDE.md` if none exists; fill in the commands.
 2. Tools that are off globally go on per project: `bash ~/Documents/projects/claude-setup/claude-code/enable-plugins.sh
-   <wordpress|design|motion|seo|figma> .` (new session to apply).
+   <wordpress|motion|seo|figma> .` (new session to apply).
 3. Code graph on larger repos: `graphify claude install && graphify update .` (ask before committing `graphify-out/`).
 4. Playwright: add `.playwright-mcp/` to `.gitignore`. Report what was added.

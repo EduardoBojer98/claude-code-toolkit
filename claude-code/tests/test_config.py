@@ -194,7 +194,7 @@ class EnablePlugins(unittest.TestCase):
             self.assertFalse(json.loads(local.read_text())["enabledPlugins"]["wp-dev-skills@synced"])
             self.assertNotEqual(subprocess.run(["bash", script, "nope", d], capture_output=True).returncode, 0)
 
-            for profile, plugin in (("design", "impeccable@impeccable"), ("motion", "gsap-skills@gsap-skills")):
+            for profile, plugin in (("motion", "gsap-skills@gsap-skills"),):
                 r = subprocess.run(["bash", script, profile, d], capture_output=True, text=True)
                 self.assertEqual(r.returncode, 0, r.stderr)
                 self.assertTrue(json.loads(local.read_text())["enabledPlugins"][plugin])

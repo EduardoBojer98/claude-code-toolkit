@@ -74,10 +74,21 @@ cd ~/Documents/projects/claude-setup && bash claude-code/install.sh && bash scri
 The installer links everything (edit files in the repo, never in `~/.claude`), merges the settings (your own
 values win), moves anything in the way to `~/.claude/claude-setup-backups/<time>/`, and is safe to re-run.
 
-**Plugins** (install once; the design and motion ones stay off until a project turns them on)
+**Plugins** (install once; Impeccable and Taste Skill are on everywhere and load on design requests; motion stays off until a project turns it on)
 
 ```bash
-claude plugin marketplace add pbakaus/impeccable && claude plugin install impeccable@impeccable --scope user && claude plugin disable impeccable@impeccable && npx impeccable telemetry off
+claude plugin marketplace add pbakaus/impeccable && claude plugin install impeccable@impeccable --scope user && npx impeccable telemetry off
+```
+
+```bash
+claude plugin marketplace add leonxlnx/taste-skill && claude plugin install taste-skill@taste-skill --scope user
+```
+
+Animation skills (Emil Kowalski, MIT, plain SKILL.md, no scripts): `animate`, `choreograph`, `animation-performance`,
+`review-animations`, `improve-animations`, `emil-design-eng`. On everywhere, loaded on motion requests.
+
+```bash
+npx skills@latest add emilkowalski/skills --skill animate --skill choreograph --skill animation-performance --skill review-animations --skill improve-animations --skill emil-design-eng
 ```
 
 ```bash
@@ -128,7 +139,7 @@ Describe the task in plain words; the right skill or agent loads itself. Shortcu
 |---|---|
 | Build or fix a website | just ask; `web-dev-standards` loads for web work |
 | Debug | `/debug`, or "X is broken, reproduce it first" |
-| Design a page | "Design a landing page for …: audience …, goal …" (`/impeccable craft` in design projects) |
+| Design a page | "Design a landing page for …: audience …, goal …" (`/impeccable craft`) |
 | Polish UI | `/impeccable critique`, then `/impeccable polish` |
 | Security check before deploy | `security-scan` in the project, then `/security-review` in Claude Code |
 | Plan or think through a business question | ask; add "plan mode" (Shift+Tab) for anything multi-step |
@@ -152,7 +163,6 @@ bash ~/Documents/projects/claude-setup/claude-code/enable-plugins.sh <profile> <
 | Profile | Turns on | Cost per request when on |
 |---|---|---|
 | `wordpress` | WordPress Dev Skills + WordPress agent skills | ~3.6k tokens |
-| `design` | Impeccable (craft, critique, polish, audit) | ~0.2k + its hooks' output |
 | `motion` | GSAP skills (only for projects using GSAP) | ~1k |
 | `seo` | searchfit-seo | ~2k |
 | `figma` | Figma plugin (then `/mcp` → Figma → sign in) | ~2.4k |
@@ -163,11 +173,10 @@ Add `--off` to turn it back off. It writes the project's `.claude/settings.local
 
 ## 3. Design workflow
 
-1. `enable-plugins.sh design .` once per project, new session.
-2. Brief: audience, tone, the one action the page should drive, brand colours/fonts (or "propose").
-3. Claude writes a 2–3 line direction first: approve or change it before any code.
-4. Build (`/impeccable craft`). Motion last, CSS first, with a reduced-motion fallback.
-5. Check: "screenshot at 375, 768 and 1280 with Playwright", then `/impeccable critique` → `polish`.
+1. Brief: audience, tone, the one action the page should drive, brand colours/fonts (or "propose").
+2. Claude writes a 2–3 line direction first: approve or change it before any code.
+3. Build (`/impeccable craft`). Motion last, CSS first, with a reduced-motion fallback.
+4. Check: "screenshot at 375, 768 and 1280 with Playwright", then `/impeccable critique` → `polish`.
 
 ## 4. Security workflow (before every deploy or client merge)
 
