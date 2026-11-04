@@ -61,7 +61,7 @@ fixes; **Normal** for planning and explanations. No custom style needed: your pr
 
 | Skill | Version | Upload |
 |---|---|---|
-| `web-dev-standards` | 2.4 | zip `skills/web-dev-standards` **with** its `references/` folder |
+| `web-dev-standards` | 2.5 | zip `skills/web-dev-standards` **with** its `references/` folder |
 
 ```bash
 cd ~/Documents/projects/claude-setup/skills
