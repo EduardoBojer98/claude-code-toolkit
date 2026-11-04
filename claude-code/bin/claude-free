@@ -10,6 +10,10 @@ COMBO="${CLAUDE_FREE_COMBO:-free-coding}"
 URL="${OMNIROUTE_URL:-http://localhost:20128}"
 TOKEN_FILE="${CLAUDE_FREE_TOKEN_FILE:-$HOME/.config/claude-free/token}"
 
+# A free session never starts another one (free-worker inside claude-free would loop).
+[[ -z "${CLAUDE_FREE_ACTIVE:-}" ]] || { echo "claude-free: already on free models; do the task in this session." >&2; exit 1; }
+export CLAUDE_FREE_ACTIVE=1
+
 [[ -s "$TOKEN_FILE" ]] || { echo "claude-free: no key at $TOKEN_FILE. Run claude-code/omniroute-setup.sh first." >&2; exit 1; }
 if ! curl -fs --max-time 3 "$URL/api/health" >/dev/null; then
   echo "claude-free: starting OmniRoute…" >&2

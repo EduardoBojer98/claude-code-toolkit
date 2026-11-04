@@ -39,6 +39,7 @@
       "Bash(vendor/bin/phpunit *)",
       "Bash(composer audit *)",
       "Bash(npm audit *)",
+      "Bash(claude-free -p *)",
       "Bash(security-scan *)",
       "Bash(gitleaks *)",
       "Bash(osv-scanner *)",

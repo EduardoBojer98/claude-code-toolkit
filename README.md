@@ -12,7 +12,7 @@ when the Claude plan limit is hit.
 | Path | What it is | Used by |
 |---|---|---|
 | `claude-code/CLAUDE.md` | Global instructions: how to work, short "caveman lite" replies, model routing, git safety | Claude Code, every session |
-| `claude-code/agents/` | 4 helper agents: `Explore` + `test-runner` (Haiku), `researcher` + `implementer` (Sonnet) | Claude Code delegates to them |
+| `claude-code/agents/` | 5 helper agents: `Explore` + `test-runner` (Haiku), `researcher` + `implementer` (Sonnet), `free-worker` (free models via OmniRoute) | Claude Code delegates to them |
 | `claude-code/skills/debug/` | Root-cause debugging workflow | Claude Code, on a bug |
 | `claude-code/hooks/` | Block secrets being printed or written; run the project's Prettier after edits | Claude Code, automatically |
 | `claude-code/settings.json` | Settings template: permissions, hooks, hidden skills, plugins off by default | merged into `~/.claude/settings.json` |
@@ -27,6 +27,7 @@ when the Claude plan limit is hit.
 | `templates/CLAUDE.md` | Starter instructions file for a project | new projects |
 | `scripts/doctor.sh`, `scripts/test.sh` | Live health check; offline tests | you |
 | `BEST-PRACTICES.md` | The checklist this setup follows, with sources | reference |
+| `prompts/audit-and-setup.md` | One prompt that audits and fixes the whole setup (incl. OmniRoute) | you, every month or two |
 
 ---
 
@@ -133,6 +134,7 @@ Describe the task in plain words; the right skill or agent loads itself. Shortcu
 | Plan or think through a business question | ask; add "plan mode" (Shift+Tab) for anything multi-step |
 | Search a codebase cheaply | "Use the Explore agent to find …" (runs on Haiku) |
 | Run tests without flooding the chat | "Have test-runner run `npm test`" |
+| Save Claude usage on simple work | "Use free-worker to …" (drafts, boilerplate, summaries, specified edits) |
 | See what this session uses | `/dash` (panel), `/context`, `/usage` |
 | Set up a project | "set up this project" (template CLAUDE.md, tools, graph) |
 
@@ -203,6 +205,29 @@ suspended. OmniRoute itself marks Antigravity and Kiro connections "avoid" for t
 
 OmniRoute dashboard: http://localhost:20128 (providers, combos, usage, logs).
 
+### Free agents inside normal Claude Code: `free-worker`
+
+Your normal `claude` session (on the subscription) can hand bounded, low-risk work to the **free-worker** agent.
+It runs the task through `claude-free -p` on the free models, then checks the diff and reports back. Only the
+small Haiku wrapper uses Claude usage (≈ $0.002 list per task, measured). Claude picks it on its own for drafts,
+boilerplate, summaries and fully specified edits, or ask: "use free-worker to …". It never handles security,
+architecture, unknown bugs or final decisions, and you review its diff like any other change.
+
+### More free providers (sign up, then add the key in the dashboard → Providers)
+
+Checked 2026-11-04 against OmniRoute's terms catalog and the providers' pages. Only you can create the accounts.
+
+| Provider (OmniRoute id) | Models to add | Free quota | Note |
+|---|---|---|---|
+| Groq (`groq`) | `openai/gpt-oss-120b`, `qwen/qwen3.6-27b` | daily per-model caps, hard stop, no card | very fast; low tokens-per-minute may reject big Claude Code prompts: test first |
+| Cloudflare Workers AI (`cloudflare-ai`) | `@cf/moonshotai/kimi-k2.6` (262k, tools) | 10,000 Neurons/day | different vendor, strong agentic model; Neurons run out fast on big prompts |
+| Z.ai GLM (`glm`) | `glm-4.7-flash` | free Flash models | extra capacity, weaker at agentic coding |
+| SambaNova (`sambanova`) | `gpt-oss-120b`, `DeepSeek-V3.1` | 20 requests/day | emergency fallback only |
+| Mistral (`mistral`), Gemini (`gemini`) | Devstral; Gemini 3.8 Flash | large | **free tiers train on your prompts**: not for client code |
+
+After adding a provider: put its models in `claude-code/omniroute-combo.json` (best first) and run
+`bash claude-code/omniroute-setup.sh`, or ask Claude to do it with the audit prompt below.
+
 ---
 
 ## 6. Fewer tokens, better results
@@ -246,6 +271,7 @@ git -C ~/Documents/projects/claude-setup pull && bash ~/Documents/projects/claud
 - Updates: `claude plugin marketplace update` then `claude plugin update <name>@<marketplace>`;
   `npm i -g omniroute`; `sudo pacman -Syu`.
 - Found a better tool? Ask Claude to compare it with what's here and to add or replace it.
+- Full audit + fix of everything (tools, skills, OmniRoute, docs): paste the prompt in [prompts/audit-and-setup.md](prompts/audit-and-setup.md).
 - Health: `bash scripts/doctor.sh` (live, free); `bash scripts/test.sh` (offline tests).
 
 ## 9. Commands reference

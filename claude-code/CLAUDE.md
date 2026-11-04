@@ -48,6 +48,7 @@ Delegate only when the work is independent and its output is bulky or parallel:
 | Run tests/lint/build and summarise failures | `test-runner` | haiku |
 | Read docs/web and return a sourced answer | `researcher` | sonnet |
 | Bounded edit with a known file list and acceptance check | `implementer` | sonnet |
+| Low-risk bulk work: drafts, boilerplate, summaries, simple specified edits | `free-worker` | free models via OmniRoute (0 plan usage) |
 | Independent multi-step task | `general-purpose` | sonnet (default) |
 
 - Escalate with the Agent tool's `model: "opus"` only for security-sensitive, architectural or
@@ -57,6 +58,7 @@ Delegate only when the work is independent and its output is bulky or parallel:
 - At most 3 parallel agents; never two agents editing the same files. Re-check agent claims you rely
   on by reading the cited lines.
 - Skip agents for anything a single Grep/Read or one command answers.
+- Prefer `free-worker` over `implementer` when the task is low-risk and fully specified; review its diff.
 
 ## Git and safety
 - Conventional Commits. Commit, push, merge, deploy or publish only when asked.
