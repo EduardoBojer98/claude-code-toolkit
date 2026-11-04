@@ -3,8 +3,9 @@
 This repo is kept current by the `toolkit-maintainer` skill (`skills/toolkit-maintainer/SKILL.md`).
 
 ## Cadence
-- **Monthly** scheduled review (1st of each month, 08:54 Belgrade time; Claude scheduled task "Monthly toolkit review"). It runs unattended: it researches, writes
+- **Manual** (since 2026-11-01): run the review yourself when you have time: ask Claude *"run the monthly toolkit review"*. It researches, writes
   `reviews/YYYY-MM.md`, and opens a PR on a `review/YYYY-MM` branch. Nothing changes on the Claude account until you approve.
+  The old scheduled task "Monthly toolkit review" is disabled; its prompt is in `archive/scheduled-tasks/monthly-review-2026-10-22-v3.md`.
 - **On demand:** ask Claude *"review my toolkit"* or *"is there something better than X?"*.
 
 ## Rules every review follows

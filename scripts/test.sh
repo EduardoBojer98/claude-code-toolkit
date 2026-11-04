@@ -9,7 +9,7 @@ find "$REPO" -name '*.json' -not -path '*/archive/*' -not -path '*/.git/*' -not 
   | xargs -0 -n1 python3 -m json.tool >/dev/null && echo "ok"
 
 echo "== Shell syntax"
-for f in "$REPO"/claude-code/install.sh "$REPO"/claude-code/enable-plugins.sh "$REPO"/claude-code/hooks/*.sh "$REPO"/scripts/*.sh "$REPO"/fallback/install.sh; do
+for f in "$REPO"/claude-code/install.sh "$REPO"/claude-code/enable-plugins.sh "$REPO"/claude-code/bin/security-scan "$REPO"/claude-code/hooks/*.sh "$REPO"/scripts/*.sh "$REPO"/fallback/install.sh; do
   bash -n "$f"
 done && echo "ok"
 

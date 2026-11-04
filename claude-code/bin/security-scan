@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+# Pre-deploy security scan, all local CLIs, no model tokens. Missing tools are skipped with the install command.
+#   security-scan [project-dir]
+# Steps: secrets (gitleaks) · dependencies (osv-scanner: npm, composer, …) · SAST (semgrep, if installed)
+#        · WordPress plugins (wpvulnerability.net, when a WP install and lando/wp are found).
+# Exit 1 when any step reports findings. Then run /security-review in Claude Code for the logic review.
+set -uo pipefail
+dir="$(cd "${1:-.}" && pwd)"; cd "$dir" || exit 2
+here="$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")"
+fail=0
+step() { printf '\n== %s\n' "$1"; }
+has() { command -v "$1" >/dev/null || { echo "skipped: $1 not installed ($2)"; return 1; }; }
+
+step "Secrets (gitleaks)"
+if has gitleaks "sudo pacman -S gitleaks"; then
+  if git rev-parse --git-dir >/dev/null 2>&1; then sub=git; else sub=dir; fi
+  gitleaks "$sub" . --redact --no-banner -v || fail=1
+fi
+
+step "Dependencies (osv-scanner)"
+if has osv-scanner "sudo pacman -S osv-scanner"; then
+  osv-scanner scan source -r .; rc=$?
+  # 0 clean, 1 vulnerabilities, 128 no lockfiles to scan, anything else an error.
+  case $rc in 0) ;; 128) echo "nothing to scan: no lockfiles (package-lock.json, composer.lock, …)" ;; *) fail=1 ;; esac
+fi
+
+step "Code patterns (semgrep)"
+if has semgrep "pipx install semgrep"; then
+  semgrep scan --config p/php --config p/javascript --config p/typescript --metrics=off --error --quiet \
+    --exclude vendor --exclude node_modules --exclude 'wp-admin' --exclude 'wp-includes' . || fail=1
+fi
+
+step "WordPress plugins (wpvulnerability.net)"
+wp_cmd=""
+if [[ -f .lando.yml ]] && command -v lando >/dev/null; then wp_cmd="lando wp"
+elif command -v wp >/dev/null && wp core is-installed >/dev/null 2>&1; then wp_cmd="wp"; fi
+if [[ -z "$wp_cmd" ]]; then
+  echo "skipped: no WordPress install reachable (needs .lando.yml + lando, or wp-cli)"
+elif list="$($wp_cmd plugin list --format=json 2>/dev/null)"; then
+  python3 "$here/wp-vuln-check.py" <<<"$list" || fail=1
+else
+  echo "skipped: '$wp_cmd plugin list' failed (is the site running?)"
+fi
+
+printf '\n%s\n' "$([[ $fail -eq 0 ]] && echo 'security-scan: no findings' || echo 'security-scan: FINDINGS above')"
+exit $fail

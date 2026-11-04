@@ -156,6 +156,7 @@ class Installer(unittest.TestCase):
             self.assertTrue((cfg / "agents" / "Explore.md").is_symlink())
             self.assertTrue((cfg / "skills" / "web-dev-standards" / "references" / "wordpress.md").is_file())
             self.assertTrue(os.access(cfg / "hooks" / "claude-setup" / "guard-bash.sh", os.X_OK))
+            self.assertTrue(os.access(Path(home, ".local", "bin", "security-scan"), os.X_OK))
 
             second = self.install(home)
             self.assertEqual(second.returncode, 0, second.stderr)
@@ -186,6 +187,50 @@ class EnablePlugins(unittest.TestCase):
             self.assertEqual(off.returncode, 0, off.stderr)
             self.assertFalse(json.loads(local.read_text())["enabledPlugins"]["wp-dev-skills@synced"])
             self.assertNotEqual(subprocess.run(["bash", script, "nope", d], capture_output=True).returncode, 0)
+
+            for profile, plugin in (("design", "impeccable@impeccable"), ("motion", "gsap-skills@gsap-skills")):
+                r = subprocess.run(["bash", script, profile, d], capture_output=True, text=True)
+                self.assertEqual(r.returncode, 0, r.stderr)
+                self.assertTrue(json.loads(local.read_text())["enabledPlugins"][plugin])
+                tmpl = json.loads((LAYER / "settings.json").read_text())["enabledPlugins"]
+                self.assertIs(tmpl[plugin], False, f"{plugin} must stay off globally")
+
+
+class SecurityScan(unittest.TestCase):
+    def test_wp_vuln_version_ranges(self):
+        import importlib.util
+        spec = importlib.util.spec_from_file_location("wpv", LAYER / "bin" / "wp-vuln-check.py")
+        wpv = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(wpv)
+        lt = {"max_version": "5.3.2", "max_operator": "lt"}
+        self.assertTrue(wpv.affected("5.3.1", lt))
+        self.assertFalse(wpv.affected("5.3.2", lt))
+        self.assertTrue(wpv.affected("5.3.2", {"max_version": "5.3.2", "max_operator": "le"}))
+        self.assertFalse(wpv.affected("5.10", {"max_version": "5.9.9", "max_operator": "le"}))
+        rng = {"min_version": "2.0", "min_operator": "ge", "max_version": "2.4", "max_operator": "lt"}
+        self.assertFalse(wpv.affected("1.9", rng))
+        self.assertTrue(wpv.affected("2.0", rng))
+        self.assertTrue(wpv.affected("9.9", {"unfixed": "1"}), "unfixed with no range affects every version")
+        self.assertFalse(wpv.affected("9.9", {}))
+
+    def test_scan_skips_missing_tools_and_never_needs_network_to_start(self):
+        with tempfile.TemporaryDirectory() as d:
+            env = dict(os.environ, PATH="/usr/bin:/bin")  # no ~/.local tools; gitleaks may be in /usr/bin
+            r = subprocess.run(["bash", str(LAYER / "bin" / "security-scan"), d], env=env,
+                               capture_output=True, text=True, timeout=60)
+            self.assertIn("WordPress plugins", r.stdout)
+            self.assertIn("security-scan:", r.stdout)
+
+    def test_osv_without_lockfiles_is_not_a_finding(self):
+        with tempfile.TemporaryDirectory() as d, tempfile.TemporaryDirectory() as fake:
+            Path(fake, "osv-scanner").write_text("#!/bin/sh\nexit 128\n")
+            os.chmod(Path(fake, "osv-scanner"), 0o755)
+            env = dict(os.environ, PATH=f"{fake}:/bin")  # only the fake scanner; other tools skip
+            r = subprocess.run(["bash", str(LAYER / "bin" / "security-scan"), d], env=env,
+                               capture_output=True, text=True, timeout=60)
+            self.assertIn("no lockfiles", r.stdout)
+            self.assertIn("security-scan: no findings", r.stdout)
+            self.assertEqual(r.returncode, 0)
 
 
 if __name__ == "__main__":

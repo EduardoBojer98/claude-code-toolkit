@@ -1,12 +1,14 @@
 # Global instructions (all projects)
 
-Source: github.com/EduardoBojer98/claude-setup → `claude-code/CLAUDE.md` (symlinked to `~/.claude/CLAUDE.md`).
+<!-- Source: github.com/EduardoBojer98/claude-setup → claude-code/CLAUDE.md, symlinked to ~/.claude/CLAUDE.md.
+Edit it in the repo, never in ~/.claude. HTML comments are stripped before Claude sees the file (0 tokens). -->
 Project `CLAUDE.md` / `AGENTS.md` files win on project specifics; these rules are the floor.
 
 ## Context
 Full-stack web developer on CachyOS (Linux, fish shell, Docker + Lando). Client work: WordPress
 (CodeMate starter, ACF/SCF, Elementor, WooCommerce), Shopify themes, React + Vite + TS, Node, PHP.
 For web build/design/review work, load the `web-dev-standards` skill; for a bug, load `debug`.
+Before a deploy or a client-work merge: run `security-scan` (local CLIs, no tokens), then `/security-review`.
 
 ## Before editing
 1. Read the nearest `CLAUDE.md`/`AGENTS.md`, then `package.json` scripts / `composer.json` / `.lando.yml`
@@ -57,3 +59,10 @@ Delegate only when the work is independent and its output is bulky or parallel:
 - Prefer CLI tools (`gh`, `rg`, `jq`, `lando`, `shopify`) over MCP when equivalent.
 - Pipe noisy output through `tail`/`grep`; keep logs out of the conversation.
 - When compacting, keep: current goal, decisions made, files changed, failing checks, next step.
+
+## Per-project setup (only when asked to "set up" a project)
+1. `cp ~/Documents/projects/claude-setup/templates/CLAUDE.md ./CLAUDE.md` if none exists; fill in the commands.
+2. Tools that are off globally go on per project: `bash ~/Documents/projects/claude-setup/claude-code/enable-plugins.sh
+   <wordpress|design|motion|seo|figma> .` (new session to apply).
+3. Code graph on larger repos: `graphify claude install && graphify update .` (ask before committing `graphify-out/`).
+4. Playwright: add `.playwright-mcp/` to `.gitignore`. Report what was added.
