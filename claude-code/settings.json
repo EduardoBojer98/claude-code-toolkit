@@ -170,7 +170,6 @@
     "built-in-browser": "name-only",
     "chrome-browser": "name-only",
     "anthropic-skills:web-dev-standards": "off",
-    "anthropic-skills:toolkit-maintainer": "off",
     "dataviz": "name-only",
     "claude-api": "name-only",
     "artifact-capabilities": "name-only"
