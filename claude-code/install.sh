@@ -45,7 +45,9 @@ link "$HERE/hooks" "$DEST/hooks/claude-setup"
 link "$HERE/skills/debug" "$DEST/skills/debug"
 link "$REPO/skills/web-dev-standards" "$DEST/skills/web-dev-standards"
 link "$REPO/skills/toolkit-maintainer" "$DEST/skills/toolkit-maintainer"
-chmod +x "$HERE"/hooks/*.sh
+# Commands for you and Claude (security-scan): ~/.local/bin is on PATH on CachyOS.
+link "$HERE/bin/security-scan" "$HOME/.local/bin/security-scan"
+chmod +x "$HERE"/hooks/*.sh "$HERE"/bin/*
 
 # Node for MCP servers/plugins (npx). Claude Code doesn't load fish/bash nvm hooks, so when node isn't
 # already on PATH, link the newest nvm.fish (~/.local/share/nvm) or nvm (~/.nvm) install into ~/.local/bin.

@@ -39,6 +39,10 @@
       "Bash(vendor/bin/phpunit *)",
       "Bash(composer audit *)",
       "Bash(npm audit *)",
+      "Bash(security-scan *)",
+      "Bash(gitleaks *)",
+      "Bash(osv-scanner *)",
+      "Bash(semgrep scan *)",
       "Bash(lando info *)",
       "Bash(lando list *)",
       "Bash(lando logs *)",
@@ -143,7 +147,10 @@
     "searchfit-seo@synced": false,
     "wp-dev-skills@synced": false,
     "wordpress-official-agent-skills@wordpress-official-agent-skills": false,
-    "figma@claude-plugins-official": false
+    "figma@claude-plugins-official": false,
+    "impeccable@impeccable": false,
+    "gsap-skills@gsap-skills": false,
+    "cowork-plugin-management@synced": false
   },
   "skillOverrides": {
     "morning": "off",
@@ -161,6 +168,9 @@
     "chrome-browser": "name-only",
     "toolkit-maintainer": "name-only",
     "anthropic-skills:web-dev-standards": "off",
-    "anthropic-skills:toolkit-maintainer": "off"
+    "anthropic-skills:toolkit-maintainer": "off",
+    "dataviz": "name-only",
+    "claude-api": "name-only",
+    "artifact-capabilities": "name-only"
   }
 }

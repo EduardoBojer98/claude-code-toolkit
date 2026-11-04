@@ -5,6 +5,8 @@
 #   bash claude-code/enable-plugins.sh wordpress [project-dir]   # WordPress Dev Skills + its dependency
 #   bash claude-code/enable-plugins.sh seo [project-dir]         # searchfit-seo
 #   bash claude-code/enable-plugins.sh figma [project-dir]       # Figma plugin + MCP (sign in via /mcp)
+#   bash claude-code/enable-plugins.sh design [project-dir]      # Impeccable (craft, critique, polish, audit)
+#   bash claude-code/enable-plugins.sh motion [project-dir]      # GSAP skills, only for projects that use GSAP
 #   bash claude-code/enable-plugins.sh wordpress [dir] --off
 set -euo pipefail
 
@@ -12,6 +14,8 @@ declare -A PROFILES=(
   [wordpress]="wp-dev-skills@synced wordpress-official-agent-skills@wordpress-official-agent-skills"
   [seo]="searchfit-seo@synced"
   [figma]="figma@claude-plugins-official"
+  [design]="impeccable@impeccable"
+  [motion]="gsap-skills@gsap-skills"
 )
 
 profile="${1:-}"; dir="."; value=true

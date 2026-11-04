@@ -1,0 +1,8 @@
+# gitleaks config for this repo: default rules, minus test fixtures and third-party plugin snapshots
+# (fake AWS example keys in fallback tests; placeholder tokens in plugin docs).
+[extend]
+useDefault = true
+
+[allowlist]
+description = "fixtures and vendored plugin docs"
+paths = ['''(^|/)tests?/''', '''^plugins/''', '''^archive/''']

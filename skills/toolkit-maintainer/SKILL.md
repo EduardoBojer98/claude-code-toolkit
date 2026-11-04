@@ -5,7 +5,7 @@ description: Review and update the user's Claude web design and development tool
 
 # Toolkit maintainer
 
-_Version 1.3 · 2026-10-28 (older versions in archive/)_
+_Version 1.4 · 2026-11-04 (older versions in archive/)_
 
 Keeps the user's web-dev setup current: finds better free tools, retires weak or newly-paid ones,
 archives what is retired, refreshes the `web-dev-standards` skill with current best practice, and records every decision in the
@@ -70,6 +70,9 @@ Open items from the latest `reviews/` file (e.g. the Impeccable trial result) go
 Run `bash scripts/test.sh` (config, hooks, installer, fallback). On the user's machine, compare
 `claude -p "/context"` with `BENCHMARKS.md` (no model call, no usage). Check `claude-code/settings.json`
 `skillOverrides` still matches the synced skill names, and that agent `model` aliases are still documented.
+Security CLIs behind `security-scan` (gitleaks, OSV-Scanner, Semgrep CE, the wpvulnerability.net API): latest
+release, licence/terms, still free for client work. Per-project profiles (`claude-code/enable-plugins.sh`: wordpress,
+design, motion, seo, figma) still point at installed plugin ids. Anything that loads every turn must still earn its tokens.
 
 ### 3b. Free-model fallback (ccfb)
 Re-verify every provider and model in `fallback/config/providers.toml` against its cited source: free

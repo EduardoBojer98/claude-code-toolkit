@@ -10,7 +10,12 @@ Part of web-dev-standards. Load for new pages, sections, redesigns, UI review or
 - Type: at most 2 families; fluid scale (~1.2–1.25); body 16–18px, line-height 1.5–1.7; measure ≤ 65–75ch.
 - Spacing on a 4px base; one focal point per section; hierarchy from size, weight, colour and space before boxes.
 - Mobile-first; Grid for page layout, Flexbox for components, `gap` between siblings, container queries where components move between contexts.
-- Motion: purposeful, 150–300ms, `transform`/`opacity`, always a `prefers-reduced-motion` fallback; CSS before animation libraries.
+- **Motion** (in this order; stop at the first that does the job):
+  1. CSS transitions/keyframes: 150–300ms UI, 400–700ms entrances, ease-out in, ease-in out; `transform`/`opacity` only.
+  2. Scroll-driven animations (`animation-timeline: view()`/`scroll()`) inside `@supports (animation-timeline: view())`, content fully visible without them.
+  3. View Transitions: same-document `document.startViewTransition()`; multi-page sites `@view-transition { navigation: auto; }`. Progressive enhancement only.
+  4. A library only when 1–3 can't: GSAP (free, incl. ScrollTrigger/SplitText) for timelines and pinned scroll stories; Motion for React state-driven animation. One library per project, loaded only on pages that use it.
+  - Always: `@media (prefers-reduced-motion: reduce)` swaps movement for a fade or nothing; never animate the LCP element in; no scroll-jacking; nothing autoplays longer than 5s without a pause control (WCAG 2.2.2).
 - Microcopy: verb-first button labels ("Book a call", not "Submit"); errors say what happened and how to fix it, never blame; every input has a visible label; no spinner under ~300ms, skeletons for longer loads.
 - E-commerce: price, delivery and returns visible near the buy button; trust signals near decisions; no surprise costs at checkout.
 - Dark mode when it fits (apps, tech audiences, client request): swap colour tokens only; check contrast in both modes.
