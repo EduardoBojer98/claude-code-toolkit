@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Install the Claude Code user layer from this repo into ~/.claude (or $CLAUDE_CONFIG_DIR).
-# Safe to re-run: links are refreshed, anything else in the way is moved to *.bak-<timestamp>
+# Safe to re-run: links are refreshed, anything else in the way is moved to ~/.claude/claude-setup-backups/<timestamp>/
 # (never deleted), and settings are merged - your existing values win, lists are unioned.
 #
 #   bash claude-code/install.sh            # install / update
@@ -12,6 +12,9 @@ HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO="$(cd "$HERE/.." && pwd)"
 DEST="${CLAUDE_CONFIG_DIR:-$HOME/.claude}"
 TS="$(date +%Y%m%d-%H%M%S)"
+# Backups live outside skills/ and agents/: Claude Code would load a skill or agent copy left there.
+BAK="$DEST/claude-setup-backups/$TS"
+bak() { echo "$BAK/${1#"$HOME"/}"; }
 DRY=0; SETTINGS=1
 for a in "$@"; do
   case "$a" in
@@ -34,7 +37,8 @@ link() {
   if [[ -L "$dst" && "$(readlink "$dst")" == "$src" ]]; then echo "ok      $dst"; return; fi
   run mkdir -p "$(dirname "$dst")"
   if [[ -e "$dst" || -L "$dst" ]]; then
-    run mv "$dst" "$dst.bak-$TS"; echo "backup  $dst -> $dst.bak-$TS"
+    local b; b="$(bak "$dst")"
+    run mkdir -p "$(dirname "$b")"; run mv "$dst" "$b"; echo "backup  $dst -> $b"
   fi
   run ln -s "$src" "$dst"; echo "link    $dst -> $src"
 }
@@ -96,7 +100,9 @@ PY
     if [[ $DRY -eq 1 ]]; then
       echo "would merge into $target:"; diff <(jq -S . "$target" 2>/dev/null || echo '{}') <(jq -S . <<<"$merged") || true
     else
-      [[ -f "$target" ]] && cp "$target" "$target.bak-$TS" && echo "backup  $target -> $target.bak-$TS"
+      if [[ -f "$target" ]]; then
+        b="$(bak "$target")"; mkdir -p "$(dirname "$b")"; cp "$target" "$b"; echo "backup  $target -> $b"
+      fi
       printf '%s\n' "$merged" > "$target"; echo "merged  $target"
     fi
   fi

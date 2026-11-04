@@ -139,6 +139,8 @@ class Installer(unittest.TestCase):
             (cfg / "settings.json").write_text(json.dumps({"theme": "dark", "effortLevel": "xhigh",
                                                            "permissions": {"allow": ["Bash(make *)"]}}))
             (cfg / "CLAUDE.md").write_text("old personal notes\n")
+            (cfg / "skills" / "debug").mkdir(parents=True)
+            (cfg / "skills" / "debug" / "SKILL.md").write_text("old copy\n")
 
             dry = self.install(home, "--dry-run")
             self.assertEqual(dry.returncode, 0, dry.stderr)
@@ -152,8 +154,11 @@ class Installer(unittest.TestCase):
             self.assertIn("Bash(make *)", s["permissions"]["allow"])
             self.assertIn("Bash(git diff *)", s["permissions"]["allow"])
             self.assertTrue((cfg / "CLAUDE.md").is_symlink())
-            self.assertEqual(len(list(cfg.glob("CLAUDE.md.bak-*"))), 1, "old CLAUDE.md is kept as a backup")
+            self.assertEqual(len(list(cfg.glob("claude-setup-backups/*/.claude/CLAUDE.md"))), 1, "old CLAUDE.md is kept as a backup")
+            self.assertFalse(list(cfg.glob("**/*.bak-*")), "no backups next to live files")
             self.assertTrue((cfg / "agents" / "Explore.md").is_symlink())
+            self.assertEqual([p.name for p in (cfg / "skills").iterdir() if not p.is_symlink()], [],
+                             "an old skill folder must not stay in skills/, where it would load as a duplicate")
             self.assertTrue((cfg / "skills" / "web-dev-standards" / "references" / "wordpress.md").is_file())
             self.assertTrue(os.access(cfg / "hooks" / "claude-setup" / "guard-bash.sh", os.X_OK))
             self.assertTrue(os.access(Path(home, ".local", "bin", "security-scan"), os.X_OK))

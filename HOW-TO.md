@@ -56,10 +56,10 @@ Inside a session: `/status` (which settings files loaded), `/agents`, `/skills`,
 | Links only, don't touch settings | `bash $R/claude-code/install.sh --no-settings` |
 | Pull repo changes | `git -C $R pull`. Skills, agents, hooks and CLAUDE.md are symlinks, so they update immediately; start a new session |
 | Apply a change to `claude-code/settings.json` | re-run `bash $R/claude-code/install.sh` (your existing values win; lists are merged) |
-| Undo | delete the symlinks (`~/.claude/CLAUDE.md`, `~/.claude/agents/*.md`, `~/.claude/skills/{debug,web-dev-standards,toolkit-maintainer}`, `~/.claude/hooks/claude-setup`) and restore `~/.claude/settings.json.bak-<time>` |
+| Undo | delete the symlinks (`~/.claude/CLAUDE.md`, `~/.claude/agents/*.md`, `~/.claude/skills/{debug,web-dev-standards,toolkit-maintainer}`, `~/.claude/hooks/claude-setup`) and restore `~/.claude/claude-setup-backups/<time>/.claude/settings.json` |
 | Update Claude Code itself | `claude update` |
 
-The installer never deletes: anything in its way becomes `*.bak-<time>`. Re-running it is safe.
+The installer never deletes: anything in its way moves to `~/.claude/claude-setup-backups/<time>/`. Re-running it is safe.
 
 ## 3. Models and effort
 
