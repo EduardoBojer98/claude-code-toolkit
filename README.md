@@ -14,7 +14,8 @@ when the Claude plan limit is hit.
 | `claude-code/CLAUDE.md` | Global instructions: how to work, short "caveman lite" replies, model routing, git safety | Claude Code, every session |
 | `claude-code/agents/` | 5 helper agents: `Explore` + `test-runner` (Haiku), `researcher` + `implementer` (Sonnet), `free-worker` (free models via OmniRoute) | Claude Code delegates to them |
 | `claude-code/skills/debug/` | Root-cause debugging workflow | Claude Code, on a bug |
-| `claude-code/hooks/` | Block secrets being printed or written; run the project's Prettier after edits | Claude Code, automatically |
+| `claude-code/skills/council/` + `agents/council-*` | `/council <goal>`: build, then loop with 3 read-only reviewers (correctness, security, simplicity) until all approve; `council-free` runs a lens on free OmniRoute models (own code only) | Claude Code, on request |
+| `claude-code/hooks/` | Block secrets being printed or written; run the project's Prettier after edits; keep a `/council` loop going until approved | Claude Code, automatically |
 | `claude-code/settings.json` | Settings template: permissions, hooks, hidden skills, plugins off by default | merged into `~/.claude/settings.json` |
 | `claude-code/bin/security-scan` | Pre-deploy scan: secrets, dependencies, code patterns, WordPress plugins | you or Claude, in a project |
 | `claude-code/bin/claude-free` | Claude Code on free models through OmniRoute | you, when the plan limit is hit |
@@ -139,6 +140,7 @@ Describe the task in plain words; the right skill or agent loads itself. Shortcu
 |---|---|
 | Build or fix a website | just ask; `web-dev-standards` loads for web work |
 | Debug | `/debug`, or "X is broken, reproduce it first" |
+| Build with review until approved | `/council <goal>`; add `--free` on your own code to run every reviewer on free models |
 | Design a page | "Design a landing page for …: audience …, goal …" (`/impeccable craft`) |
 | Polish UI | `/impeccable critique`, then `/impeccable polish` |
 | Security check before deploy | `security-scan` in the project, then `/security-review` in Claude Code |

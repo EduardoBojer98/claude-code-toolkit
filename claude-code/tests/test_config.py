@@ -77,7 +77,7 @@ class ConfigFiles(unittest.TestCase):
             self.assertIn("Output", body, f"{a.name} needs an explicit output format")
 
     def test_skills_frontmatter_and_links(self):
-        skills = [LAYER / "skills" / "debug", REPO / "skills" / "web-dev-standards"]
+        skills = [LAYER / "skills" / "debug", LAYER / "skills" / "council", REPO / "skills" / "web-dev-standards"]
         for d in skills:
             fields, body = frontmatter(d / "SKILL.md")
             self.assertEqual(fields["name"], d.name)
@@ -117,6 +117,36 @@ class Hooks(unittest.TestCase):
             self.assertEqual(run_hook("guard-bash.sh", {"tool_input": {"command": c}})[0], 2, c)
         for c in allowed:
             self.assertEqual(run_hook("guard-bash.sh", {"tool_input": {"command": c}})[0], 0, c)
+
+    def test_council_gate(self):
+        def gate(cwd, env=None):
+            p = subprocess.run([str(HOOKS / "council-gate.sh")], input=json.dumps({"cwd": cwd, "stop_hook_active": True}),
+                               capture_output=True, text=True, timeout=30, env=dict(os.environ, **(env or {})))
+            self.assertEqual(p.returncode, 0, p.stderr)
+            return json.loads(p.stdout) if p.stdout.strip() else None
+
+        with tempfile.TemporaryDirectory() as d:
+            self.assertIsNone(gate(d), "no .council/ -> stop allowed")
+            c = Path(d) / ".council"
+            c.mkdir()
+            for s in ("approved", "escalated", "waiting-user"):
+                (c / "status").write_text(s + "\n")
+                self.assertIsNone(gate(d), s)
+            (c / "status").write_text("running\n")
+            out = gate(d, {"COUNCIL_MAX_BLOCKS": "2"})
+            self.assertEqual(out["decision"], "block", "running blocks even when stop_hook_active is set")
+            self.assertIn("APPROVE", out["reason"])
+            self.assertEqual(gate(d, {"COUNCIL_MAX_BLOCKS": "2"})["decision"], "block")
+            self.assertIsNone(gate(d, {"COUNCIL_MAX_BLOCKS": "2"}), "cap reached -> stop allowed")
+            self.assertEqual((c / "status").read_text().strip(), "escalated")
+
+    def test_council_reviewers_are_read_only(self):
+        for name in ("council-correctness", "council-security", "council-simplicity"):
+            fields, _ = frontmatter(LAYER / "agents" / f"{name}.md")
+            self.assertEqual(fields["tools"], "Read, Grep, Glob", name)
+        _, body = frontmatter(LAYER / "agents" / "council-free.md")
+        self.assertIn("--permission-mode plan", body)
+        self.assertNotIn("acceptEdits", body)
 
     def test_format_file_is_a_noop_without_prettier(self):
         with tempfile.TemporaryDirectory() as d:

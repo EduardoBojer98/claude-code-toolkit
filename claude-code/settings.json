@@ -144,6 +144,17 @@
           }
         ]
       }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/claude-setup/council-gate.sh",
+            "timeout": 10
+          }
+        ]
+      }
     ]
   },
   "enabledPlugins": {

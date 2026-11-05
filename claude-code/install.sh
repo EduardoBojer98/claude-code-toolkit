@@ -46,7 +46,7 @@ link() {
 link "$HERE/CLAUDE.md" "$DEST/CLAUDE.md"
 for f in "$HERE"/agents/*.md; do link "$f" "$DEST/agents/$(basename "$f")"; done
 link "$HERE/hooks" "$DEST/hooks/claude-setup"
-link "$HERE/skills/debug" "$DEST/skills/debug"
+for s in debug council; do link "$HERE/skills/$s" "$DEST/skills/$s"; done
 link "$REPO/skills/web-dev-standards" "$DEST/skills/web-dev-standards"
 # Commands for you and Claude: ~/.local/bin is on PATH on CachyOS.
 for b in security-scan claude-free; do link "$HERE/bin/$b" "$HOME/.local/bin/$b"; done
