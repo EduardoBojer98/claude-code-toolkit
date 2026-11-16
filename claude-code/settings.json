@@ -165,6 +165,10 @@
     "figma@claude-plugins-official": false,
     "impeccable@impeccable": true,
     "taste-skill@taste-skill": true,
+    "modern-web-guidance@googlechrome": true,
+    "ponytail@ponytail": true,
+    "playwright@claude-plugins-official": true,
+    "session-dashboard@claude-setup": false,
     "gsap-skills@gsap-skills": false,
     "cowork-plugin-management@synced": false
   },

@@ -85,6 +85,12 @@ claude plugin marketplace add pbakaus/impeccable && claude plugin install impecc
 claude plugin marketplace add leonxlnx/taste-skill && claude plugin install taste-skill@taste-skill --scope user
 ```
 
+Modern Web Guidance (Chrome team): web platform + Baseline guides, fetched on demand via `npx modern-web-guidance`. On everywhere.
+
+```bash
+claude plugin marketplace add GoogleChrome/modern-web-guidance && claude plugin install modern-web-guidance@googlechrome --scope user
+```
+
 Animation skills (Emil Kowalski, MIT, plain SKILL.md, no scripts): `animate`, `choreograph`, `animation-performance`,
 `review-animations`, `improve-animations`, `emil-design-eng`. On everywhere, loaded on motion requests.
 
