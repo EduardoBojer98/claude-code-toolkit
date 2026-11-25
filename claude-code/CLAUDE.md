@@ -40,25 +40,28 @@ Before a deploy or a client-work merge: run `security-scan` (local CLIs, no toke
 ## Model routing and delegation
 You are the tech lead: you keep the plan, integration, and final verification.
 Do it yourself when the task is small, sequential, or needs this conversation's context.
-Delegate only when the work is independent and its output is bulky or parallel:
+**Free models first:** delegated work goes to OmniRoute free models (0 plan usage) before any Claude agent.
 
-| Work | Agent | Model |
+| Work | Route | Plan usage |
 |---|---|---|
-| Find files/definitions/usages across many files | `Explore` | haiku |
-| Run tests/lint/build and summarise failures | `test-runner` | haiku |
-| Read docs/web and return a sourced answer | `researcher` | sonnet |
-| Bounded edit with a known file list and acceptance check | `implementer` | sonnet |
-| Low-risk bulk work, never client code (free providers train on prompts) | `free-worker` | free models via OmniRoute (0 plan usage) |
-| Independent multi-step task | `general-purpose` | sonnet (default) |
+| Any delegable task: search, summaries, docs/web lookup, running tests and summarising, drafts, specified edits | `claude-free -p "<brief>"` via Bash yourself (add `--permission-mode acceptEdits` when it edits) | 0 |
+| Same, but parallel, background, or the diff check would flood your context | `free-worker` agent | tiny (Haiku relay) |
+| claude-free failed (OmniRoute down, quota out) or got it wrong twice: search | `Explore` | haiku |
+| ...: run tests/lint/build | `test-runner` | haiku |
+| ...: docs/web sourced answer | `researcher` | sonnet |
+| ...: bounded edit | `implementer` | sonnet |
+| ...: multi-step task | `general-purpose` | sonnet |
 
-- Escalate with the Agent tool's `model: "opus"` only for security-sensitive, architectural or
-  repeatedly failing work. Never delegate the decision itself on such work.
+- Free models are weaker: give them fully specified briefs, and review their diff before relying on it.
+  Run `claude-free` calls with a 600000 ms timeout and pipe through `tail -n 60`.
+- Never put secrets or `.env` contents in a brief (the free providers may train on prompts).
+- Security-sensitive, architectural or unknown-cause debugging: keep the decision yourself; free models may
+  gather facts. Escalate a Claude agent with `model: "opus"` only for that kind of work or repeated failure.
 - Every brief states: goal, files/dirs in scope, what not to touch, how to verify, output format.
   Pass findings as `path:line` + one-line summaries, never pasted file contents.
 - At most 3 parallel agents; never two agents editing the same files. Re-check agent claims you rely
   on by reading the cited lines.
-- Skip agents for anything a single Grep/Read or one command answers.
-- Prefer `free-worker` over `implementer` when the task is low-risk and fully specified; review its diff.
+- Skip delegation for anything a single Grep/Read or one command answers.
 
 ## Git and safety
 - Conventional Commits. Commit, push, merge, deploy or publish only when asked.

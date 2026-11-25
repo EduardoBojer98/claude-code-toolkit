@@ -33,12 +33,12 @@ Pick the members once, in round 1, and keep them for every round:
 
 | Code | correctness | security | simplicity |
 |---|---|---|---|
-| Client code or client data (default when unsure) | `council-correctness` | `council-security` | `council-simplicity` |
-| Own/personal code | `council-correctness` | `council-security` | `council-free` (lens `simplicity`) |
-| Own code + `--free` in the request | `council-free` | `council-free` | `council-free` |
+| Default (any code) | `council-free` (lens `correctness`) | `council-security` | `council-free` (lens `simplicity`) |
+| `--free` in the request | `council-free` | `council-free` | `council-free` |
+| `--claude` in the request | `council-correctness` | `council-security` | `council-simplicity` |
 
-`council-free` runs on free OmniRoute models (no plan usage, but the providers may train on prompts),
-so it never sees client code. A different model family also catches what Claude reviewers miss.
+`council-free` runs on free OmniRoute models (no plan usage; the providers may train on prompts, so
+the diff must hold no secrets). A different model family also catches what Claude reviewers miss.
 If `council-free` returns `VERDICT: UNAVAILABLE`, rerun that lens on the Claude member for the round.
 
 Spawn the three in parallel (one message, three Agent calls). Brief each with only: "Round N. Review

@@ -14,7 +14,7 @@ when the Claude plan limit is hit.
 | `claude-code/CLAUDE.md` | Global instructions: how to work, short "caveman lite" replies, model routing, git safety | Claude Code, every session |
 | `claude-code/agents/` | 5 helper agents: `Explore` + `test-runner` (Haiku), `researcher` + `implementer` (Sonnet), `free-worker` (free models via OmniRoute) | Claude Code delegates to them |
 | `claude-code/skills/debug/` | Root-cause debugging workflow | Claude Code, on a bug |
-| `claude-code/skills/council/` + `agents/council-*` | `/council <goal>`: build, then loop with 3 read-only reviewers (correctness, security, simplicity) until all approve; `council-free` runs a lens on free OmniRoute models (own code only) | Claude Code, on request |
+| `claude-code/skills/council/` + `agents/council-*` | `/council <goal>`: build, then loop with 3 read-only reviewers (correctness, security, simplicity) until all approve; `council-free` runs two lenses on free OmniRoute models by default | Claude Code, on request |
 | `claude-code/hooks/` | Block secrets being printed or written; run the project's Prettier after edits; keep a `/council` loop going until approved | Claude Code, automatically |
 | `claude-code/settings.json` | Settings template: permissions, hooks, hidden skills, plugins off by default | merged into `~/.claude/settings.json` |
 | `claude-code/bin/security-scan` | Pre-deploy scan: secrets, dependencies, code patterns, WordPress plugins | you or Claude, in a project |
@@ -153,7 +153,7 @@ Describe the task in plain words; the right skill or agent loads itself. Shortcu
 | Plan or think through a business question | ask; add "plan mode" (Shift+Tab) for anything multi-step |
 | Search a codebase cheaply | "Use the Explore agent to find …" (runs on Haiku) |
 | Run tests without flooding the chat | "Have test-runner run `npm test`" |
-| Save Claude usage on simple work | "Use free-worker to …" (drafts, boilerplate, summaries, specified edits) |
+| Save Claude usage | automatic: Claude hands delegable work to free models first (`claude-free -p` / `free-worker`) |
 | See what this session uses | `/dash` (panel), `/context`, `/usage` |
 | Set up a project | "set up this project" (template CLAUDE.md, tools, graph) |
 
@@ -209,9 +209,10 @@ Starts Claude Code on free models through OmniRoute (it starts OmniRoute if need
 
 - Uses the OmniRoute combo **`free-coding`**: NVIDIA Nemotron 3 Ultra → OpenRouter free models
   (Nemotron 3 Ultra, Nemotron 3.5 Super VL, North Mini Code). Tested 2026-11-04.
-- **Not for client code.** NVIDIA's trial terms let it use prompts to improve its models
+- **Prompts may be used for training.** NVIDIA's trial terms let it use prompts to improve its models
   ([API Trial Terms §3.3](https://assets.ngc.nvidia.com/products/api-catalog/legal/NVIDIA%20API%20Trial%20Terms%20of%20Service.pdf));
-  OpenRouter's Nemotron `:free` endpoints are served by NVIDIA. Use it for your own and weekend projects.
+  OpenRouter's Nemotron `:free` endpoints are served by NVIDIA. Client code goes there too (your choice,
+  2026-11-16); secrets never do (`.env` reads stay denied).
 - OmniRoute listens on 127.0.0.1 only (set by `omniroute-setup.sh`): it serves `/v1` without checking keys.
   The first model that answers wins; the next is tried on an error or quota limit. Edit the order in
   `claude-code/omniroute-combo.json`, then re-run `omniroute-setup.sh`.
@@ -230,11 +231,11 @@ OmniRoute dashboard: http://localhost:20128 (providers, combos, usage, logs).
 
 ### Free agents inside normal Claude Code: `free-worker`
 
-Your normal `claude` session (on the subscription) can hand bounded, low-risk work to the **free-worker** agent.
-It runs the task through `claude-free -p` on the free models, then checks the diff and reports back. Only the
-small Haiku wrapper uses Claude usage (≈ $0.002 list per task, measured). Claude picks it on its own for drafts,
-boilerplate, summaries and fully specified edits, or ask: "use free-worker to …". It never handles security,
-architecture, unknown bugs or final decisions, and you review its diff like any other change.
+Your normal `claude` session (on the subscription) sends delegated work to free models **first**, client code
+included: it runs `claude-free -p` itself through Bash (0 plan usage), or uses the **free-worker** agent for
+parallel or background work (only its small Haiku relay uses Claude usage, ≈ $0.002 list per task). Claude agents
+(Explore, test-runner, researcher, implementer) are the fallback when OmniRoute is down or out of quota.
+`/council` uses `council-free` for two of its three lenses. Security and architecture decisions stay with Claude.
 
 ### More free providers (sign up, then add the key in the dashboard → Providers)
 

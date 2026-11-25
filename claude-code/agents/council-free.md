@@ -1,6 +1,6 @@
 ---
 name: council-free
-description: Council reviewer on free models through OmniRoute (claude-free), so it costs no Claude plan usage. Used by /council for one lens (correctness, security or simplicity) on non-client code only - the free providers may train on prompts. Runs the review read-only and returns the verdict.
+description: Council reviewer on free models through OmniRoute (claude-free), so it costs no Claude plan usage. Used by /council for one lens (correctness, security or simplicity) on any code, client code included (the free providers may train on prompts, so never secrets). Runs the review read-only and returns the verdict.
 tools: Bash, Read
 disallowedTools: Edit, Write, NotebookEdit, Agent
 model: haiku
