@@ -1,9 +1,37 @@
-# Claude setup
+# Claude Code Toolkit
 
-My Claude setup for everything I do with Claude: client work (WordPress, Shopify, nopCommerce, React + Vite,
-plain HTML/CSS/JS), business strategy and planning, and weekend projects. It installs Claude Code's config on
-any Linux machine, holds what to paste into claude.ai, and runs Claude Code on free models through OmniRoute
-when the Claude plan limit is hit.
+A ready-to-install [Claude Code](https://code.claude.com) configuration for full-stack web developers:
+global instructions, helper agents, skills, safety hooks, a pre-deploy security scanner, and a way to keep
+working on free models when your Claude plan limit is hit.
+
+It's my personal daily setup (WordPress, Shopify, nopCommerce, React + Vite, plain HTML/CSS/JS, plus business
+planning), published so you can fork it, take pieces, or install the lot on a Linux machine with one script.
+
+**Highlights**
+
+- **Short, direct replies** and a "tech lead" workflow in [`claude-code/CLAUDE.md`](claude-code/CLAUDE.md):
+  read before editing, smallest diff, verify before claiming done.
+- **Cheap delegation:** searches, test runs and drafts go to free models via [OmniRoute](https://www.npmjs.com/package/omniroute)
+  (`claude-free`, `free-worker`), with Haiku/Sonnet agents as fallback.
+- **`/council <goal>`:** build, then loop with read-only correctness, security and simplicity reviewers until all approve.
+- **Safety hooks:** block secrets from being printed or written, guard risky shell commands, auto-format after edits.
+- **`security-scan`:** gitleaks + OSV-Scanner + Semgrep + WordPress plugin advisories, all local CLIs.
+- **`web-dev-standards` skill:** design, accessibility, performance, security and per-stack rules.
+- **`/dash` session dashboard** mod: context, cost, tokens, agents and files for the current session.
+
+**Quick start** (Linux, Claude Code installed)
+
+```bash
+git clone https://github.com/EduardoBojer98/claude-code-toolkit.git ~/Documents/projects/claude-setup
+```
+
+```bash
+cd ~/Documents/projects/claude-setup && bash claude-code/install.sh && bash scripts/test.sh
+```
+
+The installer symlinks into `~/.claude`, merges settings (your existing values win) and backs up anything it
+replaces. Scripts expect the clone at `~/Documents/projects/claude-setup`. Read `claude-code/CLAUDE.md` and
+`claude-code/settings.json` first and adapt them to how you work: they reflect my stack and preferences.
 
 ---
 
@@ -56,7 +84,7 @@ fish -c 'fisher install jorgebucaran/nvm.fish; nvm install lts; set --universal 
 curl -fsSL https://claude.ai/install.sh | bash
 ```
 
-**GitHub** (the repo is private)
+**GitHub** (for pushing your own fork)
 
 ```bash
 gh auth login && gh auth setup-git
@@ -65,7 +93,7 @@ gh auth login && gh auth setup-git
 **This repo + install**
 
 ```bash
-git clone https://github.com/EduardoBojer98/claude-setup.git ~/Documents/projects/claude-setup
+git clone https://github.com/EduardoBojer98/claude-code-toolkit.git ~/Documents/projects/claude-setup
 ```
 
 ```bash
@@ -110,7 +138,7 @@ claude plugin marketplace add mralaminahamed/wordpress-official-agent-skills && 
 claude mcp add --scope user --transport stdio shopify-dev-mcp -- npx -y @shopify/dev-mcp@1.18.0
 ```
 
-In a Claude Code session: `/plugin install session-dashboard --marketplace EduardoBojer98/claude-setup`.
+In a Claude Code session: `/plugin install session-dashboard --marketplace EduardoBojer98/claude-code-toolkit`.
 Optional: ponytail (`/plugin marketplace add DietrichGebert/ponytail`).
 Synced from claude.ai automatically: Playwright, WordPress Dev Skills, searchfit-seo, caveman, Context7.
 

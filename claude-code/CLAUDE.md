@@ -1,6 +1,6 @@
 # Global instructions (all projects)
 
-<!-- Source: github.com/EduardoBojer98/claude-setup → claude-code/CLAUDE.md, symlinked to ~/.claude/CLAUDE.md.
+<!-- Source: github.com/EduardoBojer98/claude-code-toolkit → claude-code/CLAUDE.md, symlinked to ~/.claude/CLAUDE.md.
 Edit it in the repo, never in ~/.claude. HTML comments are stripped before Claude sees the file (0 tokens). -->
 Project `CLAUDE.md` / `AGENTS.md` files win on project specifics; these rules are the floor.
 

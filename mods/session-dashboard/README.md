@@ -42,7 +42,7 @@ a toast once the session's estimated cost passes it.
 ## Install
 
 ```
-/plugin install session-dashboard --marketplace EduardoBojer98/claude-setup
+/plugin install session-dashboard --marketplace EduardoBojer98/claude-code-toolkit
 ```
 
 The repository is private: run `gh auth login` and `gh auth setup-git` first. Update after a repo change:

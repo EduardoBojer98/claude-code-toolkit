@@ -5,7 +5,7 @@ Paste everything in the box into Claude Code, started in the repo with `cd ~/Doc
 Run it on a new machine, after a big Claude Code or OmniRoute update, or every month or two.
 
 ```text
-Audit and set up my Claude setup in this repo (github.com/EduardoBojer98/claude-setup) and on this machine,
+Audit and set up my Claude setup in this repo (github.com/EduardoBojer98/claude-code-toolkit) and on this machine,
 so I can keep working. Today's date matters: verify every external fact live, your training data is old.
 
 Rules
