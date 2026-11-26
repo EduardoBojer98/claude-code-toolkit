@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+# One-shot prompt to a local Ollama model: private (nothing leaves the device) and 0 plan usage.
+# For read-only work on small inputs: summarise a file/log/diff, draft text, classify. It cannot edit files
+# or run tools, and a 4B model can be wrong: check anything you rely on.
+#   local-llm "Summarise this log in 5 bullets" < build.log
+#   git diff | local-llm "List what changed, one line per file"
+# Model: LOCAL_LLM_MODEL (default qwen3.5:4b). Input over LOCAL_LLM_MAX_CHARS (default 24000) is cut.
+set -euo pipefail
+
+MODEL="${LOCAL_LLM_MODEL:-qwen3.5:4b}"
+URL="${OLLAMA_HOST_URL:-http://127.0.0.1:11434}"
+MAX="${LOCAL_LLM_MAX_CHARS:-24000}"
+
+[[ $# -ge 1 ]] || { echo "usage: local-llm \"<instruction>\" [< input]" >&2; exit 2; }
+input=""
+[[ -t 0 ]] || input="$(head -c "$MAX")"
+prompt="$1"
+[[ -z "$input" ]] || prompt="$1
+
+<input>
+$input
+</input>"
+
+# shortcut: fixed 16k window fits the 4 GB GPU; raise num_ctx with LOCAL_LLM_CTX on a bigger card.
+reply="$(jq -nc --arg m "$MODEL" --arg p "$prompt" --argjson c "${LOCAL_LLM_CTX:-16384}" \
+  '{model:$m, prompt:$p, stream:false, think:false, options:{num_ctx:$c}}' \
+  | curl -fsS --max-time 600 "$URL/api/generate" -d @-)" \
+  || { echo "local-llm: Ollama request failed at $URL (is the model pulled? ollama pull $MODEL)" >&2; exit 1; }
+jq -r '.response' <<<"$reply"

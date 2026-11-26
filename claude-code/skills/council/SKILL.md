@@ -1,6 +1,6 @@
 ---
 name: council
-description: Build a goal, then loop with a read-only review council (correctness, security, simplicity; Claude reviewers or free OmniRoute models via council-free) until every member approves. A Stop hook blocks finishing until the council approves or the loop is escalated. Use when the user types /council <goal> or asks for work to be reviewed by the council until approved.
+description: Build a goal, then loop with a read-only review council (correctness, security, simplicity; Claude reviewers or free Ollama Cloud models via council-free) until every member approves. A Stop hook blocks finishing until the council approves or the loop is escalated. Use when the user types /council <goal> or asks for work to be reviewed by the council until approved.
 ---
 
 # Council
@@ -33,12 +33,10 @@ Pick the members once, in round 1, and keep them for every round:
 
 | Code | correctness | security | simplicity |
 |---|---|---|---|
-| Default (any code) | `council-free` (lens `correctness`) | `council-security` | `council-free` (lens `simplicity`) |
-| `--free` in the request | `council-free` | `council-free` | `council-free` |
-| `--claude` in the request | `council-correctness` | `council-security` | `council-simplicity` |
+| Default (any code) | `council-correctness` | `council-security` | `council-simplicity` |
+| `--free` in the request (needs Ollama Cloud credits) | `council-free` | `council-free` | `council-free` |
 
-`council-free` runs on free OmniRoute models (no plan usage; the providers may train on prompts, so
-the diff must hold no secrets). A different model family also catches what Claude reviewers miss.
+`council-free` (only with `--free`) runs on Ollama Cloud, which needs credits (the diff must hold no secrets). A different model family also catches what Claude reviewers miss.
 If `council-free` returns `VERDICT: UNAVAILABLE`, rerun that lens on the Claude member for the round.
 
 Spawn the three in parallel (one message, three Agent calls). Brief each with only: "Round N. Review

@@ -11,8 +11,9 @@ planning), published so you can fork it, take pieces, or install the lot on a Li
 
 - **Short, direct replies** and a "tech lead" workflow in [`claude-code/CLAUDE.md`](claude-code/CLAUDE.md):
   read before editing, smallest diff, verify before claiming done.
-- **Cheap delegation:** searches, test runs and drafts go to free models via [OmniRoute](https://www.npmjs.com/package/omniroute)
-  (`claude-free`, `free-worker`), with Haiku/Sonnet agents as fallback.
+- **Local model first:** digests of test output, logs, diffs and long files go to a local Ollama model
+  (`local-llm`, free, nothing leaves the device); edits go to Haiku/Sonnet agents. Say "no local" for a task
+  to keep it on Claude. No paid service besides the Claude subscription.
 - **`/po <task>`:** an agent owns the task end to end with PM, dev and QA agents, and says done only when every acceptance criterion is proven.
 - **`/council <goal>`:** build, then loop with read-only correctness, security and simplicity reviewers until all approve.
 - **Safety hooks:** block secrets from being printed or written, guard risky shell commands, auto-format after edits.
@@ -41,15 +42,15 @@ replaces. Scripts expect the clone at `~/Documents/projects/claude-setup`. Read 
 | Path | What it is | Used by |
 |---|---|---|
 | `claude-code/CLAUDE.md` | Global instructions: how to work, short "caveman lite" replies, model routing, git safety | Claude Code, every session |
-| `claude-code/agents/` | Helper agents: `Explore` + `test-runner` (Haiku), `researcher` + `implementer` (Sonnet), `free-worker` (free models via OmniRoute) | Claude Code delegates to them |
+| `claude-code/agents/` | Helper agents: `Explore` + `test-runner` (Haiku), `researcher` + `implementer` (Sonnet), `free-worker` (Ollama Cloud, parked) | Claude Code delegates to them |
 | `claude-code/skills/debug/` | Root-cause debugging workflow | Claude Code, on a bug |
-| `claude-code/skills/council/` + `agents/council-*` | `/council <goal>`: build, then loop with 3 read-only reviewers (correctness, security, simplicity) until all approve; `council-free` runs two lenses on free OmniRoute models by default | Claude Code, on request |
+| `claude-code/skills/council/` + `agents/council-*` | `/council <goal>`: build, then loop with 3 read-only reviewers (correctness, security, simplicity) until all approve; `--free` runs them on Ollama Cloud (needs credits) | Claude Code, on request |
 | `claude-code/skills/po/` + `agents/po-pm`, `agents/qa` | `/po <task>`: the session is Project Owner - writes acceptance criteria, you approve the plan once, `po-pm` agents run each workstream (dev on free models, `implementer` fallback, `qa` tests), then the PO reruns every check, runs a fresh QA and `/council`, and only then says done | Claude Code, on request |
 | `claude-code/hooks/` | Block secrets being printed or written; run the project's Prettier after edits; keep a `/council` loop going until approved; keep a `/po` project going until every criterion is proven | Claude Code, automatically |
 | `claude-code/settings.json` | Settings template: permissions, hooks, hidden skills, plugins off by default | merged into `~/.claude/settings.json` |
 | `claude-code/bin/security-scan` | Pre-deploy scan: secrets, dependencies, code patterns, WordPress plugins | you or Claude, in a project |
-| `claude-code/bin/claude-free` | Claude Code on free models through OmniRoute | you, when the plan limit is hit |
-| `claude-code/omniroute-setup.sh`, `omniroute-combo.json` | Creates the `free-coding` combo + its key in OmniRoute | once per machine |
+| `claude-code/bin/claude-free` | Claude Code on Ollama Cloud, through the local Ollama (off: needs credits) | you, only if you add credits |
+| `claude-code/bin/local-llm` | One-shot prompt to a local Ollama model: digests and drafts, nothing leaves the device | Claude (delegation), or you |
 | `claude-code/enable-plugins.sh` | Turns a tool group on for one project only | you, per project |
 | `claude-code/install.sh` | Links all of the above into `~/.claude` and `~/.local/bin` | once, and after changes |
 | `skills/web-dev-standards/` | My web standards: design, accessibility, performance, security, Definition of Done, per-stack rules | Claude Code and claude.ai |
@@ -58,7 +59,7 @@ replaces. Scripts expect the clone at `~/Documents/projects/claude-setup`. Read 
 | `templates/CLAUDE.md` | Starter instructions file for a project | new projects |
 | `scripts/doctor.sh`, `scripts/test.sh` | Live health check; offline tests | you |
 | `BEST-PRACTICES.md` | The checklist this setup follows, with sources | reference |
-| `prompts/audit-and-setup.md` | One prompt that audits and fixes the whole setup (incl. OmniRoute) | you, every month or two |
+| `prompts/audit-and-setup.md` | One prompt that audits and fixes the whole setup (incl. Ollama) | you, every month or two |
 
 ---
 
@@ -154,16 +155,24 @@ sudo systemctl enable --now docker.socket && sudo usermod -aG docker $USER
 /bin/bash -c "$(curl -fsSL https://get.lando.dev/setup-lando.sh)"
 ```
 
-**OmniRoute** (free models when the Claude limit is hit; see §5)
+**Ollama** (free models for delegation; see §5)
 
 ```bash
-npm i -g omniroute && omniroute serve --daemon --no-open
+sudo pacman -S ollama-cuda && sudo systemctl enable --now ollama
 ```
 
-Open http://localhost:20128, add provider keys (OpenRouter, NVIDIA, Ollama Cloud: free accounts), then:
+```bash
+ollama signin
+```
 
 ```bash
-bash ~/Documents/projects/claude-setup/claude-code/omniroute-setup.sh
+ollama pull qwen3.5:4b
+```
+
+**Open WebUI** (local dashboard for Ollama at http://127.0.0.1:3000; create the admin account on first open)
+
+```bash
+docker run -d --name open-webui --restart always --network host -e HOST=127.0.0.1 -e PORT=3000 -e OLLAMA_BASE_URL=http://127.0.0.1:11434 -v open-webui:/app/backend/data ghcr.io/open-webui/open-webui:main
 ```
 
 ---
@@ -183,7 +192,7 @@ Describe the task in plain words; the right skill or agent loads itself. Shortcu
 | Plan or think through a business question | ask; add "plan mode" (Shift+Tab) for anything multi-step |
 | Search a codebase cheaply | "Use the Explore agent to find …" (runs on Haiku) |
 | Run tests without flooding the chat | "Have test-runner run `npm test`" |
-| Save Claude usage | automatic: Claude hands delegable work to free models first (`claude-free -p` / `free-worker`) |
+| Save Claude usage | automatic: Claude digests long output with `local-llm` (local, free) before reading it or calling an agent |
 | See what this session uses | `/dash` (panel), `/context`, `/usage` |
 | Set up a project | "set up this project" (template CLAUDE.md, tools, graph) |
 
@@ -228,61 +237,35 @@ Semgrep rule downloads. Secrets and code stay local.
 
 ---
 
-## 5. When the Claude plan limit is hit: `claude-free`
+## 5. Local model: `local-llm` (and the parked `claude-free`)
 
 ```bash
-claude-free
+git diff | local-llm "List what changed, one line per file"
 ```
 
-Starts Claude Code on free models through OmniRoute (it starts OmniRoute if needed). Same flags as `claude`:
-`claude-free -c` continues the last session, `claude-free -p "…"` for one question.
+A one-shot prompt to the local `qwen3.5:4b` on your GPU: free, and nothing leaves the device. Claude uses it
+**by default** before any Claude agent for reading work: digests of test/build output, logs, diffs and long
+files, short drafts. Say **"no local"** or **"use Claude"** for a task and it skips it for that task.
+It can't edit or run tools, and a 4B model can be wrong, so Claude confirms what it acts on with a Grep/Read.
+Edits go to the `implementer` agent (Sonnet, your subscription).
 
-- Uses the OmniRoute combo **`free-coding`**: NVIDIA Nemotron 3 Ultra → OpenRouter free models
-  (Nemotron 3 Ultra, Nemotron 3.5 Super VL, North Mini Code). Tested 2026-11-04.
-- **Prompts may be used for training.** NVIDIA's trial terms let it use prompts to improve its models
-  ([API Trial Terms §3.3](https://assets.ngc.nvidia.com/products/api-catalog/legal/NVIDIA%20API%20Trial%20Terms%20of%20Service.pdf));
-  OpenRouter's Nemotron `:free` endpoints are served by NVIDIA. Client code goes there too (your choice,
-  2026-11-16); secrets never do (`.env` reads stay denied).
-- OmniRoute listens on 127.0.0.1 only (set by `omniroute-setup.sh`): it serves `/v1` without checking keys.
-  The first model that answers wins; the next is tried on an error or quota limit. Edit the order in
-  `claude-code/omniroute-combo.json`, then re-run `omniroute-setup.sh`.
-- Every model alias points at that combo. The key (`~/.config/claude-free/token`) is meant to allow only
-  that combo, but OmniRoute 3.8.52 doesn't enforce it (it logs "invalid bearer" and serves the request
-  anonymously). What keeps your Claude subscription out is that the `claude` provider stays inactive.
-- Normal `claude` is untouched: it always uses your Claude subscription directly.
-- Free models are weaker than Claude: use them to keep going on clear tasks, not for hard decisions.
+**Why local models don't edit here:** on an RTX 3050 (4 GB VRAM) Claude Code's ~20k-token prompt takes
+minutes per turn at ~60 tokens/s. Tested 2026-11-26: a one-line fix took 5–8 minutes on `qwen3.5:4b`/`2b`,
+and one run reported a fix it never made. A direct `local-llm` call answers in ~10 s.
 
-**Don't connect your Claude subscription inside OmniRoute.** Anthropic only allows subscription logins in
-Claude Code and its own apps, and forbids routing them through third-party tools
-([legal and compliance](https://code.claude.com/docs/en/legal-and-compliance)): it can get the account
-suspended. OmniRoute itself marks Antigravity and Kiro connections "avoid" for the same reason.
+**`claude-free` (parked):** Claude Code on an Ollama Cloud model through the local Ollama. Signed in on
+2026-11-26, but the free plan refused all 17 cloud models tried ("Add usage credits"), so it is off and
+nothing routes to it. `/council --free` and `free-worker` use it too. It fails fast with the reason:
 
-OmniRoute dashboard: http://localhost:20128 (providers, combos, usage, logs).
+```bash
+claude-free -p "Reply OK"
+```
 
-### Free agents inside normal Claude Code: `free-worker`
+### Dashboard: Open WebUI
 
-Your normal `claude` session (on the subscription) sends delegated work to free models **first**, client code
-included: it runs `claude-free -p` itself through Bash (0 plan usage), or uses the **free-worker** agent for
-parallel or background work (only its small Haiku relay uses Claude usage, ≈ $0.002 list per task). Claude agents
-(Explore, test-runner, researcher, implementer) are the fallback when OmniRoute is down or out of quota.
-`/council` uses `council-free` for two of its three lenses. Security and architecture decisions stay with Claude.
-
-### More free providers (sign up, then add the key in the dashboard → Providers)
-
-Re-checked 2026-11-04 (afternoon) with real requests and each provider's terms. Only you can create accounts.
-**No sign-up is worth it right now**; the table says why.
-
-| Provider (OmniRoute id) | Status | Why |
-|---|---|---|
-| Groq (`groq`) | key added, **not in the combo** | answers small prompts, but the free tier returns 413 on a Claude Code-sized request (~39k tokens, tested) |
-| Cloudflare Workers AI (`cloudflare-ai`) | best for client code if it ever fits | only provider with a primary-source "no training" statement ([data usage](https://developers.cloudflare.com/workers-ai/platform/data-usage/)); Kimi K2.6 now needs Workers Paid ([pricing](https://developers.cloudflare.com/workers-ai/platform/pricing/)) |
-| SambaNova (`sambanova`) | skip | 20 requests/day ([rate limits](https://docs.sambanova.ai/docs/en/models/rate-limits)): one Claude Code task uses more |
-| Cerebras (`cerebras`) | skip | free context 64–65k, below the 128k Claude Code needs ([models](https://inference-docs.cerebras.ai/models/overview)) |
-| Ollama Cloud (`ollama-cloud`) | key kept, dropped from combo | Kimi K2.6 now returns 402 (paid) |
-| Gemini (`gemini`), OpenRouter `gemma-4-31b-it:free` | skip | Google's unpaid tier trains on prompts with human review ([terms](https://aistudio.google.com/docs/terms)) |
-
-After adding a provider: put its models in `claude-code/omniroute-combo.json` (best first) and run
-`bash claude-code/omniroute-setup.sh`, or ask Claude to do it with the audit prompt below.
+http://127.0.0.1:3000 (local only). Chat with any model, pull and delete models, set model defaults.
+Install command in §1. Update: `docker pull ghcr.io/open-webui/open-webui:main`, then remove and re-run
+the container (data stays in the `open-webui` volume). `ollama ps` shows what is loaded and on CPU/GPU.
 
 ---
 
@@ -325,9 +308,9 @@ git -C ~/Documents/projects/claude-setup pull && bash ~/Documents/projects/claud
 
 - Skills, agents and `CLAUDE.md` are links: a `git pull` is enough. Re-run the installer after a settings change.
 - Updates: `claude plugin marketplace update` then `claude plugin update <name>@<marketplace>`;
-  `npm i -g omniroute`; `sudo pacman -Syu`.
+  `sudo pacman -Syu` (Ollama); `docker pull ghcr.io/open-webui/open-webui:main`.
 - Found a better tool? Ask Claude to compare it with what's here and to add or replace it.
-- Full audit + fix of everything (tools, skills, OmniRoute, docs): paste the prompt in [prompts/audit-and-setup.md](prompts/audit-and-setup.md).
+- Full audit + fix of everything (tools, skills, Ollama, docs): paste the prompt in [prompts/audit-and-setup.md](prompts/audit-and-setup.md).
 - Health: `bash scripts/doctor.sh` (live, free); `bash scripts/test.sh` (offline tests).
 
 ## 9. Commands reference
@@ -341,7 +324,7 @@ git -C ~/Documents/projects/claude-setup pull && bash ~/Documents/projects/claud
 | Hooks | `/hooks`; scripts in `claude-code/hooks/` |
 | Permissions | `permissions` in `claude-code/settings.json` (`allow` / `ask` / `deny`), then re-run the installer |
 | Project instructions | `cp ~/Documents/projects/claude-setup/templates/CLAUDE.md ./CLAUDE.md` |
-| OmniRoute | `omniroute status` · `omniroute combo list` · `omniroute logs` · dashboard at :20128 |
+| Ollama | `ollama ps` · `ollama list` · `claude-free --models` · dashboard at http://127.0.0.1:3000 |
 
 ## 10. Troubleshooting
 
@@ -353,6 +336,7 @@ git -C ~/Documents/projects/claude-setup pull && bash ~/Documents/projects/claud
 | MCP "failed to connect … npx" | re-run the installer (links nvm's Node into `~/.local/bin`) |
 | "Blocked by guard-…" | intended for secrets; read the secret yourself in a terminal |
 | Too many permission prompts | `/fewer-permission-prompts`, or add `allow` rules |
-| `claude-free`: "no key" | run `claude-code/omniroute-setup.sh` |
-| `claude-free` answers slowly or errors | free quota used up on the first models: `omniroute logs`; it falls through the list |
+| `claude-free`: "not signed in" | `ollama signin` |
+| `claude-free`: "refused … Add usage credits" | expected on the free plan; it is parked, Claude agents do the work |
+| `local-llm` slow | first call loads the model (~10 s); `ollama ps` shows CPU/GPU split |
 | Usage climbing fast | `/usage`; `/clear` between tasks; lower `/effort`; turn off unused profiles |

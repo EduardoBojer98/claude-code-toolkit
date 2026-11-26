@@ -1,6 +1,6 @@
 ---
 name: council-free
-description: Council reviewer on free models through OmniRoute (claude-free), so it costs no Claude plan usage. Used by /council for one lens (correctness, security or simplicity) on any code, client code included (the free providers may train on prompts, so never secrets). Runs the review read-only and returns the verdict.
+description: Council reviewer on Ollama Cloud free models (claude-free), so it costs no Claude plan usage. Used by /council for one lens (correctness, security or simplicity) on any code, client code included (never secrets). Runs the review read-only and returns the verdict.
 tools: Bash, Read
 disallowedTools: Edit, Write, NotebookEdit, Agent
 model: haiku
@@ -24,7 +24,7 @@ Procedure:
      --permission-mode plan --disallowedTools Edit Write NotebookEdit Bash Agent 2>&1 | tail -n 60
    ```
 3. Return the reply from its `VERDICT:` line on. Do not change it.
-4. If the output has no `VERDICT:` line (no key, OmniRoute down, quota out, timeout), return
+4. If the output has no `VERDICT:` line (not signed in, Ollama down, quota out, timeout), return
    `VERDICT: UNAVAILABLE` and the last error line.
 
 Output: the verdict block as returned, or the UNAVAILABLE line. Nothing else.

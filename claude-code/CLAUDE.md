@@ -40,21 +40,23 @@ Before a deploy or a client-work merge: run `security-scan` (local CLIs, no toke
 ## Model routing and delegation
 You are the tech lead: you keep the plan, integration, and final verification.
 Do it yourself when the task is small, sequential, or needs this conversation's context.
-**Free models first:** delegated work goes to OmniRoute free models (0 plan usage) before any Claude agent.
+**Local model first, by default:** reading work goes to `local-llm` (local Ollama, 0 plan usage, stays on
+the device) before any Claude agent. Skip it only when the user says so for that task ("no local", "use
+Claude"). `claude-free` (Ollama Cloud) is off: the account has no credits. Use it only when the user says so.
 
 | Work | Route | Plan usage |
 |---|---|---|
-| Any delegable task: search, summaries, docs/web lookup, running tests and summarising, drafts, specified edits | `claude-free -p "<brief>"` via Bash yourself (add `--permission-mode acceptEdits` when it edits) | 0 |
-| Same, but parallel, background, or the diff check would flood your context | `free-worker` agent | tiny (Haiku relay) |
-| claude-free failed (OmniRoute down, quota out) or got it wrong twice: search | `Explore` | haiku |
-| ...: run tests/lint/build | `test-runner` | haiku |
-| ...: docs/web sourced answer | `researcher` | sonnet |
-| ...: bounded edit | `implementer` | sonnet |
-| ...: multi-step task | `general-purpose` | sonnet |
+| Digest of test/build/lint output, a log, a diff or a long file; short drafts; classify or extract | `cmd 2>&1 \| local-llm "<instruction>"` or `local-llm "…" < file` | 0 |
+| Search across the codebase | `Explore` | haiku |
+| Run tests/lint/build when the output is too long even to digest | `test-runner` | haiku |
+| Docs/web sourced answer | `researcher` | sonnet |
+| Bounded edit, small-to-mid change | `implementer` | sonnet |
+| Multi-step task | `general-purpose` | sonnet |
+| Only when the user turns it on: any of the above on Ollama Cloud | `claude-free -p "<brief>"` / `free-worker` | 0 |
 
-- Free models are weaker: give them fully specified briefs, and review their diff before relying on it.
-  Run `claude-free` calls with a 600000 ms timeout and pipe through `tail -n 60`.
-- Never put secrets or `.env` contents in a brief (the free providers may train on prompts).
+- `local-llm` is a 4B model: give it one clear instruction, keep inputs under ~24k chars (it cuts the rest),
+  and confirm any fact you act on (a failing test name, a line number) with one Grep/Read.
+- Never put secrets or `.env` contents in a brief. `claude-free` would send prompts to ollama.com.
 - Security-sensitive, architectural or unknown-cause debugging: keep the decision yourself; free models may
   gather facts. Escalate a Claude agent with `model: "opus"` only for that kind of work or repeated failure.
 - Every brief states: goal, files/dirs in scope, what not to touch, how to verify, output format.

@@ -1,33 +1,44 @@
 #!/usr/bin/env bash
-# Claude Code on free models through OmniRoute, for when the Claude plan limit is reached.
+# Claude Code on Ollama Cloud free models, run through the local Ollama daemon (0 Claude plan usage).
 #   claude-free [claude args…]        e.g. claude-free, claude-free -c, claude-free -p "…"
-# Every model alias (main, opus, sonnet, haiku, subagents) points at the OmniRoute combo, and the key
-# is restricted to that combo, so no request can reach the Claude subscription connection in OmniRoute.
-# One-time setup: bash ~/Documents/projects/claude-setup/claude-code/omniroute-setup.sh
+# Every model alias (main, opus, sonnet, haiku, subagents) points at one Ollama model, so no request
+# reaches the Claude subscription. One-time setup: `ollama signin` (your ollama.com account).
+# Pick another model: CLAUDE_FREE_MODEL=<name> claude-free …   (list: claude-free --models)
+# Local models are too slow for Claude Code on this laptop (4 GB VRAM); use `local-llm` for local reads.
 set -euo pipefail
 
-COMBO="${CLAUDE_FREE_COMBO:-free-coding}"
-URL="${OMNIROUTE_URL:-http://localhost:20128}"
-TOKEN_FILE="${CLAUDE_FREE_TOKEN_FILE:-$HOME/.config/claude-free/token}"
+MODEL="${CLAUDE_FREE_MODEL:-glm-5.3:cloud}"
+URL="${OLLAMA_HOST_URL:-http://127.0.0.1:11434}"
 
 # A free session never starts another one (free-worker inside claude-free would loop).
 [[ -z "${CLAUDE_FREE_ACTIVE:-}" ]] || { echo "claude-free: already on free models; do the task in this session." >&2; exit 1; }
 export CLAUDE_FREE_ACTIVE=1
 
-[[ -s "$TOKEN_FILE" ]] || { echo "claude-free: no key at $TOKEN_FILE. Run claude-code/omniroute-setup.sh first." >&2; exit 1; }
-if ! curl -fs --max-time 3 "$URL/api/health" >/dev/null; then
-  echo "claude-free: starting OmniRoute…" >&2
-  omniroute serve --daemon --no-open >/dev/null 2>&1 || true
-  for _ in $(seq 1 30); do curl -fs --max-time 2 "$URL/api/health" >/dev/null && break; sleep 1; done
+curl -fs --max-time 3 "$URL/api/version" >/dev/null \
+  || { echo "claude-free: Ollama is not running at $URL (sudo systemctl start ollama)." >&2; exit 1; }
+
+if [[ "${1:-}" == "--models" ]]; then
+  curl -fs --max-time 10 "$URL/api/tags" | jq -r '.models[].name'; exit 0
+fi
+
+# Fail fast (and say why) instead of letting Claude Code retry a refused model for minutes.
+probe="$(curl -s --max-time 60 "$URL/api/chat" \
+  -d "$(jq -nc --arg m "$MODEL" '{model:$m, messages:[{role:"user",content:"Reply OK"}], stream:false, options:{num_predict:5}}')")"
+if err="$(jq -er '.error // empty' <<<"$probe" 2>/dev/null)" || [[ -z "$probe" ]]; then
+  case "${err:-no reply}" in
+    *nauthorized*) echo "claude-free: not signed in to Ollama Cloud. Run: ollama signin" >&2 ;;
+    *) echo "claude-free: $MODEL refused: ${err:-no reply} (quota out, or set CLAUDE_FREE_MODEL)" >&2 ;;
+  esac
+  exit 1
 fi
 
 exec env -u ANTHROPIC_API_KEY \
   ANTHROPIC_BASE_URL="$URL" \
-  ANTHROPIC_AUTH_TOKEN="$(cat "$TOKEN_FILE")" \
-  ANTHROPIC_MODEL="$COMBO" \
-  ANTHROPIC_DEFAULT_OPUS_MODEL="$COMBO" \
-  ANTHROPIC_DEFAULT_SONNET_MODEL="$COMBO" \
-  ANTHROPIC_DEFAULT_HAIKU_MODEL="$COMBO" \
-  CLAUDE_CODE_SUBAGENT_MODEL="$COMBO" \
-  CLAUDE_CODE_MAX_CONTEXT_TOKENS="${CLAUDE_FREE_CONTEXT:-256000}" \
+  ANTHROPIC_AUTH_TOKEN=ollama \
+  ANTHROPIC_MODEL="$MODEL" \
+  ANTHROPIC_DEFAULT_OPUS_MODEL="$MODEL" \
+  ANTHROPIC_DEFAULT_SONNET_MODEL="$MODEL" \
+  ANTHROPIC_DEFAULT_HAIKU_MODEL="$MODEL" \
+  CLAUDE_CODE_SUBAGENT_MODEL="$MODEL" \
+  CLAUDE_CODE_MAX_CONTEXT_TOKENS="${CLAUDE_FREE_CONTEXT:-131072}" \
   claude "$@"
