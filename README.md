@@ -50,7 +50,8 @@ replaces. Scripts expect the clone at `~/Documents/projects/claude-setup`. Read 
 | `claude-code/settings.json` | Settings template: permissions, hooks, hidden skills, plugins off by default | merged into `~/.claude/settings.json` |
 | `claude-code/bin/security-scan` | Pre-deploy scan: secrets, dependencies, code patterns, WordPress plugins | you or Claude, in a project |
 | `claude-code/bin/claude-free` | Claude Code on Ollama Cloud, through the local Ollama (off: needs credits) | you, only if you add credits |
-| `claude-code/bin/local-llm` | One-shot prompt to a local Ollama model: digests and drafts, nothing leaves the device | Claude (delegation), or you |
+| `claude-code/bin/local-llm`, `local-llm-bench` | One-shot prompt to a local Ollama model (`-m general\|code\|write`), and its benchmark | Claude (delegation), or you |
+| `claude-code/skills/local-models/` | `/local-models`: find, benchmark and switch to better local models | Claude Code, on request |
 | `claude-code/enable-plugins.sh` | Turns a tool group on for one project only | you, per project |
 | `claude-code/install.sh` | Links all of the above into `~/.claude` and `~/.local/bin` | once, and after changes |
 | `skills/web-dev-standards/` | My web standards: design, accessibility, performance, security, Definition of Done, per-stack rules | Claude Code and claude.ai |
@@ -166,10 +167,17 @@ ollama signin
 ```
 
 ```bash
-ollama pull qwen3.5:4b
+ollama pull qwen3.5:4b && ollama pull qwen2.5-coder:3b && ollama pull phi4-mini
 ```
 
-**Open WebUI** (local dashboard for Ollama at http://127.0.0.1:3000; create the admin account on first open)
+**Alpaca** (native desktop chat app for Ollama). In Preferences → Instances add an **Ollama** instance at
+`http://127.0.0.1:11434` with no key, so it uses this Ollama instead of installing its own.
+
+```bash
+flatpak install flathub com.jeffser.Alpaca
+```
+
+**Open WebUI** (optional browser dashboard at http://127.0.0.1:3000; create the admin account on first open)
 
 ```bash
 docker run -d --name open-webui --restart always --network host -e HOST=127.0.0.1 -e PORT=3000 -e OLLAMA_BASE_URL=http://127.0.0.1:11434 -v open-webui:/app/backend/data ghcr.io/open-webui/open-webui:main
@@ -240,12 +248,30 @@ Semgrep rule downloads. Secrets and code stay local.
 ## 5. Local model: `local-llm` (and the parked `claude-free`)
 
 ```bash
-git diff | local-llm "List what changed, one line per file"
+git diff | local-llm -m code "List what changed, one line per file"
 ```
 
-A one-shot prompt to the local `qwen3.5:4b` on your GPU: free, and nothing leaves the device. Claude uses it
-**by default** before any Claude agent for reading work: digests of test/build output, logs, diffs and long
-files, short drafts. Say **"no local"** or **"use Claude"** for a task and it skips it for that task.
+A one-shot prompt to a local model on your GPU: free, and nothing leaves the device. Claude uses it
+**by default** before any Claude agent for reading work, and picks the model by task with `-m`:
+
+| Role (`-m`) | Model | Used for | Speed | GPU fit | Size |
+|---|---|---|---|---|---|
+| `general` (default) | `qwen3.5:4b` | digests of test/build output and logs, extraction | 19 tok/s | 39% CPU | 3.3 GB |
+| `code` | `qwen2.5-coder:3b` | diffs, code files, snippets | 47 tok/s | full | 1.9 GB |
+| `write` | `phi4-mini` | prose drafts (commit bodies, notes) | 26 tok/s | 41% CPU | 2.5 GB |
+
+All three passed every `local-llm-bench` check (2026-11-26, RTX 3050 4 GB). Say **"no local"** or
+**"use Claude"** for a task and it skips them for that task.
+
+**Keep the models current:** type **`/local-models`**. Claude checks ollama.com for newer local models that
+fit the GPU, benchmarks them against the current ones with `local-llm-bench`, switches a role only when the
+new model passes and is clearly faster, updates `local-llm` and this table, and removes the losers (it asks
+before removing a model you used). Run it every month or two:
+
+```bash
+local-llm-bench qwen3.5:4b qwen2.5-coder:3b phi4-mini | column -t -s $'\t'
+```
+
 It can't edit or run tools, and a 4B model can be wrong, so Claude confirms what it acts on with a Grep/Read.
 Edits go to the `implementer` agent (Sonnet, your subscription).
 
@@ -324,7 +350,7 @@ git -C ~/Documents/projects/claude-setup pull && bash ~/Documents/projects/claud
 | Hooks | `/hooks`; scripts in `claude-code/hooks/` |
 | Permissions | `permissions` in `claude-code/settings.json` (`allow` / `ask` / `deny`), then re-run the installer |
 | Project instructions | `cp ~/Documents/projects/claude-setup/templates/CLAUDE.md ./CLAUDE.md` |
-| Ollama | `ollama ps` · `ollama list` · `claude-free --models` · dashboard at http://127.0.0.1:3000 |
+| Ollama | `ollama ps` · `ollama list` · `/local-models` · Alpaca app (or Open WebUI at http://127.0.0.1:3000) |
 
 ## 10. Troubleshooting
 

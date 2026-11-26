@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+# Benchmark local Ollama models for the local-llm roles, same settings local-llm uses (16k context, no thinking).
+#   local-llm-bench <model> [model…]      e.g. local-llm-bench qwen3.5:4b qwen2.5-coder:3b
+# Per model: warm speed (tok/s), GPU share, and a pass/fail check per role:
+#   general: finds the failing test in a log   code: writes a JS function that passes node tests
+#   write:   one plain sentence (non-empty, under 300 chars, no code)
+# Output: one tab-separated line per model: model, tok/s, gpu, general, code, write, size.
+set -uo pipefail
+URL="${OLLAMA_HOST_URL:-http://127.0.0.1:11434}"
+command -v node >/dev/null || { echo "local-llm-bench: needs node for the code check" >&2; exit 1; }
+[[ $# -ge 1 ]] || { echo "usage: local-llm-bench <model> [model…]" >&2; exit 2; }
+
+ask() {  # model prompt -> full JSON reply
+  jq -nc --arg m "$1" --arg p "$2" '{model:$m, prompt:$p, stream:false, think:false,
+    options:{num_ctx:16384, num_predict:400, temperature:0}}' \
+    | curl -s --max-time 600 "$URL/api/generate" -d @-
+}
+
+LOG='test_alpha ... ok
+test_po_gate ... FAIL
+AssertionError: expected block
+test_gamma ... ok
+Ran 3 tests
+FAILED (failures=1)'
+CODE_TEST='
+const t = [["a@b.co",true],["first.last@site.org",true],["no-at.com",false],["a@b",false],["a b@c.com",false],["",false]];
+const bad = t.filter(([s, want]) => isEmail(s) !== want);
+process.exit(bad.length ? 1 : 0);'
+
+printf 'model\ttok/s\tgpu\tgeneral\tcode\twrite\tsize\n'
+for m in "$@"; do
+  ask "$m" "Reply OK" >/dev/null  # load the model so speed is measured warm
+  gen="$(ask "$m" "Which test failed? Reply with only the test name.
+
+$LOG")"
+  if [[ "$(jq -r '.error // empty' <<<"$gen")" != "" ]]; then
+    printf '%s\terror: %s\n' "$m" "$(jq -r .error <<<"$gen")"; continue
+  fi
+  general=FAIL; jq -r .response <<<"$gen" | grep -q 'test_po_gate' && general=PASS
+
+  code_reply="$(ask "$m" 'Write a JavaScript function isEmail(s) that returns true only for a valid email address (one @, no spaces, a dot in the domain). Reply with only the code, no explanation.')"
+  tps="$(jq -r '(.eval_count / (.eval_duration / 1e9)) | floor' <<<"$code_reply")"
+  js="$(jq -r .response <<<"$code_reply" | sed -e '/^```/d')"
+  code=FAIL; node -e "$js
+$CODE_TEST" >/dev/null 2>&1 && code=PASS
+
+  w="$(ask "$m" 'Write one plain sentence for a commit message body: the script now picks a model per task.' | jq -r .response)"
+  write=FAIL; [[ -n "$w" && ${#w} -lt 300 && "$w" != *'```'* ]] && write=PASS
+
+  read -r size gpu < <(ollama ps | awk -v m="$m" '$1==m || $1==m":latest" {print $3$4, $5"_"$6}')
+  printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\n' "$m" "$tps" "${gpu:-?}" "$general" "$code" "$write" "${size:-?}"
+  ollama stop "$m" >/dev/null 2>&1
+done

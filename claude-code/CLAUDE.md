@@ -46,7 +46,9 @@ Claude"). `claude-free` (Ollama Cloud) is off: the account has no credits. Use i
 
 | Work | Route | Plan usage |
 |---|---|---|
-| Digest of test/build/lint output, a log, a diff or a long file; short drafts; classify or extract | `cmd 2>&1 \| local-llm "<instruction>"` or `local-llm "…" < file` | 0 |
+| Digest of test/build/lint output or a log; classify or extract | `cmd 2>&1 \| local-llm "<instruction>"` or `local-llm "…" < file` | 0 |
+| Digest or explain a diff or code file; draft a snippet you will review | `git diff \| local-llm -m code "…"` | 0 |
+| Draft prose (commit body, notes, client text you will rewrite) | `local-llm -m write "…"` | 0 |
 | Search across the codebase | `Explore` | haiku |
 | Run tests/lint/build when the output is too long even to digest | `test-runner` | haiku |
 | Docs/web sourced answer | `researcher` | sonnet |
@@ -54,7 +56,7 @@ Claude"). `claude-free` (Ollama Cloud) is off: the account has no credits. Use i
 | Multi-step task | `general-purpose` | sonnet |
 | Only when the user turns it on: any of the above on Ollama Cloud | `claude-free -p "<brief>"` / `free-worker` | 0 |
 
-- `local-llm` is a 4B model: give it one clear instruction, keep inputs under ~24k chars (it cuts the rest),
+- `local-llm` runs 3–4B models: give it one clear instruction, keep inputs under ~24k chars (it cuts the rest),
   and confirm any fact you act on (a failing test name, a line number) with one Grep/Read.
 - Never put secrets or `.env` contents in a brief. `claude-free` would send prompts to ollama.com.
 - Security-sensitive, architectural or unknown-cause debugging: keep the decision yourself; free models may

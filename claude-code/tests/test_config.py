@@ -83,7 +83,7 @@ class ConfigFiles(unittest.TestCase):
             self.assertIn("Output", body, f"{a.name} needs an explicit output format")
 
     def test_skills_frontmatter_and_links(self):
-        skills = [LAYER / "skills" / s for s in ("debug", "council", "po")] + [REPO / "skills" / "web-dev-standards"]
+        skills = [LAYER / "skills" / s for s in ("debug", "council", "po", "local-models")] + [REPO / "skills" / "web-dev-standards"]
         for d in skills:
             fields, body = frontmatter(d / "SKILL.md")
             self.assertEqual(fields["name"], d.name)

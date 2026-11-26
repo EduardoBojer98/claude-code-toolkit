@@ -3,17 +3,26 @@
 # For read-only work on small inputs: summarise a file/log/diff, draft text, classify. It cannot edit files
 # or run tools, and a 4B model can be wrong: check anything you rely on.
 #   local-llm "Summarise this log in 5 bullets" < build.log
-#   git diff | local-llm "List what changed, one line per file"
-# Model: LOCAL_LLM_MODEL (default qwen3.5:4b). Input over LOCAL_LLM_MAX_CHARS (default 24000) is cut.
+#   git diff | local-llm -m code "List what changed, one line per file"
+# -m picks the model: general (default, qwen3.5:4b: digests of logs/test output, extraction),
+#    code (qwen2.5-coder:3b: diffs, code, snippets; fastest, fits the GPU), write (phi4-mini: prose drafts),
+#    or any pulled model name. LOCAL_LLM_MODEL sets the default. Input over LOCAL_LLM_MAX_CHARS (24000) is cut.
 set -euo pipefail
 
-MODEL="${LOCAL_LLM_MODEL:-qwen3.5:4b}"
+MODEL="${LOCAL_LLM_MODEL:-general}"
+if [[ "${1:-}" == "-m" ]]; then MODEL="${2:?local-llm: -m needs a model}"; shift 2; fi
+case "$MODEL" in
+  general) MODEL=qwen3.5:4b ;;
+  code) MODEL=qwen2.5-coder:3b ;;
+  write) MODEL=phi4-mini ;;
+esac
 URL="${OLLAMA_HOST_URL:-http://127.0.0.1:11434}"
 MAX="${LOCAL_LLM_MAX_CHARS:-24000}"
 
-[[ $# -ge 1 ]] || { echo "usage: local-llm \"<instruction>\" [< input]" >&2; exit 2; }
+[[ $# -ge 1 ]] || { echo "usage: local-llm [-m general|code|write|<model>] \"<instruction>\" [< input]" >&2; exit 2; }
 input=""
-[[ -t 0 ]] || input="$(head -c "$MAX")"
+# Only a pipe or a file is input: Claude's Bash tool hands an idle socket as stdin, which would block forever.
+if [[ -p /dev/stdin || -f /dev/stdin ]]; then input="$(head -c "$MAX")"; fi
 prompt="$1"
 [[ -z "$input" ]] || prompt="$1
 
