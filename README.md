@@ -310,7 +310,12 @@ the container (data stays in the `open-webui` volume). `ollama ps` shows what is
 | Bugs, security, architecture, strategy decisions | Opus | `/effort high` or `xhigh` (Opus 5.5 starts at `medium`) |
 | Searches, test runs | Haiku agents (automatic) | low |
 
-- Rarely used skills are hidden (`skillOverrides` in the settings template); tool groups are per project (§2).
+- **Long sessions are the main cost.** Every turn re-sends the whole conversation: a fresh session starts at
+  ~29k tokens, but audited 2026-11-26 the median turn re-sent 172k, and 78% of all tokens came from turns
+  above 150k. So auto-compact starts at **150k** (`autoCompactWindow`), and Claude tells you once when an
+  unrelated task would be cheaper after `/clear`.
+- Rarely used skills are hidden (`skillOverrides` in the settings template), the 6 animation skills included
+  (they still run by name, e.g. `/animate`); tool groups are per project (§2).
 - Details and sources: [BEST-PRACTICES.md](BEST-PRACTICES.md).
 
 ---
