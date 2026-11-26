@@ -13,6 +13,7 @@ planning), published so you can fork it, take pieces, or install the lot on a Li
   read before editing, smallest diff, verify before claiming done.
 - **Cheap delegation:** searches, test runs and drafts go to free models via [OmniRoute](https://www.npmjs.com/package/omniroute)
   (`claude-free`, `free-worker`), with Haiku/Sonnet agents as fallback.
+- **`/po <task>`:** an agent owns the task end to end with PM, dev and QA agents, and says done only when every acceptance criterion is proven.
 - **`/council <goal>`:** build, then loop with read-only correctness, security and simplicity reviewers until all approve.
 - **Safety hooks:** block secrets from being printed or written, guard risky shell commands, auto-format after edits.
 - **`security-scan`:** gitleaks + OSV-Scanner + Semgrep + WordPress plugin advisories, all local CLIs.
@@ -40,10 +41,11 @@ replaces. Scripts expect the clone at `~/Documents/projects/claude-setup`. Read 
 | Path | What it is | Used by |
 |---|---|---|
 | `claude-code/CLAUDE.md` | Global instructions: how to work, short "caveman lite" replies, model routing, git safety | Claude Code, every session |
-| `claude-code/agents/` | 5 helper agents: `Explore` + `test-runner` (Haiku), `researcher` + `implementer` (Sonnet), `free-worker` (free models via OmniRoute) | Claude Code delegates to them |
+| `claude-code/agents/` | Helper agents: `Explore` + `test-runner` (Haiku), `researcher` + `implementer` (Sonnet), `free-worker` (free models via OmniRoute) | Claude Code delegates to them |
 | `claude-code/skills/debug/` | Root-cause debugging workflow | Claude Code, on a bug |
 | `claude-code/skills/council/` + `agents/council-*` | `/council <goal>`: build, then loop with 3 read-only reviewers (correctness, security, simplicity) until all approve; `council-free` runs two lenses on free OmniRoute models by default | Claude Code, on request |
-| `claude-code/hooks/` | Block secrets being printed or written; run the project's Prettier after edits; keep a `/council` loop going until approved | Claude Code, automatically |
+| `claude-code/skills/po/` + `agents/po-pm`, `agents/qa` | `/po <task>`: the session is Project Owner - writes acceptance criteria, you approve the plan once, `po-pm` agents run each workstream (dev on free models, `implementer` fallback, `qa` tests), then the PO reruns every check, runs a fresh QA and `/council`, and only then says done | Claude Code, on request |
+| `claude-code/hooks/` | Block secrets being printed or written; run the project's Prettier after edits; keep a `/council` loop going until approved; keep a `/po` project going until every criterion is proven | Claude Code, automatically |
 | `claude-code/settings.json` | Settings template: permissions, hooks, hidden skills, plugins off by default | merged into `~/.claude/settings.json` |
 | `claude-code/bin/security-scan` | Pre-deploy scan: secrets, dependencies, code patterns, WordPress plugins | you or Claude, in a project |
 | `claude-code/bin/claude-free` | Claude Code on free models through OmniRoute | you, when the plan limit is hit |

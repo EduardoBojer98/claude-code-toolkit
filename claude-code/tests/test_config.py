@@ -21,6 +21,8 @@ AGENT_FIELDS = {"name", "description", "tools", "disallowedTools", "model", "per
 AGENT_MODELS = {"sonnet", "opus", "haiku", "fable", "inherit"}
 EFFORTS = {"low", "medium", "high", "xhigh", "max"}
 # Keys claude.ai accepts in an uploaded skill (other keys are a hard error there).
+# The only agents allowed to spawn others (one level, capped by CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH).
+MANAGERS = {"po-pm"}
 CLAUDE_AI_SKILL_FIELDS = {"name", "description", "license", "compatibility", "metadata", "allowed-tools"}
 
 
@@ -73,11 +75,15 @@ class ConfigFiles(unittest.TestCase):
                 self.assertIn(fields["effort"], EFFORTS, a.name)
             no_spawn = "Agent" in fields.get("disallowedTools", "") or (
                 "tools" in fields and "Agent" not in fields["tools"])
-            self.assertTrue(no_spawn, f"{a.name} must not spawn further agents")
+            if a.stem in MANAGERS:
+                self.assertIn("Agent", fields["tools"], a.name)
+                self.assertIn("Edit", fields["disallowedTools"], f"{a.name} manages; it must not edit code")
+            else:
+                self.assertTrue(no_spawn, f"{a.name} must not spawn further agents")
             self.assertIn("Output", body, f"{a.name} needs an explicit output format")
 
     def test_skills_frontmatter_and_links(self):
-        skills = [LAYER / "skills" / "debug", LAYER / "skills" / "council", REPO / "skills" / "web-dev-standards"]
+        skills = [LAYER / "skills" / s for s in ("debug", "council", "po")] + [REPO / "skills" / "web-dev-standards"]
         for d in skills:
             fields, body = frontmatter(d / "SKILL.md")
             self.assertEqual(fields["name"], d.name)
@@ -139,6 +145,35 @@ class Hooks(unittest.TestCase):
             self.assertEqual(gate(d, {"COUNCIL_MAX_BLOCKS": "2"})["decision"], "block")
             self.assertIsNone(gate(d, {"COUNCIL_MAX_BLOCKS": "2"}), "cap reached -> stop allowed")
             self.assertEqual((c / "status").read_text().strip(), "escalated")
+
+    def test_po_gate(self):
+        def gate(cwd):
+            p = subprocess.run([str(HOOKS / "po-gate.sh")], input=json.dumps({"cwd": cwd, "stop_hook_active": True}),
+                               capture_output=True, text=True, timeout=30, env=dict(os.environ, PO_MAX_BLOCKS="2"))
+            self.assertEqual(p.returncode, 0, p.stderr)
+            return json.loads(p.stdout) if p.stdout.strip() else None
+
+        with tempfile.TemporaryDirectory() as d:
+            self.assertIsNone(gate(d), "no .po/ -> stop allowed")
+            po = Path(d) / ".po"
+            (po / "evidence").mkdir(parents=True)
+            for s in ("waiting-user", "waiting-agents", "escalated"):
+                (po / "status").write_text(s + "\n")
+                self.assertIsNone(gate(d), s)
+            (po / "status").write_text("running\n")
+            self.assertEqual(gate(d)["decision"], "block")
+            self.assertEqual(gate(d)["decision"], "block")
+            self.assertIsNone(gate(d), "cap reached -> stop allowed")
+            self.assertEqual((po / "status").read_text().strip(), "escalated")
+
+            (po / "status").write_text("done\n")
+            (po / "project.md").write_text("- [x] AC1 — a\n  - [ ] AC2 — b\n")
+            self.assertIn("unchecked", gate(d)["reason"], "done with an unproven criterion blocks")
+            (po / "project.md").write_text("- [x] AC1 — a\n- [x] AC2 — b\n")
+            self.assertIn("final.md", gate(d)["reason"], "done without final evidence blocks")
+            (po / "evidence" / "final.md").write_text("AC1 PASS\n")
+            self.assertIsNone(gate(d), "done and proven -> stop allowed")
+            self.assertFalse((po / "blocks").exists(), "an allowed stop resets the cap counter")
 
     def test_council_reviewers_are_read_only(self):
         for name in ("council-correctness", "council-security", "council-simplicity"):
